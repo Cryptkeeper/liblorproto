@@ -66,7 +66,7 @@ _Tip:_ Use `lor_channel_of_mask16` for constructing 16 bit channel masks. Channe
 ...
 
 // Fade channels 1-4, 50% to 100% brightness, in 5 seconds on unit 0x01
-const LORChannel channel_mask = lor_channel_of_mask8(0x0F, 0); // 0b0001111
+const LORChannel channel_mask = lor_channel_of_mask8(0x0F, 0); // 0b00001111, 0 = no chain_index value
 const lor_brightness_t from = lor_brightness_curve_squared(0.5); // 50% brightness
 const lor_brightness_t to = lor_brightness_curve_squared(1); // 100% brightness
 const lor_duration_t duration = lor_duration_of(5); // 5 seconds
