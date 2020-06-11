@@ -97,12 +97,13 @@ Brightness curves are responsible for converting a normalized brightness value [
 _While not visible in the graph, `lor_brightness_curve_xlights` will explicitly use a brightness of 0% and 100% at the normalized brightness inputs of 0 and 1 respectively._
 
 ### Custom Brightness Curves
-Any brightness curve may be implemented assuming it adheres to the `lor_brightness_curve_t` function signature: `lor_brightness_t (*lor_brightness_curve_t)(float normal)`
+Any brightness curve may be implemented assuming it adheres to the `lor_brightness_curve_t` function signature: 
+`lor_brightness_t (*lor_brightness_curve_t)(float normal)`
 
 Each brightness curve is designed to return a `lor_brightness_t` object representing the LOR protocol equivalent value of the normalized input, as adapted by the curve. Several consts have been defined within `protocol.h` to avoid using magic numbers in your implementations. See [`brightness_curve.c`](brightness_curve.c) for implementation examples.
 
-## Compatability
-liblightorama is implemented following [this documentation](https://github.com/Cryptkeeper/lightorama-protocol), which was built through reverse engineering efforts. As such, liblightorama has limited compatability testing and may not work with your hardware. The current library functionality offerings have been tested with the `LOR1602Wg3` & `CTB16PCg3` hardware models.
+## Compatibility
+liblightorama is implemented following [this documentation](https://github.com/Cryptkeeper/lightorama-protocol), which was built through reverse engineering efforts. As such, liblightorama has limited compatibility testing and may not work with your hardware. The current library functionality offerings have been tested with the `LOR1602Wg3` & `CTB16PCg3` hardware models.
 
 ## License
 See [LICENSE](LICENSE).
