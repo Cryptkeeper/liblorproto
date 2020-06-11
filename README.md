@@ -78,6 +78,35 @@ unsigned char msg[25];
 size_t len = lor_write_channel_fade(0x01, channel_mask, from, to, duration, msg);
 ```
 
+### Channel Mask Chaining
+Using four 16 bit masks, set channels 1-64 to 50% brightness on unit `0x01`.
+
+```C
+#include <lightorama/brightness_curve.h>
+#include <lightorama/io.h>
+#include <lightorama/protocol.h>
+...
+
+// Create channel masks
+const size_t mask_count = 4;
+const lor_brightness_t brightness = lor_brightness_curve_linear(0.5); // 50% brightness
+
+LORChannel channels[mask_count];
+
+for (int i = mask_count; i >= 0; i--) { // decrement so when iterating the last LORChannel comes first
+    channels[i] = lor_channel_of_mask16(0xFF, i); // use i as chain_index
+}
+
+unsigned char msg[100];
+size_t len = 0;
+
+// For each channel mask, set the brightness
+for (int i = 0; i < mask_count; i++) {
+    len += lor_write_channel_set_brightness(0x01, channels[i], brightness, msg + len);
+}
+```
+
+## Library Structure
 ### Memory Allocations
 liblightorama does not allocate any memory internally, and requires a `unsigned char *` be passed to functions for writing to memory. All write related functions return a `size_t` value indicating the length of the data written (in bytes). Please track this value alongside the memory allocation size to ensure write calls do not overflow.
 
@@ -86,10 +115,15 @@ To help size your buffers, consider that while not absolute and potentially vola
 ### Encoding Helper Methods
 `io.h` additionally exposes several encoding methods, allowing you to circumvent the helper methods and manually construct message structures as desired, without needing to reimplement the data types.
 
-## Brightness Curves
+* `lor_write_heartbeat`
+* `lor_write_brightness` & `lor_write_brightnessf`
+* `lor_write_duration` & `lor_write_durationf`
+* `lor_write_channel`
+
+### Brightness Curves
 Brightness curves are responsible for converting a normalized brightness value [0, 1] to a [LOR protocol brightness value](https://github.com/Cryptkeeper/lightorama-protocol#brightness). The purpose of different brightness curves is to easily modify the visual appearance of brightness changes without redefining the underlying normalized values.
 
-### Pre-implemented Brightness Curves
+#### Pre-implemented Brightness Curves
 | Function | Description |
 | --- | --- |
 | `lor_brightness_curve_linear` | Encodes the normalized value as its direct LOR protocol equivalent value without changes. |
@@ -100,7 +134,7 @@ Brightness curves are responsible for converting a normalized brightness value [
 
 _While not visible in the graph, `lor_brightness_curve_xlights` will explicitly use a brightness of 0% and 100% at the normalized brightness inputs of 0 and 1 respectively._
 
-### Custom Brightness Curves
+#### Custom Brightness Curves
 Any brightness curve may be implemented assuming it adheres to the `lor_brightness_curve_t` function signature: 
 `lor_brightness_t (*lor_brightness_curve_t)(float normal)`
 
