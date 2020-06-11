@@ -39,7 +39,6 @@ lor_brightness_t lor_brightness_curve_xlights(float normal) {
     if (clamped == 0) {
         return LOR_BRIGHTNESS_MIN;
     } else if (clamped == 1) {
-        uint8_t t = 0b11111111;
         return LOR_BRIGHTNESS_MAX;
     } else {
         // Rounding behavior is inherited from xLights implementation and is considered unsafe

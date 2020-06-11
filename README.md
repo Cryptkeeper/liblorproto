@@ -1,7 +1,7 @@
 # liblightorama
 C90 library implementing the [Light-O-Rama (LOR) communication protocol](https://github.com/Cryptkeeper/lightorama-protocol) alongside related APIs, aiming to reduce usage of magic values and competing encoding & helper methods.
 
-liblightorama strives to be _generally_ portable (for use in microcontrollers) and limits its usage of the standard library. As such liblightorama uses only the `stdint.h` and `stddef.h` headers (for fixed sized int definitions), alongside minimal usage of the `float` data type.
+liblightorama strives to be _generally_ portable (for use in microcontrollers) and limits its usage of the standard library, using only the `stdint.h` and `stddef.h` headers (for fixed sized int definitions), with minimal usage of `float`.
 
 Usage of liblightorama assumes existing familiarity with the LOR protocol.
 
@@ -10,14 +10,15 @@ Usage of liblightorama assumes existing familiarity with the LOR protocol.
 | [`lightorama/protocol.h`](protocol.h) | typedefs, conversion functions and constants for values within the LOR protocol. |
 | [`lightorama/io.h`](io.h) | Encoding helper methods for easily building LOR protocol messages. |
 | [`lightorama/brightness_curve.h`](brightness_curve.h) | Reimplementation of brightness curve functions to ensure backwards compatibility. |
-| [`lightorama/model.h`](model.h) | Automatically generated code representation of the [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt) (see [generate_model_h.sh](generate_model_h.sh)). |
+| [`lightorama/model.h`](model.h) | Automatically generated code representation of the [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt). |
 
 ## Installation
 liblightorama uses [CMake](https://cmake.org/) for building and packaging the library.
 
 1. Generate Makefiles using `cmake .`
-2. To compile the library, use `make`
-3. Optionally install the headers and compiled archive using `make install`
+2. If outdated or missing, use `generate_model_h.sh` to generate an updated `model.h`
+3. Compile the library using `make`
+4. Optionally install the headers and compiled archive using `make install`
 
 If optionally installed, `install_manifest.txt` will be created, containing the installed file paths for easy removal.
 
@@ -65,7 +66,7 @@ _Tip:_ Use `lor_channel_of_mask16` for constructing 16 bit channel masks. Channe
 ...
 
 // Fade channels 1-4, 50% to 100% brightness, in 5 seconds on unit 0x01
-const LORChannel channel_mask = lor_channel_of_mask8(0x0F, 0); // 0b0001111, 0 indicates no additional channel masks will be sent
+const LORChannel channel_mask = lor_channel_of_mask8(0x0F, 0); // 0b0001111
 const lor_brightness_t from = lor_brightness_curve_squared(0.5); // 50% brightness
 const lor_brightness_t to = lor_brightness_curve_squared(1); // 100% brightness
 const lor_duration_t duration = lor_duration_of(5); // 5 seconds
@@ -96,9 +97,7 @@ Brightness curves are responsible for converting a normalized brightness value [
 _While not visible in the graph, `lor_brightness_curve_xlights` will explicitly use a brightness of 0% and 100% at the normalized brightness inputs of 0 and 1 respectively._
 
 ### Custom Brightness Curves
-Any brightness curve may be implemented assuming it adheres to the `lor_brightness_curve_t` function signature defined in `protocol.h`:
-
-`lor_brightness_t (*lor_brightness_curve_t)(float normal)`
+Any brightness curve may be implemented assuming it adheres to the `lor_brightness_curve_t` function signature: `lor_brightness_t (*lor_brightness_curve_t)(float normal)`
 
 Each brightness curve is designed to return a `lor_brightness_t` object representing the LOR protocol equivalent value of the normalized input, as adapted by the curve. Several consts have been defined within `protocol.h` to avoid using magic numbers in your implementations. See [`brightness_curve.c`](brightness_curve.c) for implementation examples.
 
