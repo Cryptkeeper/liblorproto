@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "io.h"
+#include "../include/io.h"
 
 size_t lor_write_heartbeat(unsigned char *ptr) {
     ptr[0] = LOR_UNIT_ID_BROADCAST;

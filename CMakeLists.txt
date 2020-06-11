@@ -8,9 +8,9 @@ project(lightorama
 
 set(CMAKE_C_STANDARD 90)
 
-add_library(lightorama protocol.h protocol.c io.c io.h model.h brightness_curve.c brightness_curve.h math.c math.h)
+add_library(lightorama include/protocol.h src/protocol.c src/io.c include/io.h include/model.h src/brightness_curve.c include/brightness_curve.h src/math.c src/math.h)
 
-set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "protocol.h;io.h;model.h;brightness_curve.h")
+set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/protocol.h;include/io.h;include/model.h;include/brightness_curve.h")
 
 install(TARGETS lightorama
         LIBRARY DESTINATION lib/lightorama

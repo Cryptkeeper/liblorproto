@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "protocol.h"
+#include "../include/protocol.h"
 #include "math.h"
 
 lor_duration_t lor_duration_of(float seconds) {

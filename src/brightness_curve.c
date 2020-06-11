@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "brightness_curve.h"
+#include "../include/brightness_curve.h"
 #include "math.h"
 
 lor_brightness_t lor_brightness_curve_linear(float normal) {

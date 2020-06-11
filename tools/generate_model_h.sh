@@ -1,6 +1,6 @@
 #!/bin/sh
 DEVICE_FILE=LOR_DeviceFile.txt
-HEADER_FILE=model.h
+HEADER_FILE=include/model.h
 
 # Download and overwrite $DEVICE_FILE using quiet mode
 echo "Downloading $DEVICE_FILE"
