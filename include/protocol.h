@@ -25,6 +25,7 @@
 #define LIGHTORAMA_PROTOCOL_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 /**
  * Magic Numbers
@@ -46,34 +47,23 @@ static const lor_unit_t LOR_UNIT_ID_BROADCAST = 0xFF;
 static const lor_unit_t LOR_UNIT_ID_COMPUTER = 0xFE;
 
 /**
- * Channel Masks
+ * Channels
  */
-enum lor_channel_type_t {
+typedef enum lor_channel_type_t {
     LOR_CHANNEL_ID = 1,
     LOR_CHANNEL_MASK8 = 8,
     LOR_CHANNEL_MASK16 = 16,
-};
+} LORChannelType;
 
-typedef struct lor_channel_t {
-    enum lor_channel_type_t type;
-    uint16_t bits;
-    uint8_t chain_index;
-} LORChannel;
+typedef uint16_t lor_channel_t;
 
-LORChannel lor_channel_of(uint8_t channel_id);
+typedef uint8_t lor_channel_action_magic_t;
 
-LORChannel lor_channel_of_mask8(uint8_t bits, uint8_t chain_index);
+static const lor_channel_action_magic_t LOR_CHANNEL_ACTION_MAGIC_MASK8 = 0x30;
+static const lor_channel_action_magic_t LOR_CHANNEL_ACTION_MAGIC_MASK16 = 0x10;
+static const lor_channel_action_magic_t LOR_CHANNEL_ACTION_MAGIC_CHAIN = 0x50;
 
-LORChannel lor_channel_of_mask16(uint16_t bits, uint8_t chain_index);
-
-typedef uint8_t lor_channel_magic_t;
-
-static const lor_channel_magic_t LOR_CHANNEL_MAGIC_ID = 0x00;
-static const lor_channel_magic_t LOR_CHANNEL_MAGIC_MASK8 = 0x30;
-static const lor_channel_magic_t LOR_CHANNEL_MAGIC_MASK16 = 0x10;
-static const lor_channel_magic_t LOR_CHANNEL_MAGIC_CHAIN = 0x50;
-
-lor_channel_magic_t lor_get_channel_magic(LORChannel channel);
+lor_channel_action_magic_t lor_get_channel_action_magic(LORChannelType type);
 
 /**
  * Brightness

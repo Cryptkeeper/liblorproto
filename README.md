@@ -42,6 +42,8 @@ size_t len = lor_write_unit_action(unit_id, LOR_ACTION_UNIT_OFF, msg);
 ### Set Channel Brightness
 Set channel 8 on unit `0x01` to 50% brightness. This uses the `lor_brightness_curve_linear` brightness curve, but you can use other brightness curves (or write your own).
 
+_Tip:_ `LOR_CHANNEL_ID` informs the protocol encoding the value of `channel` is a single channel ID and not an 8 bit or 16 bit channel mask.
+
 ```C
 #include <lightorama/brightness_curve.h>
 #include <lightorama/io.h>
@@ -50,17 +52,17 @@ Set channel 8 on unit `0x01` to 50% brightness. This uses the `lor_brightness_cu
 
 // Set channel 8 on unit 0x01 to 50% brightness
 const lor_unit_t unit_id = 0x01;
-const LORChannel channel = lor_channel_of(7); // channels start at 0
+const lor_channel_t channel = 7; // channels start at 0
 const lor_brightness_t brightness = lor_brightness_curve_linear(0.5); // 50% brightness
 
 unsigned char msg[25];
-size_t len = lor_write_channel_set_brightness(unit_id, channel, brightness, msg);
+size_t len = lor_write_channel_set_brightness(unit_id, LOR_CHANNEL_ID, channel, brightness, msg);
 ```
 
 ### Channel Masking & Fading
 Fade channels 1-4 from 50% to 100% brightness in 5 seconds on unit `0x01`. This uses the `lor_brightness_curve_squared` brightness curve to demonstrate alternate brightness curve functionality.
 
-_Tip:_ Use `lor_channel_of_mask16` for constructing 16 bit channel masks. Channel mask stiching functionality is available using the `chain_index` parameter.
+_Tip:_ Use `LOR_CHANNEL_MASK16` when using 16 bit channel masks.
 
 ```C
 #include <lightorama/brightness_curve.h>
@@ -69,44 +71,21 @@ _Tip:_ Use `lor_channel_of_mask16` for constructing 16 bit channel masks. Channe
 ...
 
 // Fade channels 1-4, 50% to 100% brightness, in 5 seconds on unit 0x01
-const LORChannel channel_mask = lor_channel_of_mask8(0x0F, 0); // 0b00001111, 0 = no chain_index value
+const lor_channel_t channel = 0x0F; // 0b00001111
 const lor_brightness_t from = lor_brightness_curve_squared(0.5); // 50% brightness
 const lor_brightness_t to = lor_brightness_curve_squared(1); // 100% brightness
 const lor_duration_t duration = lor_duration_of(5); // 5 seconds
 
 unsigned char msg[25];
-size_t len = lor_write_channel_fade(0x01, channel_mask, from, to, duration, msg);
-```
-
-### Channel Mask Chaining
-Using four 16 bit masks, set channels 1-64 to 50% brightness on unit `0x01`.
-
-```C
-#include <lightorama/brightness_curve.h>
-#include <lightorama/io.h>
-#include <lightorama/protocol.h>
-...
-
-// Create channel masks
-const size_t mask_count = 4;
-const lor_brightness_t brightness = lor_brightness_curve_linear(0.5); // 50% brightness
-
-LORChannel channels[mask_count];
-
-for (int i = mask_count; i >= 0; i--) { // decrement so when iterating the last LORChannel comes first
-    channels[i] = lor_channel_of_mask16(0xFF, i); // use i as chain_index
-}
-
-unsigned char msg[100];
-size_t len = 0;
-
-// For each channel mask, set the brightness
-for (int i = 0; i < mask_count; i++) {
-    len += lor_write_channel_set_brightness(0x01, channels[i], brightness, msg + len);
-}
+size_t len = lor_write_channel_fade(0x01, LOR_CHANNEL_MASK8, channel, from, to, duration, msg);
 ```
 
 ## Library Structure
+### Channels
+Within liblightorama the `lor_channel_t` type (`uint16_t`) can represent a single channel ID, a 8 bit channel mask or a 16 bit channel mask. Its value, and subsequent encoding, is determined by the value of an enum, `LORChannelType`. As such, a `lor_channel_t` may actually represent up to 16 channels, regardless of its singular naming scheme.
+
+While this increases the length of method signatures, it avoids helper methods and more rigid structures. As a bonus, it enables developers familiar with bitwise operations to operate directly on the `lor_channel_t` value.
+
 ### Memory Allocations
 liblightorama does not allocate any memory internally, and requires a `unsigned char *` be passed to functions for writing to memory. All write related functions return a `size_t` value indicating the length of the data written (in bytes). Please track this value alongside the memory allocation size to ensure write calls do not overflow.
 

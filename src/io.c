@@ -54,60 +54,57 @@ size_t lor_write_durationf(float seconds, unsigned char *ptr) {
     return lor_write_duration(lor_duration_of(seconds), ptr);
 }
 
-size_t lor_write_channel(LORChannel channel, unsigned char *ptr) {
+size_t lor_write_channel(LORChannelType type, lor_channel_t channel, unsigned char *ptr) {
     size_t n = 0;
-    if (channel.chain_index > 0) {
-        ptr[n++] = channel.chain_index;
-    }
-    switch (channel.type) {
+    switch (type) {
         case LOR_CHANNEL_ID:
-            ptr[n++] = LOR_MAGIC_CHANNEL_ID_MASK | channel.bits;
+            ptr[n++] = LOR_MAGIC_CHANNEL_ID_MASK | channel;
             break;
 
         case LOR_CHANNEL_MASK8:
-            ptr[n++] = channel.bits;
+            ptr[n++] = channel;
             break;
 
         case LOR_CHANNEL_MASK16: {
-            ptr[n++] = channel.bits & 0x00FFu;
-            ptr[n++] = (channel.bits & 0xFF00u) >> 8u;
+            ptr[n++] = channel & 0x00FFu;
+            ptr[n++] = (channel & 0xFF00u) >> 8u;
             break;
         }
     }
     return n;
 }
 
-size_t lor_write_channel_action(lor_unit_t unit, lor_channel_action_t action, LORChannel channel, unsigned char *ptr) {
+size_t lor_write_channel_action(lor_unit_t unit, lor_channel_action_t action, LORChannelType type, lor_channel_t channel, unsigned char *ptr) {
     size_t n = 0;
     ptr[n++] = LOR_MAGIC_FLUSH;
     ptr[n++] = unit;
-    ptr[n++] = lor_get_channel_magic(channel) | action;
-    n += lor_write_channel(channel, ptr + n);
+    ptr[n++] = lor_get_channel_action_magic(type) | action;
+    n += lor_write_channel(type, channel, ptr + n);
     ptr[n++] = LOR_MAGIC_FLUSH;
     return n;
 }
 
-size_t lor_write_channel_fade(lor_unit_t unit, LORChannel channel, lor_brightness_t from, lor_brightness_t to, lor_duration_t duration, unsigned char *ptr) {
+size_t lor_write_channel_fade(lor_unit_t unit, LORChannelType type, lor_channel_t channel, lor_brightness_t from, lor_brightness_t to, lor_duration_t duration, unsigned char *ptr) {
     size_t n = 0;
     ptr[n++] = LOR_MAGIC_FLUSH;
     ptr[n++] = unit;
-    ptr[n++] = lor_get_channel_magic(channel) | LOR_ACTION_CHANNEL_FADE;
+    ptr[n++] = lor_get_channel_action_magic(type) | LOR_ACTION_CHANNEL_FADE;
     n += lor_write_brightness(from, ptr + n);
     n += lor_write_brightness(to, ptr + n);
     n += lor_write_duration(duration, ptr + n);
-    n += lor_write_channel(channel, ptr + n);
+    n += lor_write_channel(type, channel, ptr + n);
     ptr[n++] = LOR_MAGIC_FLUSH;
     return n;
 }
 
-size_t lor_write_channel_fade_with(lor_unit_t unit, lor_channel_action_t foreground_action, LORChannel channel, lor_brightness_t from, lor_brightness_t to, lor_duration_t duration, unsigned char *ptr) {
+size_t lor_write_channel_fade_with(lor_unit_t unit, lor_channel_action_t foreground_action, LORChannelType type, lor_channel_t channel, lor_brightness_t from, lor_brightness_t to, lor_duration_t duration, unsigned char *ptr) {
     size_t n = 0;
     ptr[n++] = LOR_MAGIC_FLUSH;
     ptr[n++] = unit;
-    ptr[n++] = lor_get_channel_magic(channel) | foreground_action;
-    n += lor_write_channel(channel, ptr + n);
+    ptr[n++] = lor_get_channel_action_magic(type) | foreground_action;
+    n += lor_write_channel(type, channel, ptr + n);
     ptr[n++] = LOR_MAGIC_AND;
-    ptr[n++] = lor_get_channel_magic(channel) | LOR_ACTION_CHANNEL_FADE;
+    ptr[n++] = lor_get_channel_action_magic(type) | LOR_ACTION_CHANNEL_FADE;
     n += lor_write_brightness(from, ptr + n);
     n += lor_write_brightness(to, ptr + n);
     n += lor_write_duration(duration, ptr + n);
@@ -115,13 +112,13 @@ size_t lor_write_channel_fade_with(lor_unit_t unit, lor_channel_action_t foregro
     return n;
 }
 
-size_t lor_write_channel_set_brightness(lor_unit_t unit, LORChannel channel, lor_brightness_t to, unsigned char *ptr) {
+size_t lor_write_channel_set_brightness(lor_unit_t unit, LORChannelType type, lor_channel_t channel, lor_brightness_t to, unsigned char *ptr) {
     size_t n = 0;
     ptr[n++] = LOR_MAGIC_FLUSH;
     ptr[n++] = unit;
-    ptr[n++] = lor_get_channel_magic(channel) | LOR_ACTION_CHANNEL_SET_BRIGHTNESS;
+    ptr[n++] = lor_get_channel_action_magic(type) | LOR_ACTION_CHANNEL_SET_BRIGHTNESS;
     n += lor_write_brightness(to, ptr + n);
-    n += lor_write_channel(channel, ptr + n);
+    n += lor_write_channel(type, channel, ptr + n);
     ptr[n++] = LOR_MAGIC_FLUSH;
     return n;
 }

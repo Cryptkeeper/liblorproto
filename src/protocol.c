@@ -34,40 +34,13 @@ lor_duration_t lor_duration_of(float seconds) {
     }
 }
 
-LORChannel lor_channel_of(uint8_t channel_id) {
-    return (LORChannel) {
-            .type = LOR_CHANNEL_ID,
-            .bits = LOR_MAGIC_CHANNEL_ID_MASK | channel_id,
-            .chain_index = 0,
-    };
-}
-
-LORChannel lor_channel_of_mask8(uint8_t bits, uint8_t chain_index) {
-    return (LORChannel) {
-            .type = LOR_CHANNEL_MASK8,
-            .bits = bits,
-            .chain_index = chain_index,
-    };
-}
-
-LORChannel lor_channel_of_mask16(uint16_t bits, uint8_t chain_index) {
-    return (LORChannel) {
-            .type = LOR_CHANNEL_MASK16,
-            .bits = bits,
-            .chain_index = chain_index,
-    };
-}
-
-lor_channel_magic_t lor_get_channel_magic(LORChannel channel) {
-    if (channel.chain_index > 0) {
-        return LOR_CHANNEL_MAGIC_CHAIN;
-    }
-    switch (channel.type) {
-        case LOR_CHANNEL_ID:
-            return LOR_CHANNEL_MAGIC_ID;
+lor_channel_action_magic_t lor_get_channel_action_magic(enum lor_channel_type_t type) {
+    switch (type) {
         case LOR_CHANNEL_MASK8:
-            return LOR_CHANNEL_MAGIC_MASK8;
+            return LOR_CHANNEL_ACTION_MAGIC_MASK8;
         case LOR_CHANNEL_MASK16:
-            return LOR_CHANNEL_MAGIC_MASK16;
+            return LOR_CHANNEL_ACTION_MAGIC_MASK16;
+        default:
+            return 0x00;
     }
 }
