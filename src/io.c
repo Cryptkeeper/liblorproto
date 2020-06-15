@@ -24,10 +24,14 @@
 #include "../include/io.h"
 
 size_t lor_write_heartbeat(unsigned char *ptr) {
-    ptr[0] = LOR_UNIT_ID_BROADCAST;
-    ptr[1] = LOR_MAGIC_AND;
-    ptr[2] = LOR_MAGIC_HEARTBEAT;
-    return 3;
+    // Always write LOR_MAGIC_FLUSH values
+    // This ensures the pipeline is cleared for execution of the heartbeat
+    ptr[0] = LOR_MAGIC_FLUSH;
+    ptr[1] = LOR_UNIT_ID_BROADCAST;
+    ptr[2] = LOR_MAGIC_AND;
+    ptr[3] = LOR_MAGIC_HEARTBEAT;
+    ptr[4] = LOR_MAGIC_FLUSH;
+    return 5;
 }
 
 size_t lor_write_brightness(lor_brightness_t brightness, unsigned char *ptr) {
