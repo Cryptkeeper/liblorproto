@@ -110,7 +110,7 @@ for (int i = 0; i < mask_count; i++) {
 ### Memory Allocations
 liblightorama does not allocate any memory internally, and requires a `unsigned char *` be passed to functions for writing to memory. All write related functions return a `size_t` value indicating the length of the data written (in bytes). Please track this value alongside the memory allocation size to ensure write calls do not overflow.
 
-To help size your buffers, consider that while not absolute and potentially volatile, even the largest write call (`lor_write_channel_fade_with`) will not write more than 11 bytes.
+To help size your buffers, consider that while not absolute and potentially volatile, even the largest write call (`lor_write_channel_fade_with`) will not write more than 13 bytes.
 
 ### Encoding Helper Methods
 `io.h` additionally exposes several encoding methods, allowing you to circumvent the helper methods and manually construct message structures as desired, without needing to reimplement the data types.
