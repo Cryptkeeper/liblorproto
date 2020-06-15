@@ -69,8 +69,8 @@ size_t lor_write_channel(LORChannel channel, unsigned char *ptr) {
             break;
 
         case LOR_CHANNEL_MASK16: {
-            ptr[n++] = (channel.bits & 0xFF00u) >> 8u;
             ptr[n++] = channel.bits & 0x00FFu;
+            ptr[n++] = (channel.bits & 0xFF00u) >> 8u;
             break;
         }
     }
