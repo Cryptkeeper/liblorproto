@@ -74,7 +74,7 @@ size_t lor_write_channel(LORChannelType type, lor_channel_t channel, unsigned ch
     return n;
 }
 
-size_t lor_write_channel_action(lor_unit_t unit, lor_channel_action_t action, LORChannelType type, lor_channel_t channel, unsigned char *ptr) {
+size_t lor_write_channel_action(lor_unit_t unit, LORChannelType type, lor_channel_t channel, lor_channel_action_t action, unsigned char *ptr) {
     size_t n = 0;
     ptr[n++] = LOR_MAGIC_FLUSH;
     ptr[n++] = unit;
@@ -97,7 +97,7 @@ size_t lor_write_channel_fade(lor_unit_t unit, LORChannelType type, lor_channel_
     return n;
 }
 
-size_t lor_write_channel_fade_with(lor_unit_t unit, lor_channel_action_t foreground_action, LORChannelType type, lor_channel_t channel, lor_brightness_t from, lor_brightness_t to, lor_duration_t duration, unsigned char *ptr) {
+size_t lor_write_channel_fade_with(lor_unit_t unit, LORChannelType type, lor_channel_t channel, lor_channel_action_t foreground_action, lor_brightness_t from, lor_brightness_t to, lor_duration_t duration, unsigned char *ptr) {
     size_t n = 0;
     ptr[n++] = LOR_MAGIC_FLUSH;
     ptr[n++] = unit;
