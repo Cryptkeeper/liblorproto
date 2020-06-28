@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(lightorama
         VERSION 1.0.0
-        DESCRIPTION "C99 library implementing the Light-O-Rama \(LOR\) communication protocol"
+        DESCRIPTION "C90 library implementing the Light-O-Rama \(LOR\) communication protocol"
         HOMEPAGE_URL "https://github.com/Cryptkeeper/liblightorama"
         LANGUAGES C)
 
