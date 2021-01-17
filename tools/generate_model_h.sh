@@ -36,7 +36,7 @@ echo " */
 " >> $HEADER_FILE
 
 # Use tail -n+2 to skip the 1st line $LOR_DEVICEFILE containing column names
-tail -n+2 $DEVICE_FILE | while read LINE
+tail -n+2 $DEVICE_FILE | while read LINE || [ -n "$LINE" ]
 do
 	MODEL_NUMBER=$(echo "$LINE" | cut -d, -f 1 | sed 's/^0*//')	# Split on "," get the 1st column, remove any leading zeroes from $MODEL_NUMBER
 	

@@ -1,6 +1,6 @@
 // AUTOMATICALLY GENERATED, DO NOT MODIFY THIS FILE!
 // LOR_DeviceFile.txt sha1sum: b0b1a5d5aa63b8df9523eb1b3e62512309ff8499
-// Built Wed Jun 10 22:38:23 CDT 2020
+// Built Sun Jan 17 00:30:17 CST 2021
 // git: Nick Krecklow <hello@github.nklow.com>
 // generate_model_h.sh
 
@@ -118,5 +118,6 @@
 #define LOR_MODEL_BOOTLOADER_PIX02_E8 232 /* 0xe8 */
 #define LOR_MODEL_BOOTLOADER_PIX04_E9 233 /* 0xe9 */
 #define LOR_MODEL_BOOTLOADER_PIX08_EA 234 /* 0xea */
+#define LOR_MODEL_BOOTLOADER_PIX16_EB 235 /* 0xeb */
 
 #endif //LIGHTORAMA_MODEL_H
