@@ -48,10 +48,12 @@ far more channel control options—dramatically reducing bandwidth use compared 
 1. Using a single channel ID.
 2. Using 1-2 "channel bank" bit masks for selecting up to 16 sequential channels. A single channel bank is an 8 bit
    mask. Each "channel group" (16 channels)
-   therefor contains two channel banks, named "high" (channels 1-8, first channel bank)
+   therefore contains two channel banks, named "high" (channels 1-8, first 
+channel bank)
    and "low" (channels 9-16, second channel bank). These seemingly backwards names come from their bit order when
    encoded into the LOR protocol, with the "high" channel bank becoming the highest order bits and vice versa.
-3. Using the previous mode with a channel group offset, which offsets the channel group mask by a multiple of 16.
+3. Using the previous mode with a channel group offset, which offsets the channel bank masks by a multiple of 16 (the size 
+of a channel group).
 4. Using a single unit ID to automatically select all its channels (rarely usable).
 
 ```
