@@ -5,6 +5,7 @@ cmake_install.cmake
 CMakeCache.txt
 Makefile
 install_manifest.txt
+CTestTestfile.cmake
 
 # CLion
 .idea/
