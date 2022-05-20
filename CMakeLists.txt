@@ -20,14 +20,14 @@ add_library(lightorama
         src/time.c
         src/uid.c)
 
-set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/effect.h;include/heartbeat.h;include/intensity.h;include/liblightorama.h;include/model.h;include/platform.h;include/time.h;include/uid.h;include/version.h;")
+set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/effect.h;include/heartbeat.h;include/intensity.h;include/lightorama.h;include/model.h;include/platform.h;include/time.h;include/uid.h;include/version.h;")
 
 install(TARGETS lightorama
         LIBRARY DESTINATION lib/lightorama
         PUBLIC_HEADER DESTINATION include/lightorama)
 
-add_executable(test_duration test/time.c)
-target_link_libraries(test_duration lightorama)
-add_test(duration test_duration)
+add_executable(test_time test/time.c)
+target_link_libraries(test_time lightorama)
+add_test(time test_time)
 
 enable_testing()

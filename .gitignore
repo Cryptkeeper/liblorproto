@@ -13,3 +13,6 @@ CTestTestfile.cmake
 # Archives
 liblightorama.a
 lightorama.cbp
+
+# Test binaries
+test_time
