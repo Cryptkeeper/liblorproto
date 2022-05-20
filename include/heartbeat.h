@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Nick Krecklow
+ * Copyright (c) 2022 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_MATH_H
-#define LIGHTORAMA_MATH_H
+#ifndef LIGHTORAMA_HEARTBEAT_H
+#define LIGHTORAMA_HEARTBEAT_H
 
-float clampf(float val, float min, float max);
+#include <stdint.h>
 
-#endif //LIGHTORAMA_MATH_H
+#include "platform.h"
+#include "uid.h"
+
+#define LOR_HEARTBEAT_DELAY_NS 500000000
+#define LOR_HEARTBEAT_DELAY_MS 500
+#define LOR_HEARTBEAT_DELAY_S  0.5F
+
+lor_size_t lor_write_unit_heartbeat(lor_unit_t unit, uint8_t *b);
+
+lor_size_t lor_write_heartbeat(uint8_t *b);
+
+#endif // LIGHTORAMA_HEARTBEAT_H

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Nick Krecklow
+ * Copyright (c) 2022 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "math.h"
+#include "../include/heartbeat.h"
 
-float clampf(float val, float min, float max) {
-    if (val > max) {
-        return max;
-    } else if (val < min) {
-        return min;
-    } else {
-        return val;
-    }
+lor_size_t lor_write_unit_heartbeat(lor_unit_t unit, uint8_t *b) {
+  lor_size_t n = 0;
+  n += lor_write_unit(unit, b);
+  b[n++] = 0x81;
+  b[n++] = 0x56;
+  return n;
+}
+
+lor_size_t lor_write_heartbeat(uint8_t *b) {
+  return lor_write_unit_heartbeat(LOR_UNIT_ALL, b);
 }

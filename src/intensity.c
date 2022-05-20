@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Nick Krecklow
+ * Copyright (c) 2022 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/brightness_curve.h"
-#include "math.h"
+#include "../include/intensity.h"
 
-lor_brightness_t lor_brightness_curve_linear(float normal) {
-    return ((lor_brightness_t) (clampf(normal, 0, 1) * LOR_BRIGHTNESS_RANGE)) + LOR_BRIGHTNESS_MIN;
+lor_size_t lor_write_intensity(lor_intensity_t intensity, uint8_t *buf) {
+  buf[0] = intensity;
+  return 1;
 }
 
-lor_brightness_t lor_brightness_curve_squared(float normal) {
-    const float clamped = clampf(normal, 0, 1);
-    const float squared = 1 - (1 - clamped) * (1 - clamped);
-    return ((lor_brightness_t) (squared * LOR_BRIGHTNESS_RANGE)) + LOR_BRIGHTNESS_MIN;
+lor_size_t lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf) {
+  *intensity = buf[0];
+  return 1;
 }
 
-lor_brightness_t lor_brightness_curve_xlights(float normal) {
-    const float clamped = clampf(normal, 0, 1);
-    if (clamped == 0) {
-        return LOR_BRIGHTNESS_MIN;
-    } else if (clamped == 1) {
-        return LOR_BRIGHTNESS_MAX;
-    } else {
-        // Rounding behavior is inherited from xLights implementation and is considered unsafe
-        // Clang-Tidy: Casting (double + 0.5) to integer leads to incorrect rounding
-        return 0xE4 - (unsigned char) (clamped * 100 + 0.5F) * 2;
-    }
+#define LOR_CLAMPF(val, min, max) ((val) < (min) ? (min) : ((val) > (max)) ? (max) : (val))
+#define LOR_INTENSITY_RANGE       ((lor_intensity_t)(LOR_INTENSITY_MAX - LOR_INTENSITY_MIN))
+
+lor_intensity_t lor_intensity_curve_linear(float normal) {
+  return ((lor_intensity_t)(LOR_CLAMPF(normal, 0, 1) * LOR_INTENSITY_RANGE)) + LOR_INTENSITY_MIN;
+}
+
+lor_intensity_t lor_intensity_curve_squared(float normal) {
+  const float clamped = LOR_CLAMPF(normal, 0, 1);
+  const float squared = 1 - (1 - clamped) * (1 - clamped);
+  return ((lor_intensity_t)(squared * LOR_INTENSITY_RANGE)) + LOR_INTENSITY_MIN;
 }

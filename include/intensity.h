@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Nick Krecklow
+ * Copyright (c) 2022 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_BRIGHTNESS_CURVE_H
-#define LIGHTORAMA_BRIGHTNESS_CURVE_H
+#ifndef LIGHTORAMA_INTENSITY_H
+#define LIGHTORAMA_INTENSITY_H
 
-#include "protocol.h"
+#include <stdint.h>
 
-lor_brightness_t lor_brightness_curve_linear(float normal);
+#include "platform.h"
 
-lor_brightness_t lor_brightness_curve_squared(float normal);
+typedef uint8_t lor_intensity_t;
 
-lor_brightness_t lor_brightness_curve_xlights(float normal);
+#define LOR_INTENSITY_MIN ((lor_intensity_t)0xF0)
+#define LOR_INTENSITY_MAX ((lor_intensity_t)0x01)
 
-#endif //LIGHTORAMA_BRIGHTNESS_CURVE_H
+lor_size_t lor_write_intensity(lor_intensity_t intensity, uint8_t *buf);
+
+lor_size_t lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf);
+
+typedef lor_intensity_t (*lor_intensity_curve_t)(float normal);
+
+lor_intensity_t lor_intensity_curve_linear(float normal);
+
+lor_intensity_t lor_intensity_curve_squared(float normal);
+
+#endif // LIGHTORAMA_INTENSITY_H

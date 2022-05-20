@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Nick Krecklow
+ * Copyright (c) 2022 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/protocol.h"
-#include "math.h"
+#ifndef LIGHTORAMA_LIGHTORAMA_H
+#define LIGHTORAMA_LIGHTORAMA_H
 
-lor_duration_t lor_duration_of(float seconds) {
-    const float seconds_clamped = clampf(seconds, LOR_DURATION_SECONDS_MIN, LOR_DURATION_SECONDS_MAX);
-    const lor_duration_t duration = (lor_duration_t) (((float) LOR_DURATION_MIN / (seconds_clamped / LOR_DURATION_SECONDS_MIN)) + 0.5F);
-    if (duration > 0xFF) {
-        return duration;
-    } else {
-        return 0x8000u | duration;
-    }
-}
+#include "platform.h"
 
-lor_channel_action_magic_t lor_get_channel_action_magic(enum lor_channel_type_t type) {
-    switch (type) {
-        case LOR_CHANNEL_MASK8:
-            return LOR_CHANNEL_ACTION_MAGIC_MASK8;
-        case LOR_CHANNEL_MASK16:
-            return LOR_CHANNEL_ACTION_MAGIC_MASK16;
-        default:
-            return 0x00;
-    }
-}
+#include "effect.h"
+#include "heartbeat.h"
+#include "intensity.h"
+#include "time.h"
+#include "uid.h"
+#include "version.h"
+
+#endif // LIGHTORAMA_LIGHTORAMA_H
