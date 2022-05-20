@@ -45,17 +45,17 @@ If optionally installed, `install_manifest.txt` will be created, containing the 
 The LOR protocol has four distinct ways to reference channels. Each becomes increasingly complex, but at the benefit of
 far more channel control options—dramatically reducing bandwidth use compared to individual channels.
 
-1. Using a single channel ID
+1. Using a single channel ID.
 2. Using 1-2 "channel bank" bit masks for selecting up to 16 sequential channels. A single channel bank is an 8 bit
    mask. Each "channel group" (16 channels)
    therefor contains two channel banks, named "high" (channels 1-8, first channel bank)
    and "low" (channels 9-16, second channel bank). These seemingly backwards names come from their bit order when
    encoded into the LOR protocol, with the "high" channel bank becoming the highest order bits and vice versa.
-3. Using mode #2 with an additional channel group offset, which offsets the channel group mask by a multiple of 16.
-4. Using a single unit ID to automatically select all its channels (rarely usable)
+3. Using the previous mode with a channel group offset, which offsets the channel group mask by a multiple of 16.
+4. Using a single unit ID to automatically select all its channels (rarely usable).
 
 ```
-                 High Channel Bank                Low Channel Bank
+                 High Channel Bank (1-8)   Low Channel Bank (9-16)
                  ┌───────────────────────┬───────────────────────┐
                  ▼                       │                       ▼
                  ┌──┬──┬──┬──┬──┬──┬──┬──┼──┬──┬──┬──┬──┬──┬──┬──┐
@@ -72,37 +72,35 @@ Channels 17-32:  │01│02│03│04│05│06│07│08│09│10│11│12│
 Channels 33-48:  │01│02│03│04│05│06│07│08│09│10│11│12│13│14│15│16│
                  └──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┴──┘
                  Channel Group Offset 2
-
-
-                 ...
 ```
 
-Within liblightorama a single channel ID is represented by the `lor_channel_t` type. (A `lor_channelset_t` can be used
-to reference a single channel, but that is likely a waste of bandwidth and memory and isn't recommended.)
+Within liblightorama a single channel ID is represented by the `lor_channel_t` type. Keep in mind that channels within
+the LOR protocol start at 0, not 1. A `lor_channelset_t` can be used to reference a single channel, but that is likely a
+waste of bandwidth and isn't recommended.
 
 For using channel groups and channel banks, the `lor_channelset_t` type contains a `channels` field for defining the
-channel banks and an optional `offset` value for providing a channel group offset. liblightorama's channel set encoding
-logic will apply a few protocol optimizations that can help minimize memory usage when referencing a single channel
-bank.
+channel banks and an optional `offset` value for providing a channel group offset. liblightorama's `lor_channelset_t`
+encoding logic will apply a few protocol optimizations that can help minimize memory usage when referencing a single
+channel bank.
 
 Depending on your type (`lor_channel_t`, `lor_channelset_t`, `lor_unit_t`) you will use different functions when
 encoding/decoding (e.g. `lor_write_channel_effect` vs `lor_write_channelset_effect` vs `lor_write_unit_effect`). A
 missing function signature for your type may mean it is unsupported by the protocol.
 
-### Code Examples
+### Channel Set Code Examples
 
 ```C
-lor_channel_t first_8_channels = { 
+lor_channelset_t first_8_channels = { 
         .channels = 0xFF00, // set first 8 high bits
         .offset = 0, // channel group 0
 };
 
-lor_channel_t channels_96_to_112 = {
+lor_channelset_t channels_96_to_112 = {
         .channels = 0xFFFF, // all 16 channels
         .offset = 5, // start at channel 96 (96/16 == 6 - 1 [because group #1 is 0] == 5)
 };
 
-lor_channel_t only_channel_32 = {
+lor_channelset_t only_channel_32 = {
         .channels = 0x1, // only set lowest order bit (channel 16)
         .offset = 1, // offset channels by +16
 };
