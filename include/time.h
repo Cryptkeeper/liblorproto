@@ -26,8 +26,6 @@
 
 #include <stdint.h>
 
-#include "platform.h"
-
 typedef uint16_t lor_time_t;
 
 #define LOR_TIME_MAX         ((lor_time_t)0x8014)
@@ -54,8 +52,8 @@ lor_time_t lor_seconds_to_time(float seconds);
  */
 float lor_time_to_seconds(lor_time_t time);
 
-lor_size_t lor_write_time(lor_time_t time, uint8_t *b);
+int lor_write_time(lor_time_t time, uint8_t *b);
 
-lor_size_t lor_read_time(lor_time_t *time, const uint8_t *b);
+int lor_read_time(lor_time_t *time, const uint8_t *b);
 
 #endif // LIGHTORAMA_TIME_H

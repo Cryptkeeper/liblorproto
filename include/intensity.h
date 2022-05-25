@@ -26,16 +26,14 @@
 
 #include <stdint.h>
 
-#include "platform.h"
-
 typedef uint8_t lor_intensity_t;
 
 #define LOR_INTENSITY_MIN ((lor_intensity_t)0xF0)
 #define LOR_INTENSITY_MAX ((lor_intensity_t)0x01)
 
-lor_size_t lor_write_intensity(lor_intensity_t intensity, uint8_t *buf);
+int lor_write_intensity(lor_intensity_t intensity, uint8_t *buf);
 
-lor_size_t lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf);
+int lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf);
 
 typedef lor_intensity_t (*lor_intensity_curve_t)(float normal);
 

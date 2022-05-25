@@ -23,12 +23,12 @@
  */
 #include "../include/intensity.h"
 
-lor_size_t lor_write_intensity(lor_intensity_t intensity, uint8_t *buf) {
+int lor_write_intensity(lor_intensity_t intensity, uint8_t *buf) {
   buf[0] = intensity;
   return 1;
 }
 
-lor_size_t lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf) {
+int lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf) {
   *intensity = buf[0];
   return 1;
 }

@@ -15,7 +15,6 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 | [`lightorama/heartbeat.h`](include/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                |
 | [`lightorama/intensity.h`](include/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values    |
 | [`lightorama/model.h`](include/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt)      |
-| [`lightorama/platform.h`](include/platform.h)   | Override library type usages with platform-specific definitions                                                                   |
 | [`lightorama/time.h`](include/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                |
 | [`lightorama/uid.h`](include/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs) |
 | [`lightorama/version.h`](include/version.h)     | Named constants of liblightorama version information                                                                              |
@@ -23,10 +22,8 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 You may optionally use `lightorama/lightorama.h` to automatically include all library header files.
 
 liblightorama strives to be _generally_ portable (typically for use in microcontrollers) and limits its usage of the
-standard library, using only the `stdint.h` header for fixed sized int definitions, `stddef.h` for `size_t`, and with
-minimal usage of `float`. Usage of `size_t` may be overridden by defining `LOR_PLATFORM_TYPE_SIZE` and including a
-`lor_size_t` typedef to an (optionally unsigned) int size of your choice; _prior_ to including `lightorama.h` or any
-header that includes `platform.h`.
+standard library, using only `stdint.h` for fixed sized int definitions, `stddef.h` for `NULL`, and with minimal usage
+of floating-point arithmetic.
 
 ## Installation
 
@@ -48,18 +45,16 @@ far more channel control options—dramatically reducing bandwidth use compared 
 1. Using a single channel ID.
 2. Using 1-2 "channel bank" bit masks for selecting up to 16 sequential channels. A single channel bank is an 8 bit
    mask. Each "channel group" (16 channels)
-   therefore contains two channel banks, named "high" (channels 1-8, first 
-channel bank)
+   therefore contains two channel banks, named "high" (channels 1-8, first channel bank)
    and "low" (channels 9-16, second channel bank). These seemingly backwards names come from their bit order when
    encoded into the LOR protocol, with the "high" channel bank becoming the highest order bits and vice versa.
-3. Using the previous mode with a channel group offset, which offsets the channel bank masks by a multiple of 16 (the size 
-of a channel group).
+3. Using the previous mode with a channel group offset, which offsets the channel bank masks by a multiple of 16 (the
+   size of a channel group).
 4. Using a single unit ID to automatically select all its channels (rarely usable).
 
 ```
                  Channel Group
                  ┌───────────────────────────────────────────────┐
-                 │                                               │
                  ▼                                               ▼
                  High Channel Bank                Low Channel Bank
                  ┌───────────────────────┬───────────────────────┐
@@ -126,7 +121,7 @@ _Tip:_ Changing `unit_id` to `LOR_UNIT_ALL` would turn off all data on ALL units
 static void turn_off_all_channels(lor_unit_t unit_id) {
     uint8_t msg[128]; // allocate a small data buffer
     
-    lor_size_t written = lor_write_unit_effect(LOR_EFFECT_SET_OFF, NULL, unit_id, msg);
+    int written = lor_write_unit_effect(LOR_EFFECT_SET_OFF, NULL, unit_id, msg);
     
     // ...write msg buffer to destination...
 }
@@ -156,7 +151,7 @@ static void set_channel_half_brightness(lor_unit_t unit_id, lor_channel_t channe
     
     uint8_t msg[128]; // allocate a small data buffer
     
-    lor_size_t written = lor_write_channel_effect(LOR_EFFECT_SET_INTENSITY, &effect, channel_id, unit_id, msg);
+    int written = lor_write_channel_effect(LOR_EFFECT_SET_INTENSITY, &effect, channel_id, unit_id, msg);
     
     // ...write msg buffer to destination...
 }
@@ -186,7 +181,7 @@ static void fade_channels(lor_unit_t unit_id, lor_intensity_t from, lor_intensit
     
     uint8_t msg[128]; // allocate a small data buffer
     
-    lor_size_t written = lor_write_channelset_effect(LOR_EFFECT_FADE, &effect, channelset, unit_id, msg);
+    int written = lor_write_channelset_effect(LOR_EFFECT_FADE, &effect, channelset, unit_id, msg);
     
     // ...write msg buffer to destination...
 }
@@ -199,12 +194,18 @@ fade_channels(0x01, LOR_INTENSITY_MIN, LOR_INTENSITY_MAX, 5.0F);
 ### Memory Allocations
 
 liblightorama does not allocate any memory internally, and requires a `uint8_t *` be passed to functions for writing to
-memory. All write related functions return a `lor_size_t` value (customizable typedef for `size_t` or optimized
-equivalent) indicating the length of the data written in bytes. Please track this value alongside the memory allocation
-size to ensure write calls do not overflow.
+memory. To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest
+write call will not write more than 32 bytes.
 
-To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest write call
-will not write more than 32 bytes.
+### Error Values
+
+This library has limited input validation features by design (e.g. liblightorama assumes that buffers are correctly
+sized and void pointers are of the correct type). liblightorama consists primarily of encoding/decoding functions which
+are mostly used as small elements within function chains when assembling packet structures. Error checking within this
+structure (without an error sum type) is cumbersome, repetitive, and likely to be skipped by most programmers.
+
+As encoding/decoding functions do not return error values, you may consider validating the written byte count return
+value sum against a manually calculated (or previously valid) sample value.
 
 ### Brightness Curves
 

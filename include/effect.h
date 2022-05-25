@@ -27,7 +27,6 @@
 #include <stdint.h>
 
 #include "intensity.h"
-#include "platform.h"
 #include "time.h"
 #include "uid.h"
 
@@ -55,19 +54,21 @@ struct lor_effect_pulse_t {
   lor_time_t halfInterval;
 };
 
-lor_size_t lor_write_channel_effect(lor_effect_t effect,
-                                    const void *effectStruct,
-                                    lor_channel_t channel,
-                                    lor_unit_t unit,
-                                    uint8_t *b);
+int lor_write_channel_effect(lor_effect_t effect,
+                             const void *effectStruct,
+                             lor_channel_t channel,
+                             lor_unit_t unit,
+                             uint8_t *b);
 
-lor_size_t lor_write_channelset_effect(lor_effect_t effect,
-                                       const void *effectStruct,
-                                       lor_channelset_t channelset,
-                                       lor_unit_t unit,
-                                       uint8_t *b);
+int lor_write_channelset_effect(lor_effect_t effect,
+                                const void *effectStruct,
+                                lor_channelset_t channelset,
+                                lor_unit_t unit,
+                                uint8_t *b);
 
-lor_size_t
-lor_write_unit_effect(lor_effect_t effect, const void *effectStruct, lor_unit_t unit, uint8_t *b);
+int lor_write_unit_effect(lor_effect_t effect,
+                          const void *effectStruct,
+                          lor_unit_t unit,
+                          uint8_t *b);
 
 #endif // LIGHTORAMA_EFFECT_H

@@ -24,8 +24,6 @@
 #ifndef LIGHTORAMA_LIGHTORAMA_H
 #define LIGHTORAMA_LIGHTORAMA_H
 
-#include "platform.h"
-
 #include "effect.h"
 #include "heartbeat.h"
 #include "intensity.h"

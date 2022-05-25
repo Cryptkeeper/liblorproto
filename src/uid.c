@@ -23,12 +23,12 @@
  */
 #include "../include/uid.h"
 
-lor_size_t lor_write_unit(lor_unit_t unit, uint8_t *b) {
+int lor_write_unit(lor_unit_t unit, uint8_t *b) {
   b[0] = unit;
   return 1;
 }
 
-lor_size_t lor_read_unit(lor_unit_t *unit, const uint8_t *b) {
+int lor_read_unit(lor_unit_t *unit, const uint8_t *b) {
   *unit = b[0];
   return 1;
 }
@@ -43,10 +43,10 @@ lor_size_t lor_read_unit(lor_unit_t *unit, const uint8_t *b) {
 
 #define LOR_CHANNEL_MASK_OFFSET 0x80
 
-lor_size_t lor_write_channel(lor_channel_t channel, uint8_t *b) {
+int lor_write_channel(lor_channel_t channel, uint8_t *b) {
   const uint8_t offset = channel / LOR_CHANNEL_GROUP_MULTIPLIER;
 
-  lor_size_t n = 0;
+  int n = 0;
 
   if (offset == 0) {
     b[n++] = channel + LOR_CHANNEL_MASK_NO_OFFSET_MIN;
@@ -58,7 +58,7 @@ lor_size_t lor_write_channel(lor_channel_t channel, uint8_t *b) {
   return n;
 }
 
-lor_size_t lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
+int lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
   const uint8_t idx = b[0];
 
   if (idx >= LOR_CHANNEL_MASK_NO_OFFSET_MIN && idx <= LOR_CHANNEL_MASK_NO_OFFSET_MAX) {
@@ -78,8 +78,8 @@ lor_size_t lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
 #define LOR_CHANNELSET_MASK_8L 0x40
 #define LOR_CHANNELSET_MASK_8H 0x80
 
-lor_size_t lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
-  lor_size_t n = 0;
+int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
+  int n = 0;
 
   const uint8_t bankL = (channelset.channels & 0x00FF);
   const uint8_t bankH = (channelset.channels & 0xFF00) >> 8;
@@ -104,8 +104,8 @@ lor_size_t lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
   return n;
 }
 
-lor_size_t lor_read_channelset(lor_channelset_t *channelset, uint8_t cmd, const uint8_t *b) {
-  lor_size_t n = 0;
+int lor_read_channelset(lor_channelset_t *channelset, uint8_t cmd, const uint8_t *b) {
+  int n = 0;
 
   if ((cmd & LOR_EFFECT_MASK_MULTIPART) == LOR_EFFECT_MASK_MULTIPART) {
     const uint8_t offset = b[n++];
