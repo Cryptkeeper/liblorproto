@@ -26,6 +26,10 @@ install(TARGETS lightorama
         LIBRARY DESTINATION lib/lightorama
         PUBLIC_HEADER DESTINATION include/lightorama)
 
+add_executable(test_channelset test/channelset.c)
+target_link_libraries(test_channelset lightorama)
+add_test(channelset test_channelset)
+
 add_executable(test_time test/time.c)
 target_link_libraries(test_time lightorama)
 add_test(time test_time)
