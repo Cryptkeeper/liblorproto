@@ -75,8 +75,9 @@ int lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
   }
 }
 
-#define LOR_CHANNELSET_MASK_8L 0x40
-#define LOR_CHANNELSET_MASK_8H 0x80
+#define LOR_CHANNELSET_MASK_OFFSET 0b00111111 /* 0x3F */
+#define LOR_CHANNELSET_MASK_8L     0b01000000 /* 0x40 */
+#define LOR_CHANNELSET_MASK_8H     0b10000000 /* 0x80 */
 
 int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
   int n = 0;
@@ -86,11 +87,11 @@ int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
 
   if (channelset.offset > 0) {
     if (bankL > 0 && bankH > 0) {
-      b[n++] = channelset.offset;
+      b[n++] = (channelset.offset & LOR_CHANNELSET_MASK_OFFSET);
     } else if (bankL > 0) {
-      b[n++] = channelset.offset | LOR_CHANNELSET_MASK_8L;
+      b[n++] = (channelset.offset & LOR_CHANNELSET_MASK_OFFSET) | LOR_CHANNELSET_MASK_8L;
     } else if (bankH > 0) {
-      b[n++] = channelset.offset | LOR_CHANNELSET_MASK_8H;
+      b[n++] = (channelset.offset & LOR_CHANNELSET_MASK_OFFSET) | LOR_CHANNELSET_MASK_8H;
     }
   }
 
@@ -111,13 +112,13 @@ int lor_read_channelset(lor_channelset_t *channelset, uint8_t cmd, const uint8_t
     const uint8_t offset = b[n++];
 
     if ((offset & LOR_CHANNELSET_MASK_8H) == LOR_CHANNELSET_MASK_8H) {
-      channelset->offset = (offset & ~LOR_CHANNELSET_MASK_8H);
+      channelset->offset = offset & LOR_CHANNELSET_MASK_OFFSET;
       channelset->channels = (uint16_t)(b[n++] << 8);
     } else if ((offset & LOR_CHANNELSET_MASK_8L) == LOR_CHANNELSET_MASK_8L) {
-      channelset->offset = (offset & ~LOR_CHANNELSET_MASK_8L);
+      channelset->offset = offset & LOR_CHANNELSET_MASK_OFFSET;
       channelset->channels = (uint16_t)(b[n++]);
     } else if (offset > 0) {
-      channelset->offset = offset;
+      channelset->offset = offset & LOR_CHANNELSET_MASK_OFFSET;
       const uint8_t lsb = b[n++];
       channelset->channels = (uint16_t)(b[n++] << 8) | lsb;
     }

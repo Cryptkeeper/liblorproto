@@ -44,6 +44,8 @@ int lor_write_channel(lor_channel_t channel, uint8_t *b);
 
 int lor_read_channel(lor_channel_t *channel, const uint8_t *b);
 
+#define LOR_CHANNELSET_OFFSET_MAX ((1 << 6) - 1)
+
 typedef struct lor_channelset_t {
   uint8_t offset;
   uint16_t channels;
