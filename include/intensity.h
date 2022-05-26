@@ -37,6 +37,8 @@ int lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf);
 
 typedef lor_intensity_t (*lor_intensity_curve_t)(float normal);
 
+lor_intensity_t lor_intensity_curve_vendor(float normal);
+
 lor_intensity_t lor_intensity_curve_linear(float normal);
 
 lor_intensity_t lor_intensity_curve_squared(float normal);

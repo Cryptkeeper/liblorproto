@@ -36,6 +36,17 @@ int lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf) {
 #define LOR_CLAMPF(val, min, max) ((val) < (min) ? (min) : ((val) > (max)) ? (max) : (val))
 #define LOR_INTENSITY_RANGE       ((lor_intensity_t)(LOR_INTENSITY_MAX - LOR_INTENSITY_MIN))
 
+lor_intensity_t lor_intensity_curve_vendor(float normal) {
+  const float clamped = LOR_CLAMPF(normal, 0, 1);
+  if (clamped == 0) {
+    return LOR_INTENSITY_MIN;
+  } else if (clamped == 1) {
+    return LOR_INTENSITY_MAX;
+  } else {
+    return ((lor_intensity_t)0xE4) - (lor_intensity_t)(clamped * 2);
+  }
+}
+
 lor_intensity_t lor_intensity_curve_linear(float normal) {
   return ((lor_intensity_t)(LOR_CLAMPF(normal, 0, 1) * LOR_INTENSITY_RANGE)) + LOR_INTENSITY_MIN;
 }
