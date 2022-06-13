@@ -49,9 +49,9 @@ int lor_write_channel(lor_channel_t channel, uint8_t *b) {
   int n = 0;
 
   if (offset == 0) {
-    b[n++] = channel + LOR_CHANNEL_MASK_NO_OFFSET_MIN;
+    b[n++] = channel | LOR_CHANNEL_MASK_NO_OFFSET_MIN;
   } else {
-    b[n++] = (channel % 16) + LOR_CHANNEL_MASK_OFFSET_MIN;
+    b[n++] = (channel % LOR_CHANNEL_GROUP_MULTIPLIER) | LOR_CHANNEL_MASK_OFFSET_MIN;
     b[n++] = offset | LOR_CHANNEL_MASK_OFFSET;
   }
 
@@ -62,12 +62,12 @@ int lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
   const uint8_t idx = b[0];
 
   if (idx >= LOR_CHANNEL_MASK_NO_OFFSET_MIN && idx <= LOR_CHANNEL_MASK_NO_OFFSET_MAX) {
-    *channel = idx - LOR_CHANNEL_MASK_NO_OFFSET_MIN;
+    *channel = idx & ~LOR_CHANNEL_MASK_NO_OFFSET_MIN;
 
     return 1;
   } else if (idx >= LOR_CHANNEL_MASK_OFFSET_MIN && idx <= LOR_CHANNEL_MASK_OFFSET_MAX) {
     const uint8_t offset = b[1] & ~LOR_CHANNEL_MASK_OFFSET;
-    *channel = (idx - LOR_CHANNEL_MASK_OFFSET_MIN) + (offset * LOR_CHANNEL_GROUP_MULTIPLIER);
+    *channel = (idx & ~LOR_CHANNEL_MASK_OFFSET_MIN) + (offset * LOR_CHANNEL_GROUP_MULTIPLIER);
 
     return 2;
   } else {
