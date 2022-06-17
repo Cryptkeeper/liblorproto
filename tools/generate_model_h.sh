@@ -59,6 +59,3 @@ done
 # End header definition
 echo "
 #endif //LIGHTORAMA_MODEL_H" >> $HEADER_FILE
-
-# Remove $DEVICE_FILE download
-rm -f $DEVICE_FILE
