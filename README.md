@@ -22,8 +22,8 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 You may optionally use `lightorama/lightorama.h` to automatically include all library header files.
 
 liblightorama strives to be _generally_ portable (typically for use in microcontrollers) and limits its usage of the
-standard library, using only `stdint.h` for fixed sized int definitions, `stddef.h` for `NULL`, and with minimal usage
-of floating-point arithmetic.
+standard library, using only `stdint.h` for fixed sized int definitions and with minimal usage of floating-point
+arithmetic.
 
 ## Installation
 
