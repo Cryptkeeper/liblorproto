@@ -37,6 +37,39 @@ liblightorama uses [CMake](https://cmake.org/) for building and packaging the li
 
 If optionally installed, `install_manifest.txt` will be created, containing the installed file paths for easy removal.
 
+## Packet Structure
+
+The majority of data is lighting control packets. Each follows a basic structure, prefixed by the target unit ID, and
+followed by a table directory and its corresponding data entry rows, in matching order. The corresponding data
+structures used by liblightorama for each field are shown in the diagram below.
+
+```
+Light Control Packet
+┌─────────────────┐
+│Unit             ├─► lor_unit_id
+├────────┬────────┤
+│Effect  │Channel ├─► lor_effect_t (4 bits)
+├────────┴────────┤   uint8_t (4 bits)
+│Variable length  │
+│effect struct    ├─► struct lor_effect_*_t
+│                 │   union lor_effect_any_t
+│[0,4] bytes      │
+├─────────────────┤
+│Variable length  │
+│channel struct   ├─► lor_channelset_t
+│                 │   lor_channel_t
+│[1,2] bytes      │
+└─────────────────┘
+```
+
+### Implementation Notes
+
+* Additional packet structures exist for remote management/firmware update/system configuration feature sets, but are
+  entirely undocumented and more time-consuming to explore. As a result, liblightorama focuses purely on lighting
+  control packets.
+* A `union lor_effect_any_t` type has been provided to reduce code complexity when deserializing effect data structures.
+  It is solely a union of the other individually defined effect data structures.
+
 ## Referencing Channels
 
 The LOR protocol has four distinct ways to reference channels. Each becomes increasingly complex, but at the benefit of
