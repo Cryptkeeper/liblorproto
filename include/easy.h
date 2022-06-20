@@ -21,15 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_LIGHTORAMA_H
-#define LIGHTORAMA_LIGHTORAMA_H
+#ifndef LIGHTORAMA_EASY_H
+#define LIGHTORAMA_EASY_H
 
-#include "easy.h"
 #include "effect.h"
-#include "heartbeat.h"
-#include "intensity.h"
-#include "time.h"
 #include "uid.h"
-#include "version.h"
 
-#endif // LIGHTORAMA_LIGHTORAMA_H
+int lor_write_channel_effect(lor_effect_t effect,
+                             const void *effectStruct,
+                             lor_channel_t channel,
+                             lor_unit_t unit,
+                             uint8_t *b);
+
+int lor_write_channelset_effect(lor_effect_t effect,
+                                const void *effectStruct,
+                                lor_channelset_t channelset,
+                                lor_unit_t unit,
+                                uint8_t *b);
+
+int lor_write_unit_effect(lor_effect_t effect,
+                          const void *effectStruct,
+                          lor_unit_t unit,
+                          uint8_t *b);
+
+#endif // LIGHTORAMA_EASY_H

@@ -66,21 +66,4 @@ int lor_read_effect_struct(lor_effect_t effect,
                            union lor_effect_any_t *effectStruct,
                            const uint8_t *b);
 
-int lor_write_channel_effect(lor_effect_t effect,
-                             const void *effectStruct,
-                             lor_channel_t channel,
-                             lor_unit_t unit,
-                             uint8_t *b);
-
-int lor_write_channelset_effect(lor_effect_t effect,
-                                const void *effectStruct,
-                                lor_channelset_t channelset,
-                                lor_unit_t unit,
-                                uint8_t *b);
-
-int lor_write_unit_effect(lor_effect_t effect,
-                          const void *effectStruct,
-                          lor_unit_t unit,
-                          uint8_t *b);
-
 #endif // LIGHTORAMA_EFFECT_H

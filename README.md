@@ -11,6 +11,7 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 
 | Header                                          | Purpose                                                                                                                           |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| [`lightorama/easy.h`](include/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                               |
 | [`lightorama/effect.h`](include/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                             |
 | [`lightorama/heartbeat.h`](include/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                |
 | [`lightorama/intensity.h`](include/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values    |

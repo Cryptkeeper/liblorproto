@@ -14,6 +14,7 @@ if (APPLE)
 endif ()
 
 add_library(lightorama
+        src/easy.c
         src/effect.c
         src/heartbeat.c
         src/intensity.c
