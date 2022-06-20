@@ -33,51 +33,51 @@ int lor_read_unit(lor_unit_t *unit, const uint8_t *b) {
   return 1;
 }
 
-#define LOR_CHANNEL_GROUP_MULTIPLIER 64
-
-#define LOR_CHANNEL_MASK_NO_OFFSET_MIN 0x80
-#define LOR_CHANNEL_MASK_NO_OFFSET_MAX 0xBF
-
-#define LOR_CHANNEL_MASK_OFFSET_MIN 0xC0
-#define LOR_CHANNEL_MASK_OFFSET_MAX 0xFF
-
-#define LOR_CHANNEL_MASK_OFFSET 0x80
+// Light-O-Rama protocol requires all values be non-zero, so the highest order bit
+// seems to be static true, which is applied via `LOR_CHANNEL_OPT`
+#define LOR_CHANNEL_OPT            0b10000000                     /* 0x80 */
+#define LOR_CHANNEL_OPT_HAS_OFFSET (0b01000000 | LOR_CHANNEL_OPT) /* 0xC0 */
+#define LOR_CHANNEL_OPT_DATA       0b00111111                     /* 0x3F */
+#define LOR_CHANNEL_OPT_DATA_MAX   (1 << 6)                       /* 64 */
 
 int lor_write_channel(lor_channel_t channel, uint8_t *b) {
-  const uint8_t offset = channel / LOR_CHANNEL_GROUP_MULTIPLIER;
+  // TODO: implement overflow protection on offset math (/,%)?
+  const uint8_t offset = channel / LOR_CHANNEL_OPT_DATA_MAX;
 
   int n = 0;
 
   if (offset == 0) {
-    b[n++] = channel | LOR_CHANNEL_MASK_NO_OFFSET_MIN;
+    b[n++] = channel | LOR_CHANNEL_OPT;
   } else {
-    b[n++] = (channel % LOR_CHANNEL_GROUP_MULTIPLIER) | LOR_CHANNEL_MASK_OFFSET_MIN;
-    b[n++] = offset | LOR_CHANNEL_MASK_OFFSET;
+    b[n++] = (channel % LOR_CHANNEL_OPT_DATA_MAX) | LOR_CHANNEL_OPT_HAS_OFFSET;
+    b[n++] = offset | LOR_CHANNEL_OPT;
   }
 
   return n;
 }
 
 int lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
-  const uint8_t idx = b[0];
+  const uint8_t opts = b[0];
 
-  if (idx >= LOR_CHANNEL_MASK_NO_OFFSET_MIN && idx <= LOR_CHANNEL_MASK_NO_OFFSET_MAX) {
-    *channel = idx & ~LOR_CHANNEL_MASK_NO_OFFSET_MIN;
+  if (opts & LOR_CHANNEL_OPT) {
+    if (opts & LOR_CHANNEL_OPT_HAS_OFFSET) {
+      const uint8_t offset = b[1] & ~LOR_CHANNEL_OPT;
+      *channel = (opts & LOR_CHANNEL_OPT_DATA) + (offset * LOR_CHANNEL_OPT_DATA_MAX);
 
-    return 1;
-  } else if (idx >= LOR_CHANNEL_MASK_OFFSET_MIN && idx <= LOR_CHANNEL_MASK_OFFSET_MAX) {
-    const uint8_t offset = b[1] & ~LOR_CHANNEL_MASK_OFFSET;
-    *channel = (idx & ~LOR_CHANNEL_MASK_OFFSET_MIN) + (offset * LOR_CHANNEL_GROUP_MULTIPLIER);
+      return 2;
+    } else {
+      *channel = opts & ~LOR_CHANNEL_OPT;
 
-    return 2;
-  } else {
-    return 0;
+      return 1;
+    }
   }
+
+  return 0;
 }
 
-#define LOR_CHANNELSET_MASK_OFFSET 0b00111111 /* 0x3F */
-#define LOR_CHANNELSET_MASK_8L     0b01000000 /* 0x40 */
-#define LOR_CHANNELSET_MASK_8H     0b10000000 /* 0x80 */
+#define LOR_CHANNELSET_OPT_8L   0b01000000 /* 0x40 */
+#define LOR_CHANNELSET_OPT_8H   0b10000000 /* 0x80 */
+#define LOR_CHANNELSET_OPT_DATA 0b00111111 /* 0x3F */
 
 int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
   int n = 0;
@@ -86,12 +86,14 @@ int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
   const uint8_t bankH = (channelset.channels & 0xFF00) >> 8;
 
   if (channelset.offset > 0) {
+    const uint8_t offset = channelset.offset & LOR_CHANNELSET_OPT_DATA;
+
     if (bankL > 0 && bankH > 0) {
-      b[n++] = (channelset.offset & LOR_CHANNELSET_MASK_OFFSET);
+      b[n++] = offset;
     } else if (bankL > 0) {
-      b[n++] = (channelset.offset & LOR_CHANNELSET_MASK_OFFSET) | LOR_CHANNELSET_MASK_8L;
+      b[n++] = offset | LOR_CHANNELSET_OPT_8L;
     } else if (bankH > 0) {
-      b[n++] = (channelset.offset & LOR_CHANNELSET_MASK_OFFSET) | LOR_CHANNELSET_MASK_8H;
+      b[n++] = offset | LOR_CHANNELSET_OPT_8H;
     }
   }
 
@@ -108,27 +110,27 @@ int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
 int lor_read_channelset(lor_channelset_t *channelset, uint8_t cmd, const uint8_t *b) {
   int n = 0;
 
-  if ((cmd & LOR_EFFECT_MASK_MULTIPART) == LOR_EFFECT_MASK_MULTIPART) {
-    const uint8_t offset = b[n++];
+  if (cmd & LOR_OFFSET_OPT_MULTIPART) {
+    const uint8_t opts = b[n++];
 
-    if ((offset & LOR_CHANNELSET_MASK_8H) == LOR_CHANNELSET_MASK_8H) {
-      channelset->offset = offset & LOR_CHANNELSET_MASK_OFFSET;
+    if (opts & LOR_CHANNELSET_OPT_8H) {
+      channelset->offset = opts & LOR_CHANNELSET_OPT_DATA;
       channelset->channels = (uint16_t)(b[n++] << 8);
-    } else if ((offset & LOR_CHANNELSET_MASK_8L) == LOR_CHANNELSET_MASK_8L) {
-      channelset->offset = offset & LOR_CHANNELSET_MASK_OFFSET;
+    } else if (opts & LOR_CHANNELSET_OPT_8L) {
+      channelset->offset = opts & LOR_CHANNELSET_OPT_DATA;
       channelset->channels = (uint16_t)(b[n++]);
-    } else if (offset > 0) {
-      channelset->offset = offset & LOR_CHANNELSET_MASK_OFFSET;
+    } else if (opts > 0) {
+      channelset->offset = opts & LOR_CHANNELSET_OPT_DATA;
       const uint8_t lsb = b[n++];
       channelset->channels = (uint16_t)(b[n++] << 8) | lsb;
     }
-  } else if ((cmd & LOR_EFFECT_MASK_0) == LOR_EFFECT_MASK_0) {
+  } else if (cmd & LOR_OFFSET_OPT_UNIT) {
     return n;
-  } else if ((cmd & LOR_EFFECT_MASK_8L) == LOR_EFFECT_MASK_8L) {
+  } else if (cmd & LOR_OFFSET_OPT_8L) {
     channelset->channels = (uint16_t)(b[n++]);
-  } else if ((cmd & LOR_EFFECT_MASK_8H) == LOR_EFFECT_MASK_8H) {
+  } else if (cmd & LOR_OFFSET_OPT_8H) {
     channelset->channels = (uint16_t)(b[n++]) << 8;
-  } else if ((cmd & LOR_EFFECT_MASK_16) == LOR_EFFECT_MASK_16) {
+  } else if (cmd & LOR_OFFSET_OPT_16) {
     const uint8_t lsb = b[n++];
     channelset->channels = (uint16_t)(b[n++] << 8) | lsb;
   }

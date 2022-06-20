@@ -55,11 +55,10 @@ int lor_write_channelset(lor_channelset_t channelset, uint8_t *b);
 
 int lor_read_channelset(lor_channelset_t *channelset, uint8_t cmd, const uint8_t *b);
 
-#define LOR_EFFECT_MASK_NONE      0x00
-#define LOR_EFFECT_MASK_16        0x10
-#define LOR_EFFECT_MASK_8H        0x20
-#define LOR_EFFECT_MASK_8L        0x30
-#define LOR_EFFECT_MASK_0         0x40
-#define LOR_EFFECT_MASK_MULTIPART 0x50
+#define LOR_OFFSET_OPT_16        0x10
+#define LOR_OFFSET_OPT_8H        0x20
+#define LOR_OFFSET_OPT_8L        0x30
+#define LOR_OFFSET_OPT_UNIT      0x40
+#define LOR_OFFSET_OPT_MULTIPART 0x50
 
 #endif // LIGHTORAMA_UID_H

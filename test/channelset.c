@@ -42,26 +42,26 @@ int main() {
 
       lor_write_channelset(channelset, b);
 
-      uint8_t effect_mask;
+      uint8_t opts;
 
-      // copy of `lor_get_channelset_effect_mask` from src/effect.c
-      // used to generate an effect mask valid within an encoded channelset context
+      // copy of `lor_get_channelset_opts` from src/effect.c
+      // used to generate a set of bitflag options valid within an encoded channelset context
       if (channelset.offset > 0) {
-        effect_mask = LOR_EFFECT_MASK_MULTIPART;
+        opts = LOR_OFFSET_OPT_MULTIPART;
       } else {
         const uint8_t bank0 = (channelset.channels & 0x00FF);
         const uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
 
         if (bank0 > 0x00 && bank1 > 0x00) {
-          effect_mask = LOR_EFFECT_MASK_16;
+          opts = LOR_OFFSET_OPT_16;
         } else if (bank0 > 0) {
-          effect_mask = LOR_EFFECT_MASK_8L;
+          opts = LOR_OFFSET_OPT_8L;
         } else {
-          effect_mask = LOR_EFFECT_MASK_8H;
+          opts = LOR_OFFSET_OPT_8H;
         }
       }
 
-      lor_read_channelset(&read_channelset, effect_mask, b);
+      lor_read_channelset(&read_channelset, opts, b);
 
       assert(channelset.offset == read_channelset.offset);
       assert(channelset.channels == read_channelset.channels);
