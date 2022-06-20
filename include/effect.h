@@ -54,6 +54,18 @@ struct lor_effect_pulse_t {
   lor_time_t halfInterval;
 };
 
+union lor_effect_any_t {
+  struct lor_effect_setintensity_t setIntensity;
+  struct lor_effect_fade_t fade;
+  struct lor_effect_pulse_t pulse;
+};
+
+int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, uint8_t *b);
+
+int lor_read_effect_struct(lor_effect_t effect,
+                           union lor_effect_any_t *effectStruct,
+                           const uint8_t *b);
+
 int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,
                              lor_channel_t channel,

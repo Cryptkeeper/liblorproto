@@ -23,13 +23,7 @@
  */
 #include "../include/effect.h"
 
-#include <stddef.h>
-
-static int lor_serialize_effect(lor_effect_t effect, const void *effectStruct, uint8_t *b) {
-  if (effectStruct == NULL) {
-    return 0;
-  }
-
+int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, uint8_t *b) {
   switch (effect) {
   case LOR_EFFECT_SET_INTENSITY: {
     struct lor_effect_setintensity_t md = *((struct lor_effect_setintensity_t *)effectStruct);
@@ -56,6 +50,34 @@ static int lor_serialize_effect(lor_effect_t effect, const void *effectStruct, u
   }
 }
 
+int lor_read_effect_struct(lor_effect_t effect,
+                           union lor_effect_any_t *effectStruct,
+                           const uint8_t *b) {
+  switch (effect) {
+  case LOR_EFFECT_SET_INTENSITY: {
+    struct lor_effect_setintensity_t *md = &effectStruct->setIntensity;
+    return lor_read_intensity(&md->intensity, b);
+  }
+
+  case LOR_EFFECT_FADE: {
+    struct lor_effect_fade_t *md = &effectStruct->fade;
+    int n = 0;
+    n += lor_read_intensity(&md->startIntensity, b);
+    n += lor_read_intensity(&md->endIntensity, &b[n]);
+    n += lor_read_time(&md->duration, &b[n]);
+    return n;
+  }
+
+  case LOR_EFFECT_PULSE: {
+    struct lor_effect_pulse_t *md = &effectStruct->pulse;
+    return lor_read_time(&md->halfInterval, b);
+  }
+
+  default:
+    return 0;
+  }
+}
+
 int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,
                              lor_channel_t channel,
@@ -64,7 +86,7 @@ int lor_write_channel_effect(lor_effect_t effect,
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = effect;
-  n += lor_serialize_effect(effect, effectStruct, &b[n]);
+  n += lor_write_effect_struct(effect, effectStruct, &b[n]);
   n += lor_write_channel(channel, &b[n]);
   return n;
 }
@@ -94,7 +116,7 @@ int lor_write_channelset_effect(lor_effect_t effect,
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = effect | lor_get_channelset_effect_mask(channelset);
-  n += lor_serialize_effect(effect, effectStruct, &b[n]);
+  n += lor_write_effect_struct(effect, effectStruct, &b[n]);
   n += lor_write_channelset(channelset, &b[n]);
   return n;
 }
@@ -106,6 +128,6 @@ int lor_write_unit_effect(lor_effect_t effect,
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = effect | LOR_EFFECT_MASK_0;
-  n += lor_serialize_effect(effect, effectStruct, &b[n]);
+  n += lor_write_effect_struct(effect, effectStruct, &b[n]);
   return n;
 }
