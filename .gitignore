@@ -15,4 +15,6 @@ liblightorama.a
 lightorama.cbp
 
 # Test binaries
+test_channelset
 test_time
+
