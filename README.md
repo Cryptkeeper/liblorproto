@@ -223,6 +223,42 @@ static void fade_channels(lor_unit_t unit_id, lor_intensity_t from, lor_intensit
 fade_channels(0x01, LOR_INTENSITY_MIN, LOR_INTENSITY_MAX, 5.0F);
 ```
 
+### Complex Effects
+
+Complex effects allow the unit to apply two effects simultaneously to a single channel (with limited options). The "
+primary" effect, sent first, must be stateless — i.e. no `effectStruct` option — which reduces your options
+to `LOR_EFFECT_TWINKLE` and `LOR_EFFECT_SHIMMER`. The "secondary" effect is followed by its respective metadata struct,
+restricting it to supporting `LOR_EFFECT_SET_LIGHTS`, `LOR_EFFECT_FADE`, or `LOR_EFFECT_PULSE`.
+
+See the [Complex Effects](#1-complex-effects) section of [Library Structure](#library-structure) for more information.
+
+```C
+#include <lightorama/lightorama.h>
+
+static void fade_channel_while_shimmering(lor_unit_t unit_id, lor_channel_t channel, lor_intensity_t from, lor_intensity_t to, float seconds) {
+    struct lor_effect_fade_t effect;
+    effect.startIntensity = from;
+    effect.endIntensity = to;
+    effect.duration = lor_seconds_to_time(seconds);
+    
+    uint8_t msg[128]; // allocate a small data buffer
+    
+    int written = 0;
+    
+    // manual assembly of a complex effect command using the various library methods
+    written += lor_write_unit(unit_id, &msg[written]);
+    msg[written++] = LOR_EFFECT_SHIMMER; // primary effect, stateless
+    written += lor_write_channel(channel, &msg[written]);
+    msg[written++] = LOR_EFFECT_FADE; // secondary effect, followed by metadata struct
+    written += lor_write_effect_struct(LOR_EFFECT_FADE, &effect, &msg[written]);
+    
+    // using pre-made helper function from `easy.h`
+    written += lor_write_complex_effect(LOR_EFFECT_SHIMMER, LOR_EFFECT_FADE, &effect, channel, unit, &msg[written]);
+    
+    // ...write msg buffer to destination...
+}
+```
+
 ## Library Structure
 
 ### Memory Allocations
@@ -264,6 +300,21 @@ Each brightness curve is designed to return a `lor_intensity_t` object represent
 the normalized input, as adapted by the curve. Several consts have been defined
 within [`intensity.h`](include/intensity.h) to avoid using magic numbers in your implementations.
 See [`intensity.c`](src/intensity.c) for implementation examples.
+
+#### Complex Effects
+
+Complex effects allow the unit to apply two effects simultaneously to a single channel (with limited options). The "
+primary" effect, sent first, must be stateless — i.e. no `effectStruct` option — which reduces your options
+to `LOR_EFFECT_TWINKLE` and `LOR_EFFECT_SHIMMER`. The "secondary" effect is followed by its respective metadata struct,
+restricting it to supporting `LOR_EFFECT_SET_LIGHTS`, `LOR_EFFECT_FADE`, or `LOR_EFFECT_PULSE`.
+
+The underlying LOR protocol functionality seems to only support single channel IDs (i.e. `lor_channel_t`). However, any
+single channel ID that is encoded within a single byte, is padded by an additional `0x81` byte. As a result, the encoded
+channel routing bytes should always be exactly two bytes in length.
+
+liblightorama has provided a modified `lor_write_channel` implementation (`lor_write_channel2`)
+within [`src/easy.c`](src/easy.c) that corresponds to this unique behavior. A pre-made helper function for encoding
+complex effects (`lor_write_complex_effect`) is provided as a part of [`include/easy.h`](include/easy.h).
 
 ## Compatibility
 

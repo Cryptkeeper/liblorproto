@@ -76,3 +76,26 @@ int lor_write_unit_effect(lor_effect_t effect,
   n += lor_write_effect_struct(effect, effectStruct, &b[n]);
   return n;
 }
+
+static int lor_write_channel2(lor_channel_t channel, uint8_t *b) {
+  int written = lor_write_channel(channel, b);
+  if (written < 2) {
+    b[written++] = 0x81;
+  }
+  return written;
+}
+
+int lor_write_complex_effect(lor_effect_t primaryEffect,
+                             lor_effect_t secondaryEffect,
+                             const void *effectStruct,
+                             lor_channel_t channel,
+                             lor_unit_t unit,
+                             uint8_t *b) {
+  int n = 0;
+  n += lor_write_unit(unit, &b[n]);
+  b[n++] = primaryEffect;
+  n += lor_write_channel2(channel, &b[n]);
+  b[n++] = secondaryEffect;
+  n += lor_write_effect_struct(secondaryEffect, effectStruct, &b[n]);
+  return n;
+}
