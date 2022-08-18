@@ -47,7 +47,7 @@ structures used by liblightorama for each field are shown in the diagram below.
 ```
 Light Control Packet
 ┌─────────────────┐
-│Unit             ├─► lor_unit_id
+│Unit             ├─► lor_unit_t
 ├────────┬────────┤
 │Effect  │Channel ├─► lor_effect_t (4 bits)
 ├────────┴────────┤   uint8_t (4 bits)
