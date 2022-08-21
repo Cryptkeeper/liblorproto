@@ -286,10 +286,11 @@ underlying normalized values.
 
 #### Pre-implemented Brightness Curves
 
-| Function | Description |
-| --- | --- |
-| `lor_intensity_curve_linear` | Encodes the normalized value as its direct LOR protocol equivalent value without changes |
+| Function                      | Description                                                                                          |
+|-------------------------------|------------------------------------------------------------------------------------------------------|
+| `lor_intensity_curve_linear`  | Encodes the normalized value as its direct LOR protocol equivalent value without changes             |
 | `lor_intensity_curve_squared` | A smoothed version of `lor_intensity_curve_linear` designed to emphasis changes in brightness values |
+| `lor_intensity_curve_vendor`  | The most vanilla intensity curve for anyone with the goal of recreating a Light-O-Rama look          |
 
 #### Custom Brightness Curves
 

@@ -43,7 +43,7 @@ lor_intensity_t lor_intensity_curve_vendor(float normal) {
   } else if (clamped == 1) {
     return LOR_INTENSITY_MAX;
   } else {
-    return ((lor_intensity_t)0xE4) - (lor_intensity_t)(clamped * 2);
+    return ((lor_intensity_t)0xE4) - (lor_intensity_t)(clamped * 200);
   }
 }
 
