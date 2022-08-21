@@ -24,9 +24,7 @@
 #ifndef LIGHTORAMA_TIME_H
 #define LIGHTORAMA_TIME_H
 
-#include <stdint.h>
-
-typedef uint16_t lor_time_t;
+#include "coretypes.h"
 
 #define LOR_TIME_MAX         ((lor_time_t)0x8014)
 #define LOR_TIME_MAX_SECONDS 25.0F

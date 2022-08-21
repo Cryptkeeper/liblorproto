@@ -24,8 +24,7 @@
 #ifndef LIGHTORAMA_EASY_H
 #define LIGHTORAMA_EASY_H
 
-#include "effect.h"
-#include "uid.h"
+#include "coretypes.h"
 
 int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,

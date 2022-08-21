@@ -24,9 +24,7 @@
 #ifndef LIGHTORAMA_UID_H
 #define LIGHTORAMA_UID_H
 
-#include <stdint.h>
-
-typedef uint8_t lor_unit_t;
+#include "coretypes.h"
 
 #define LOR_UNIT_MIN ((lor_unit_t)0x01)
 #define LOR_UNIT_MAX ((lor_unit_t)0xF0)
@@ -38,18 +36,16 @@ int lor_write_unit(lor_unit_t unit, uint8_t *b);
 
 int lor_read_unit(lor_unit_t *unit, const uint8_t *b);
 
-typedef uint16_t lor_channel_t;
-
 int lor_write_channel(lor_channel_t channel, uint8_t *b);
 
 int lor_read_channel(lor_channel_t *channel, const uint8_t *b);
 
 #define LOR_CHANNELSET_OFFSET_MAX ((1 << 6) - 1)
 
-typedef struct lor_channelset_t {
+struct lor_channelset_t {
   uint8_t offset;
   uint16_t channels;
-} lor_channelset_t;
+}; // typedef'd by coretypes.h
 
 int lor_write_channelset(lor_channelset_t channelset, uint8_t *b);
 

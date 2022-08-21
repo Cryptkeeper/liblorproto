@@ -23,6 +23,8 @@
  */
 #include "../include/heartbeat.h"
 
+#include "../include/uid.h"
+
 int lor_write_unit_heartbeat(lor_unit_t unit, uint8_t *b) {
   int n = 0;
   n += lor_write_unit(unit, b);

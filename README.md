@@ -11,6 +11,7 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 
 | Header                                          | Purpose                                                                                                                           |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| [`lightorama/coretypes.h`](include/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                          |
 | [`lightorama/easy.h`](include/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                               |
 | [`lightorama/effect.h`](include/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                             |
 | [`lightorama/heartbeat.h`](include/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                |
@@ -22,9 +23,10 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 
 You may optionally use `lightorama/lightorama.h` to automatically include all library header files.
 
-liblightorama strives to be _generally_ portable (typically for use in microcontrollers) and limits its usage of the
-standard library, using only `stdint.h` for fixed sized int definitions and with minimal usage of floating-point
-arithmetic.
+liblightorama strives to be fairly portable (typically for use in microcontrollers) and requires no external
+dependencies or headers. The few core data types used by liblightorama (e.g. fixed size ints) are defined
+in [`include/coretypes.h`](include/coretypes.h). Limited use of floating-point arithmetic is present in
+the [`intensity.c`](src/intensity.c) math functions.
 
 ## Installation
 

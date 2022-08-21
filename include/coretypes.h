@@ -21,34 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/time.h"
+#ifndef LIGHTORAMA_CORETYPES_H
+#define LIGHTORAMA_CORETYPES_H
 
-#define LOR_CLAMPF(x, min, max) (x < min ? min : (x > max ? max : x))
+typedef unsigned char uint8_t;
 
-lor_time_t lor_seconds_to_time(float seconds) {
-  seconds = LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
-  return (lor_time_t)(LOR_TIME_MIN / (seconds / LOR_TIME_MIN_SECONDS));
-}
+typedef uint8_t lor_effect_t;    // see effect.h
+typedef uint8_t lor_intensity_t; // see intensity.h
+typedef uint8_t lor_unit_t;      // see uid.h
 
-float lor_time_to_seconds(uint16_t time) {
-  const float seconds = (LOR_TIME_MIN / (float)time) * LOR_TIME_MIN_SECONDS;
-  return LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
-}
+typedef unsigned short uint16_t;
 
-#define LOR_DURATION_MASK 0x8000
+typedef uint16_t lor_time_t;    // see time.h
+typedef uint16_t lor_channel_t; // see uid.h
 
-int lor_write_time(lor_time_t time, uint8_t *b) {
-  // include required 0x8000 protocol mask if the upper duration byte is zero
-  const uint16_t t = time | LOR_DURATION_MASK;
-  b[0] = (t & 0xFF00) >> 8;
-  b[1] = (t & 0x00FF);
-  return 2;
-}
+struct lor_channelset_t; // see uid.h
+typedef struct lor_channelset_t lor_channelset_t;
 
-int lor_read_time(lor_time_t *time, const uint8_t *b) {
-  // strip protocol mask bit (indicates the byte value is zero)
-  uint16_t t = ((uint16_t)(b[0] << 8)) | b[1];
-  t &= ~LOR_DURATION_MASK;
-  *time = (lor_time_t)(t);
-  return 2;
-}
+#endif // LIGHTORAMA_CORETYPES_H

@@ -23,6 +23,9 @@
  */
 #include "../include/easy.h"
 
+#include "../include/effect.h"
+#include "../include/uid.h"
+
 int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,
                              lor_channel_t channel,

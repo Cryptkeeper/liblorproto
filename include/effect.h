@@ -24,21 +24,15 @@
 #ifndef LIGHTORAMA_EFFECT_H
 #define LIGHTORAMA_EFFECT_H
 
-#include <stdint.h>
+#include "coretypes.h"
 
-#include "intensity.h"
-#include "time.h"
-#include "uid.h"
-
-typedef enum lor_effect_t {
-  LOR_EFFECT_SET_LIGHTS = 0x01,
-  LOR_EFFECT_SET_OFF = 0x02,
-  LOR_EFFECT_SET_INTENSITY = 0x03,
-  LOR_EFFECT_FADE = 0x04,
-  LOR_EFFECT_PULSE = 0x05,
-  LOR_EFFECT_TWINKLE = 0x06,
-  LOR_EFFECT_SHIMMER = 0x07
-} lor_effect_t;
+#define LOR_EFFECT_SET_LIGHTS    ((lor_effect_t)0x01)
+#define LOR_EFFECT_SET_OFF       ((lor_effect_t)0x02)
+#define LOR_EFFECT_SET_INTENSITY ((lor_effect_t)0x03)
+#define LOR_EFFECT_FADE          ((lor_effect_t)0x04)
+#define LOR_EFFECT_PULSE         ((lor_effect_t)0x05)
+#define LOR_EFFECT_TWINKLE       ((lor_effect_t)0x06)
+#define LOR_EFFECT_SHIMMER       ((lor_effect_t)0x07)
 
 struct lor_effect_setintensity_t {
   lor_intensity_t intensity;

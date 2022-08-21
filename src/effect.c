@@ -23,6 +23,9 @@
  */
 #include "../include/effect.h"
 
+#include "../include/intensity.h"
+#include "../include/time.h"
+
 int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, uint8_t *b) {
   switch (effect) {
   case LOR_EFFECT_SET_INTENSITY: {

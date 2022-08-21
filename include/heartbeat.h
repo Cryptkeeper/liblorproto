@@ -24,9 +24,7 @@
 #ifndef LIGHTORAMA_HEARTBEAT_H
 #define LIGHTORAMA_HEARTBEAT_H
 
-#include <stdint.h>
-
-#include "uid.h"
+#include "coretypes.h"
 
 #define LOR_HEARTBEAT_DELAY_NS 500000000
 #define LOR_HEARTBEAT_DELAY_MS 500

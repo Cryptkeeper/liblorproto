@@ -21,7 +21,7 @@ add_library(lightorama
         src/time.c
         src/uid.c)
 
-set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/easy.h;include/effect.h;include/heartbeat.h;include/intensity.h;include/lightorama.h;include/model.h;include/time.h;include/uid.h;include/version.h;")
+set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/coretypes.h;include/easy.h;include/effect.h;include/heartbeat.h;include/intensity.h;include/lightorama.h;include/model.h;include/time.h;include/uid.h;include/version.h;")
 
 if (MSVC)
     # warning level 4 and all warnings as errors

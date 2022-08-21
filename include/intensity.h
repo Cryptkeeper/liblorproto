@@ -24,9 +24,7 @@
 #ifndef LIGHTORAMA_INTENSITY_H
 #define LIGHTORAMA_INTENSITY_H
 
-#include <stdint.h>
-
-typedef uint8_t lor_intensity_t;
+#include "coretypes.h"
 
 #define LOR_INTENSITY_MIN ((lor_intensity_t)0xF0)
 #define LOR_INTENSITY_MAX ((lor_intensity_t)0x01)
