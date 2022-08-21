@@ -37,7 +37,7 @@ typedef enum lor_effect_t {
   LOR_EFFECT_FADE = 0x04,
   LOR_EFFECT_PULSE = 0x05,
   LOR_EFFECT_TWINKLE = 0x06,
-  LOR_EFFECT_SHIMMER = 0x07,
+  LOR_EFFECT_SHIMMER = 0x07
 } lor_effect_t;
 
 struct lor_effect_setintensity_t {

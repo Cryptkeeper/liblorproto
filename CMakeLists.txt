@@ -23,6 +23,14 @@ add_library(lightorama
 
 set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/easy.h;include/effect.h;include/heartbeat.h;include/intensity.h;include/lightorama.h;include/model.h;include/time.h;include/uid.h;include/version.h;")
 
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/W4 /WX)
+else ()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic)
+endif ()
+
 install(TARGETS lightorama
         LIBRARY DESTINATION lib/lightorama
         PUBLIC_HEADER DESTINATION include/lightorama)
