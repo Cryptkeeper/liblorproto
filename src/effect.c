@@ -77,3 +77,37 @@ int lor_read_effect_struct(lor_effect_t effect,
     return 0;
   }
 }
+
+int lor_is_effect_eq(lor_effect_t effect, const void *aes, const void *bes) {
+  switch (effect) {
+  case LOR_EFFECT_SET_LIGHTS:
+  case LOR_EFFECT_SET_OFF:
+    return 1;
+
+  case LOR_EFFECT_SET_INTENSITY: {
+    struct lor_effect_setintensity_t amd = *((struct lor_effect_setintensity_t *)aes);
+    struct lor_effect_setintensity_t bmd = *((struct lor_effect_setintensity_t *)bes);
+    return amd.intensity == bmd.intensity;
+  }
+
+  case LOR_EFFECT_FADE: {
+    struct lor_effect_fade_t amd = *((struct lor_effect_fade_t *)aes);
+    struct lor_effect_fade_t bmd = *((struct lor_effect_fade_t *)bes);
+    return amd.startIntensity == bmd.startIntensity && amd.endIntensity == bmd.endIntensity &&
+           amd.duration == bmd.duration;
+  }
+
+  case LOR_EFFECT_PULSE: {
+    struct lor_effect_pulse_t amd = *((struct lor_effect_pulse_t *)aes);
+    struct lor_effect_pulse_t bmd = *((struct lor_effect_pulse_t *)bes);
+    return amd.halfInterval == bmd.halfInterval;
+  }
+
+  case LOR_EFFECT_TWINKLE:
+  case LOR_EFFECT_SHIMMER:
+    return 1;
+
+  default:
+    return -1;
+  }
+}

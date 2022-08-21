@@ -39,6 +39,10 @@ add_executable(test_channelset test/channelset.c)
 target_link_libraries(test_channelset lightorama)
 add_test(channelset test_channelset)
 
+add_executable(test_effect test/effect.c)
+target_link_libraries(test_effect lightorama)
+add_test(effect test_effect)
+
 add_executable(test_time test/time.c)
 target_link_libraries(test_time lightorama)
 add_test(time test_time)

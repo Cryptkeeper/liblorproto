@@ -66,4 +66,23 @@ int lor_read_effect_struct(lor_effect_t effect,
                            union lor_effect_any_t *effectStruct,
                            const uint8_t *b);
 
+/**
+ * Compares two effect metadata structures to test if their member fields (within `aes` & `bes`) are
+ * equal. Assumes `aes` & `bes` are not NULL if the value of `effect` requires an associated
+ * metadata struct. If a metadata struct is NOT required, the pointers will be ignored by the
+ * function and may be non-NULL.
+ *
+ * Metadata structs may take the form of any `struct lor_effect_*_t` type, or `union
+ * lor_effect_any_t`. The two parameters do not need to match types for the purposes of the
+ * comparison.
+ *
+ * @param effect
+ * @param aes A pointer to a `struct lor_effect_*_t` or `union lor_effect_any_t`, if the `effect`
+ * value requires an associated metadata struct
+ * @param bes A pointer to a `struct lor_effect_*_t` or `union lor_effect_any_t` used to compare for
+ * equality
+ * @return 1 if equal, 0 if not, -1 if `effect` is an unknown/unsupported value
+ */
+int lor_is_effect_eq(lor_effect_t effect, const void *aes, const void *bes);
+
 #endif // LIGHTORAMA_EFFECT_H
