@@ -5,7 +5,6 @@ cmake_install.cmake
 CMakeCache.txt
 Makefile
 install_manifest.txt
-CTestTestfile.cmake
 
 # CLion
 .idea/
@@ -14,7 +13,11 @@ CTestTestfile.cmake
 liblightorama.a
 lightorama.cbp
 
+# CTest
+Testing/
+CTestTestfile.cmake
+
 # Test binaries
 test_channelset
+test_effect
 test_time
-
