@@ -25,17 +25,22 @@
 
 #include <assert.h>
 
-static void test_channelset_encoding(int offset, int channels, uint8_t *b) {
+static void test_channelset_encoding(int offset, int channels) {
+  uint8_t b[32];
+
   struct lor_channelset_t channelset, read_channelset;
+  int writtenb;
+
   uint8_t encode_opts;
 
   channelset.offset = offset;
 
   // rather than test each 2^16-1 value of `.channels` per offset, test each bit flag position,
   // instead creating 16 test cases per offset
+  assert(channels < 16);
   channelset.channels = 1 << channels;
 
-  lor_write_channelset(channelset, b);
+  writtenb = lor_write_channelset(channelset, b);
 
   // copy of `lor_get_channelset_opts` from src/effect.c
   // used to generate a set of bitflag options valid within an encoded channelset context
@@ -54,20 +59,18 @@ static void test_channelset_encoding(int offset, int channels, uint8_t *b) {
     }
   }
 
-  lor_read_channelset(&read_channelset, encode_opts, b);
+  assert(lor_read_channelset(&read_channelset, encode_opts, b) == writtenb);
 
   assert(channelset.offset == read_channelset.offset);
   assert(channelset.channels == read_channelset.channels);
 }
 
 int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) {
-  uint8_t b[32];
-
   int offset;
   for (offset = 1; offset <= LOR_CHANNELSET_OFFSET_MAX; offset++) {
     int channels;
     for (channels = 0; channels < 16; channels++) {
-      test_channelset_encoding(offset, channels, b);
+      test_channelset_encoding(offset, channels);
     }
   }
 

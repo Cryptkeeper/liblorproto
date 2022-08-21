@@ -34,27 +34,44 @@ static void test_time_table(void) {
   assert(lor_seconds_to_time(25.0F) == 20);
 }
 
-static void test_interval_diffs(void) {
-  float intervals[5] = {0.1F, 0.5F, 1.0F, 2.0F, 25.0F};
+static void test_time_interval_diff(float f) {
+  const float real = lor_time_to_seconds(lor_seconds_to_time(f));
 
-  size_t i;
-  for (i = 0; i < sizeof(intervals) / sizeof(float); i++) {
-    const float input = intervals[i];
-    const float output = lor_time_to_seconds(lor_seconds_to_time(input));
+  // safely handle an offset between the expected seconds values
+  // this is caused by the encoding scheme being lossy with precision
+  const float diff = real > f ? real - f : f - real;
 
-    // safely handle an offset between the expected seconds values
-    // this is caused by the encoding scheme being lossy with precision
-    const float diff = output > input ? output - input : input - output;
+  printf("time: %f real: %f (∆%f)\n", f, real, diff);
 
-    printf("%f %f (%f)\n", input, output, diff);
+  assert(diff < 0.01);
+}
 
-    assert(diff < 0.01);
-  }
+static void test_time_encoding(float s) {
+  uint8_t b[32];
+
+  lor_time_t time, read_time;
+  int writtenb;
+
+  time = lor_seconds_to_time(s);
+  writtenb = lor_write_time(time, b);
+
+  assert(lor_read_time(&read_time, b) == writtenb);
+
+  assert(time == read_time);
 }
 
 int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) {
+  float test_intervals[5] = {0.1F, 0.5F, 1.0F, 2.0F, 25.0F};
+
+  size_t i;
+  for (i = 0; i < sizeof(test_intervals) / sizeof(float); i++) {
+    const float f = test_intervals[i];
+
+    test_time_interval_diff(f);
+    test_time_encoding(f);
+  }
+
   test_time_table();
-  test_interval_diffs();
 
   return 0;
 }
