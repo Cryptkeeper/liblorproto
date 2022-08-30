@@ -18,6 +18,7 @@ add_library(lightorama
         src/effect.c
         src/heartbeat.c
         src/intensity.c
+        src/model.c
         src/time.c
         src/uid.c)
 
@@ -42,6 +43,10 @@ add_test(channelset test_channelset)
 add_executable(test_effect test/effect.c)
 target_link_libraries(test_effect lightorama)
 add_test(effect test_effect)
+
+add_executable(test_model test/model.c)
+target_link_libraries(test_model lightorama)
+add_test(model test_model)
 
 add_executable(test_time test/time.c)
 target_link_libraries(test_time lightorama)

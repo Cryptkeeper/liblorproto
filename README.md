@@ -9,19 +9,20 @@ the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 
 ## Project Structure
 
-| Header                                          | Purpose                                                                                                                           |
-|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| [`lightorama/coretypes.h`](include/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                          |
-| [`lightorama/easy.h`](include/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                               |
-| [`lightorama/effect.h`](include/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                             |
-| [`lightorama/heartbeat.h`](include/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                |
-| [`lightorama/intensity.h`](include/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values    |
-| [`lightorama/model.h`](include/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt)      |
-| [`lightorama/time.h`](include/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                |
-| [`lightorama/uid.h`](include/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs) |
-| [`lightorama/version.h`](include/version.h)     | Named constants of liblightorama version information                                                                              |
+| Header                                          | Purpose                                                                                                                                                                             |
+|-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`lightorama/coretypes.h`](include/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                                                                            |
+| [`lightorama/easy.h`](include/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                                                                                 |
+| [`lightorama/effect.h`](include/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                                                                               |
+| [`lightorama/heartbeat.h`](include/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                                                                  |
+| [`lightorama/intensity.h`](include/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values                                                      |
+| [`lightorama/model.h`](include/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt), includes helper functions for referencing model names |
+| [`lightorama/time.h`](include/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                                                                  |
+| [`lightorama/uid.h`](include/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs)                                                   |
+| [`lightorama/version.h`](include/version.h)     | Named constants of liblightorama version information                                                                                                                                |
 
-You may optionally use `lightorama/lightorama.h` to automatically include all library header files.
+You may optionally use `lightorama/lightorama.h` to automatically include all library header files (except `model.h` due
+to its strings, please include as needed).
 
 liblightorama strives to be fairly portable (typically for use in microcontrollers) and requires no external
 dependencies or headers. The few core data types used by liblightorama (e.g. fixed size ints) are defined
@@ -33,7 +34,8 @@ the [`intensity.c`](src/intensity.c) math functions.
 liblightorama uses [CMake](https://cmake.org/) for building and packaging the library.
 
 1. Generate Makefiles using `cmake .`
-2. If outdated or missing, use `sh tools/generate_model_h.sh` to generate an updated `include/model.h`
+2. (Optional) If outdated, use `python3 tools/generate_model_files.py` to generate updated `model.h`
+   & `model.c` code files
 3. Compile the library using `make`
 4. Optionally install the headers and compiled archive using `make install`
 5. Include your selected headers, or include all headers using `lightorama/lightorama.h`
