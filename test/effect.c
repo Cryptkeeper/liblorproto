@@ -71,7 +71,6 @@ static void test_effect_pulse(void) {
 }
 
 int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) {
-
   test_effect_encoding(LOR_EFFECT_SET_LIGHTS, NULL);
   test_effect_encoding(LOR_EFFECT_SET_OFF, NULL);
   test_effect_encoding(LOR_EFFECT_TWINKLE, NULL);
