@@ -47,7 +47,7 @@ static void test_time_interval_diff(float f) {
 }
 
 static void test_time_encoding(float s) {
-  uint8_t b[32];
+  lor_uint8_t b[32];
 
   lor_time_t time, read_time;
   int writtenb;

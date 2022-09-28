@@ -24,16 +24,16 @@
 #ifndef LIGHTORAMA_CORETYPES_H
 #define LIGHTORAMA_CORETYPES_H
 
-typedef unsigned char uint8_t;
+typedef unsigned char lor_uint8_t;
 
-typedef uint8_t lor_effect_t;    // see effect.h
-typedef uint8_t lor_intensity_t; // see intensity.h
-typedef uint8_t lor_unit_t;      // see uid.h
+typedef lor_uint8_t lor_effect_t;    // see effect.h
+typedef lor_uint8_t lor_intensity_t; // see intensity.h
+typedef lor_uint8_t lor_unit_t;      // see uid.h
 
-typedef unsigned short uint16_t;
+typedef unsigned short lor_uint16_t;
 
-typedef uint16_t lor_time_t;    // see time.h
-typedef uint16_t lor_channel_t; // see uid.h
+typedef lor_uint16_t lor_time_t;    // see time.h
+typedef lor_uint16_t lor_channel_t; // see uid.h
 
 struct lor_channelset_t; // see uid.h
 typedef struct lor_channelset_t lor_channelset_t;

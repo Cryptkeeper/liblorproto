@@ -8,7 +8,7 @@ For example, this function would set channel 10 (index 9) on unit 1 to 50% brigh
 ```c
 // existing encoding functions
 void turn_on_channel_ten(void) {
-    uint8_t b[32];
+    lor_uint8_t b[32];
     struct lor_effect_setintensity_t effectStruct = {
             .intensity = lor_intensity_curve_linear(0.5),
     };

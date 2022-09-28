@@ -50,8 +50,8 @@ lor_time_t lor_seconds_to_time(float seconds);
  */
 float lor_time_to_seconds(lor_time_t time);
 
-int lor_write_time(lor_time_t time, uint8_t *b);
+int lor_write_time(lor_time_t time, lor_uint8_t *b);
 
-int lor_read_time(lor_time_t *time, const uint8_t *b);
+int lor_read_time(lor_time_t *time, const lor_uint8_t *b);
 
 #endif // LIGHTORAMA_TIME_H

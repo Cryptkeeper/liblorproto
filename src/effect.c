@@ -26,7 +26,7 @@
 #include "../include/intensity.h"
 #include "../include/time.h"
 
-int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, uint8_t *b) {
+int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, lor_uint8_t *b) {
   switch (effect) {
   case LOR_EFFECT_SET_INTENSITY: {
     struct lor_effect_setintensity_t md = *((struct lor_effect_setintensity_t *)effectStruct);
@@ -55,7 +55,7 @@ int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, uint8
 
 int lor_read_effect_struct(lor_effect_t effect,
                            union lor_effect_any_t *effectStruct,
-                           const uint8_t *b) {
+                           const lor_uint8_t *b) {
   switch (effect) {
   case LOR_EFFECT_SET_INTENSITY: {
     struct lor_effect_setintensity_t *md = &effectStruct->setIntensity;

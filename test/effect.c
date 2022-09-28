@@ -27,7 +27,7 @@
 #include <stddef.h>
 
 static void test_effect_encoding(lor_effect_t effect, void *effectStruct) {
-  uint8_t b[32];
+  lor_uint8_t b[32];
 
   union lor_effect_any_t effect_read;
   int writtenb = lor_write_effect_struct(effect, effectStruct, b);
@@ -40,7 +40,7 @@ static void test_effect_encoding(lor_effect_t effect, void *effectStruct) {
   //  this tests for false positives in equality testing
   if (effectStruct != NULL) {
     // TODO: this assumes the first byte is member fields, could this fail with alignment padding?
-    uint8_t *ptr = (uint8_t *)effectStruct;
+    lor_uint8_t *ptr = (lor_uint8_t *)effectStruct;
     ptr[0] = ~ptr[0];
 
     assert(lor_is_effect_eq(effect, effectStruct, &effect_read) == 0);

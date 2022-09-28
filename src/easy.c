@@ -30,7 +30,7 @@ int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,
                              lor_channel_t channel,
                              lor_unit_t unit,
-                             uint8_t *b) {
+                             lor_uint8_t *b) {
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = effect;
@@ -39,12 +39,12 @@ int lor_write_channel_effect(lor_effect_t effect,
   return n;
 }
 
-static uint8_t lor_get_channelset_offset_opts(lor_channelset_t channelset) {
+static lor_uint8_t lor_get_channelset_offset_opts(lor_channelset_t channelset) {
   if (channelset.offset > 0) {
     return LOR_OFFSET_OPT_MULTIPART;
   } else {
-    const uint8_t bank0 = (channelset.channels & 0x00FF);
-    const uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
+    const lor_uint8_t bank0 = (channelset.channels & 0x00FF);
+    const lor_uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
 
     if (bank0 > 0x00 && bank1 > 0x00) {
       return LOR_OFFSET_OPT_16;
@@ -60,7 +60,7 @@ int lor_write_channelset_effect(lor_effect_t effect,
                                 const void *effectStruct,
                                 lor_channelset_t channelset,
                                 lor_unit_t unit,
-                                uint8_t *b) {
+                                lor_uint8_t *b) {
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = effect | lor_get_channelset_offset_opts(channelset);
@@ -72,7 +72,7 @@ int lor_write_channelset_effect(lor_effect_t effect,
 int lor_write_unit_effect(lor_effect_t effect,
                           const void *effectStruct,
                           lor_unit_t unit,
-                          uint8_t *b) {
+                          lor_uint8_t *b) {
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = effect | LOR_OFFSET_OPT_UNIT;
@@ -80,7 +80,7 @@ int lor_write_unit_effect(lor_effect_t effect,
   return n;
 }
 
-static int lor_write_channel2(lor_channel_t channel, uint8_t *b) {
+static int lor_write_channel2(lor_channel_t channel, lor_uint8_t *b) {
   int written = lor_write_channel(channel, b);
   if (written < 2) {
     b[written++] = 0x81;
@@ -93,7 +93,7 @@ int lor_write_complex_effect(lor_effect_t primaryEffect,
                              const void *effectStruct,
                              lor_channel_t channel,
                              lor_unit_t unit,
-                             uint8_t *b) {
+                             lor_uint8_t *b) {
   int n = 0;
   n += lor_write_unit(unit, &b[n]);
   b[n++] = primaryEffect;

@@ -54,7 +54,7 @@ Light Control Packet
 │Unit             ├─► lor_unit_t
 ├────────┬────────┤
 │Effect  │Channel ├─► lor_effect_t (4 bits)
-├────────┴────────┤   uint8_t (4 bits)
+├────────┴────────┤   lor_uint8_t (4 bits)
 │Variable length  │
 │effect struct    ├─► struct lor_effect_*_t
 │                 │   union lor_effect_any_t
@@ -157,7 +157,7 @@ _Tip:_ Changing `unit_id` to `LOR_UNIT_ALL` would turn off all data on ALL units
 #include <lightorama/lightorama.h>
 
 static void turn_off_all_channels(lor_unit_t unit_id) {
-    uint8_t msg[128]; // allocate a small data buffer
+    lor_uint8_t msg[128]; // allocate a small data buffer
     
     int written = lor_write_unit_effect(LOR_EFFECT_SET_OFF, NULL, unit_id, msg);
     
@@ -187,7 +187,7 @@ static void set_channel_half_brightness(lor_unit_t unit_id, lor_channel_t channe
     struct lor_effect_setintensity_t effect;
     effect.intensity = half_intensity;
     
-    uint8_t msg[128]; // allocate a small data buffer
+    lor_uint8_t msg[128]; // allocate a small data buffer
     
     int written = lor_write_channel_effect(LOR_EFFECT_SET_INTENSITY, &effect, channel_id, unit_id, msg);
     
@@ -217,7 +217,7 @@ static void fade_channels(lor_unit_t unit_id, lor_intensity_t from, lor_intensit
     effect.endIntensity = to;
     effect.duration = lor_seconds_to_time(seconds);
     
-    uint8_t msg[128]; // allocate a small data buffer
+    lor_uint8_t msg[128]; // allocate a small data buffer
     
     int written = lor_write_channelset_effect(LOR_EFFECT_FADE, &effect, channelset, unit_id, msg);
     
@@ -245,7 +245,7 @@ static void fade_channel_while_shimmering(lor_unit_t unit_id, lor_channel_t chan
     effect.endIntensity = to;
     effect.duration = lor_seconds_to_time(seconds);
     
-    uint8_t msg[128]; // allocate a small data buffer
+    lor_uint8_t msg[128]; // allocate a small data buffer
     
     int written = 0;
     
@@ -267,7 +267,7 @@ static void fade_channel_while_shimmering(lor_unit_t unit_id, lor_channel_t chan
 
 ### Memory Allocations
 
-liblightorama does not allocate any memory internally, and requires a `uint8_t *` be passed to functions for writing to
+liblightorama does not allocate any memory internally, and requires a `lor_uint8_t *` be passed to functions for writing to
 memory. To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest
 write call will not write more than 32 bytes.
 

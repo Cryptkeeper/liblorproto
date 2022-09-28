@@ -23,12 +23,12 @@
  */
 #include "../include/uid.h"
 
-int lor_write_unit(lor_unit_t unit, uint8_t *b) {
+int lor_write_unit(lor_unit_t unit, lor_uint8_t *b) {
   b[0] = unit;
   return 1;
 }
 
-int lor_read_unit(lor_unit_t *unit, const uint8_t *b) {
+int lor_read_unit(lor_unit_t *unit, const lor_uint8_t *b) {
   *unit = b[0];
   return 1;
 }
@@ -40,9 +40,9 @@ int lor_read_unit(lor_unit_t *unit, const uint8_t *b) {
 #define LOR_CHANNEL_OPT_DATA       0b00111111                     /* 0x3F */
 #define LOR_CHANNEL_OPT_DATA_MAX   (1 << 6)                       /* 64 */
 
-int lor_write_channel(lor_channel_t channel, uint8_t *b) {
+int lor_write_channel(lor_channel_t channel, lor_uint8_t *b) {
   // TODO: implement overflow protection on offset math (/,%)?
-  const uint8_t offset = channel / LOR_CHANNEL_OPT_DATA_MAX;
+  const lor_uint8_t offset = channel / LOR_CHANNEL_OPT_DATA_MAX;
 
   int n = 0;
 
@@ -56,12 +56,12 @@ int lor_write_channel(lor_channel_t channel, uint8_t *b) {
   return n;
 }
 
-int lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
-  const uint8_t opts = b[0];
+int lor_read_channel(lor_channel_t *channel, const lor_uint8_t *b) {
+  const lor_uint8_t opts = b[0];
 
   if (opts & LOR_CHANNEL_OPT) {
     if (opts & LOR_CHANNEL_OPT_HAS_OFFSET) {
-      const uint8_t offset = b[1] & ~LOR_CHANNEL_OPT;
+      const lor_uint8_t offset = b[1] & ~LOR_CHANNEL_OPT;
       *channel = (opts & LOR_CHANNEL_OPT_DATA) + (offset * LOR_CHANNEL_OPT_DATA_MAX);
 
       return 2;
@@ -79,14 +79,14 @@ int lor_read_channel(lor_channel_t *channel, const uint8_t *b) {
 #define LOR_CHANNELSET_OPT_8H   0b10000000 /* 0x80 */
 #define LOR_CHANNELSET_OPT_DATA 0b00111111 /* 0x3F */
 
-int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
+int lor_write_channelset(lor_channelset_t channelset, lor_uint8_t *b) {
   int n = 0;
 
-  const uint8_t bankL = (channelset.channels & 0x00FF);
-  const uint8_t bankH = (channelset.channels & 0xFF00) >> 8;
+  const lor_uint8_t bankL = (channelset.channels & 0x00FF);
+  const lor_uint8_t bankH = (channelset.channels & 0xFF00) >> 8;
 
   if (channelset.offset > 0) {
-    const uint8_t offset = channelset.offset & LOR_CHANNELSET_OPT_DATA;
+    const lor_uint8_t offset = channelset.offset & LOR_CHANNELSET_OPT_DATA;
 
     if (bankL > 0 && bankH > 0) {
       b[n++] = offset;
@@ -107,32 +107,32 @@ int lor_write_channelset(lor_channelset_t channelset, uint8_t *b) {
   return n;
 }
 
-int lor_read_channelset(lor_channelset_t *channelset, uint8_t cmd, const uint8_t *b) {
+int lor_read_channelset(lor_channelset_t *channelset, lor_uint8_t cmd, const lor_uint8_t *b) {
   int n = 0;
 
   if (cmd & LOR_OFFSET_OPT_MULTIPART) {
-    const uint8_t opts = b[n++];
+    const lor_uint8_t opts = b[n++];
 
     if (opts & LOR_CHANNELSET_OPT_8H) {
       channelset->offset = opts & LOR_CHANNELSET_OPT_DATA;
-      channelset->channels = (uint16_t)(b[n++] << 8);
+      channelset->channels = (lor_uint16_t)(b[n++] << 8);
     } else if (opts & LOR_CHANNELSET_OPT_8L) {
       channelset->offset = opts & LOR_CHANNELSET_OPT_DATA;
-      channelset->channels = (uint16_t)(b[n++]);
+      channelset->channels = (lor_uint16_t)(b[n++]);
     } else if (opts > 0) {
       channelset->offset = opts & LOR_CHANNELSET_OPT_DATA;
-      const uint8_t lsb = b[n++];
-      channelset->channels = (uint16_t)(b[n++] << 8) | lsb;
+      const lor_uint8_t lsb = b[n++];
+      channelset->channels = (lor_uint16_t)(b[n++] << 8) | lsb;
     }
   } else if (cmd & LOR_OFFSET_OPT_UNIT) {
     return n;
   } else if (cmd & LOR_OFFSET_OPT_8L) {
-    channelset->channels = (uint16_t)(b[n++]);
+    channelset->channels = (lor_uint16_t)(b[n++]);
   } else if (cmd & LOR_OFFSET_OPT_8H) {
-    channelset->channels = (uint16_t)(b[n++]) << 8;
+    channelset->channels = (lor_uint16_t)(b[n++]) << 8;
   } else if (cmd & LOR_OFFSET_OPT_16) {
-    const uint8_t lsb = b[n++];
-    channelset->channels = (uint16_t)(b[n++] << 8) | lsb;
+    const lor_uint8_t lsb = b[n++];
+    channelset->channels = (lor_uint16_t)(b[n++] << 8) | lsb;
   }
 
   return n;

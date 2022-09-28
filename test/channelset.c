@@ -26,12 +26,12 @@
 #include <assert.h>
 
 static void test_channelset_encoding(int offset, int channels) {
-  uint8_t b[32];
+  lor_uint8_t b[32];
 
   struct lor_channelset_t channelset, read_channelset;
   int writtenb;
 
-  uint8_t encode_opts;
+  lor_uint8_t encode_opts;
 
   channelset.offset = offset;
 
@@ -47,8 +47,8 @@ static void test_channelset_encoding(int offset, int channels) {
   if (channelset.offset > 0) {
     encode_opts = LOR_OFFSET_OPT_MULTIPART;
   } else {
-    const uint8_t bank0 = (channelset.channels & 0x00FF);
-    const uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
+    const lor_uint8_t bank0 = (channelset.channels & 0x00FF);
+    const lor_uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
 
     if (bank0 > 0x00 && bank1 > 0x00) {
       encode_opts = LOR_OFFSET_OPT_16;

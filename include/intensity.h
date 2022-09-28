@@ -29,9 +29,9 @@
 #define LOR_INTENSITY_MIN ((lor_intensity_t)0xF0)
 #define LOR_INTENSITY_MAX ((lor_intensity_t)0x01)
 
-int lor_write_intensity(lor_intensity_t intensity, uint8_t *buf);
+int lor_write_intensity(lor_intensity_t intensity, lor_uint8_t *buf);
 
-int lor_read_intensity(lor_intensity_t *intensity, const uint8_t *buf);
+int lor_read_intensity(lor_intensity_t *intensity, const lor_uint8_t *buf);
 
 typedef lor_intensity_t (*lor_intensity_curve_t)(float normal);
 

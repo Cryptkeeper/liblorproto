@@ -25,7 +25,7 @@
 
 #include "../include/uid.h"
 
-int lor_write_unit_heartbeat(lor_unit_t unit, uint8_t *b) {
+int lor_write_unit_heartbeat(lor_unit_t unit, lor_uint8_t *b) {
   int n = 0;
   n += lor_write_unit(unit, b);
   b[n++] = 0x81;
@@ -33,6 +33,6 @@ int lor_write_unit_heartbeat(lor_unit_t unit, uint8_t *b) {
   return n;
 }
 
-int lor_write_heartbeat(uint8_t *b) {
+int lor_write_heartbeat(lor_uint8_t *b) {
   return lor_write_unit_heartbeat(LOR_UNIT_ALL, b);
 }

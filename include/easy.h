@@ -30,24 +30,24 @@ int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,
                              lor_channel_t channel,
                              lor_unit_t unit,
-                             uint8_t *b);
+                             lor_uint8_t *b);
 
 int lor_write_channelset_effect(lor_effect_t effect,
                                 const void *effectStruct,
                                 lor_channelset_t channelset,
                                 lor_unit_t unit,
-                                uint8_t *b);
+                                lor_uint8_t *b);
 
 int lor_write_unit_effect(lor_effect_t effect,
                           const void *effectStruct,
                           lor_unit_t unit,
-                          uint8_t *b);
+                          lor_uint8_t *b);
 
 int lor_write_complex_effect(lor_effect_t primaryEffect,
                              lor_effect_t secondaryEffect,
                              const void *effectStruct,
                              lor_channel_t channel,
                              lor_unit_t unit,
-                             uint8_t *b);
+                             lor_uint8_t *b);
 
 #endif // LIGHTORAMA_EASY_H
