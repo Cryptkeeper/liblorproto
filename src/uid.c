@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/uid.h"
+#include "lightorama/uid.h"
 
 int lor_write_unit(lor_unit_t unit, lor_uint8_t *b) {
   b[0] = unit;

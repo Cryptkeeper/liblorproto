@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/lightorama.h"
+#include "lightorama/lightorama.h"
 
 #include <assert.h>
 #include <stddef.h>

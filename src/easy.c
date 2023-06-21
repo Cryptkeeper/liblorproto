@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/easy.h"
+#include "lightorama/easy.h"
 
-#include "../include/effect.h"
-#include "../include/uid.h"
+#include "lightorama/effect.h"
+#include "lightorama/uid.h"
 
 int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,

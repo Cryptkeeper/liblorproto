@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/time.h"
+#include "lightorama/time.h"
 
 #define LOR_CLAMPF(x, min, max) (x < min ? min : (x > max ? max : x))
 

@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/heartbeat.h"
+#include "lightorama/heartbeat.h"
 
-#include "../include/uid.h"
+#include "lightorama/uid.h"
 
 int lor_write_unit_heartbeat(lor_unit_t unit, lor_uint8_t *b) {
   int n = 0;

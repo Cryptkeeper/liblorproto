@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(lightorama
-        VERSION 2.6.0
+        VERSION 2.6.1
         DESCRIPTION "C90 library implementing the Light-O-Rama \(LOR\) communication protocol"
         HOMEPAGE_URL "https://github.com/Cryptkeeper/liblightorama"
         LANGUAGES C)
@@ -13,7 +13,10 @@ if (APPLE)
     link_directories(/usr/local/lib)
 endif ()
 
+file(GLOB_RECURSE PUBLIC_HEADERS "include/lightorama/*.h")
+
 add_library(lightorama
+        ${PUBLIC_HEADERS}
         src/easy.c
         src/effect.c
         src/heartbeat.c
@@ -22,7 +25,9 @@ add_library(lightorama
         src/time.c
         src/uid.c)
 
-set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "include/coretypes.h;include/easy.h;include/effect.h;include/heartbeat.h;include/intensity.h;include/lightorama.h;include/model.h;include/time.h;include/uid.h;include/version.h;")
+set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
+
+target_include_directories(lightorama PUBLIC include)
 
 if (MSVC)
     # warning level 4 and all warnings as errors

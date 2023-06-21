@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../include/effect.h"
+#include "lightorama/effect.h"
 
-#include "../include/intensity.h"
-#include "../include/time.h"
+#include "lightorama/intensity.h"
+#include "lightorama/time.h"
 
 int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, lor_uint8_t *b) {
   switch (effect) {

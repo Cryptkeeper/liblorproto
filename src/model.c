@@ -1,7 +1,7 @@
 // AUTOMATICALLY GENERATED FILE, DO NOT MODIFY!
 // YOUR CHANGES WILL BE OVERWRITTEN BY SCRIPT:
 // liblightorama/tools/generate_model_files.py
-#include "../include/model.h"
+#include "lightorama/model.h"
 
 static const char *LOR_MODEL_NAMES[211] = {
     	[0] = "CTB08",
@@ -94,7 +94,7 @@ static const char *LOR_MODEL_NAMES[211] = {
 	[209] = "BootLoader-PIX08",
 	[210] = "BootLoader-PIX16",
 };
-    
+
 int lor_get_model_name(lor_model_t model, const char **name) {
     if (model < 25 || model > 235) {
         return 0;

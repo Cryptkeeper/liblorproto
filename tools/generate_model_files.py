@@ -140,7 +140,7 @@ int lor_get_model_name(lor_model_t model, const char **name);
 """
 
 
-f = open("../include/model.h", "w")
+f = open("../include/lightorama/model.h", "w")
 f.write(fmt_model_h())
 f.close()
 
