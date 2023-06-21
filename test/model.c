@@ -23,6 +23,7 @@
  */
 #include "lightorama/model.h"
 
+#undef NDEBUG
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>

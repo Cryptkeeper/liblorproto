@@ -23,6 +23,7 @@
  */
 #include "lightorama/lightorama.h"
 
+#undef NDEBUG
 #include <assert.h>
 
 static void test_channelset_encoding(int offset, int channels) {
