@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
-import urllib.request
 import re
+import urllib.request
 
 
 class HardwareModel:
@@ -109,6 +109,7 @@ def get_model_id_range(models):
     pids = list(map(HardwareModel.get_pid, models))
     return min(pids), max(pids)
 
+
 # method to keep the same builder pattern throughout the script
 def get_auto_generated_warning():
     return """// AUTOMATICALLY GENERATED FILE, DO NOT MODIFY!
@@ -154,7 +155,7 @@ def fmt_model_c():
     get_model_name_str = f"""static const char *LOR_MODEL_NAMES[{highestPid - lowestPid + 1}] = {{
     {table_init_str}
 }};
-    
+
 int lor_get_model_name(lor_model_t model, const char **name) {{
     if (model < {lowestPid} || model > {highestPid}) {{
         return 0;
@@ -168,7 +169,7 @@ int lor_get_model_name(lor_model_t model, const char **name) {{
 }}"""
 
     return f"""{get_auto_generated_warning()}
-#include \"../include/model.h\"
+#include \"lightorama/model.h\"
 
 {get_model_name_str}
 """
