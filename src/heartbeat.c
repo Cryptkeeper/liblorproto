@@ -26,13 +26,13 @@
 #include "lightorama/uid.h"
 
 int lor_write_unit_heartbeat(lor_unit_t unit, lor_uint8_t *b) {
-  int n = 0;
-  n += lor_write_unit(unit, b);
-  b[n++] = 0x81;
-  b[n++] = 0x56;
-  return n;
+    int n = 0;
+    n += lor_write_unit(unit, b);
+    b[n++] = 0x81;
+    b[n++] = 0x56;
+    return n;
 }
 
 int lor_write_heartbeat(lor_uint8_t *b) {
-  return lor_write_unit_heartbeat(LOR_UNIT_ALL, b);
+    return lor_write_unit_heartbeat(LOR_UNIT_ALL, b);
 }

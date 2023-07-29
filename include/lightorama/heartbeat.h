@@ -34,4 +34,4 @@ int lor_write_unit_heartbeat(lor_unit_t unit, lor_uint8_t *b);
 
 int lor_write_heartbeat(lor_uint8_t *b);
 
-#endif // LIGHTORAMA_HEARTBEAT_H
+#endif// LIGHTORAMA_HEARTBEAT_H

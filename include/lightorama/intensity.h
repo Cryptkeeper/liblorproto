@@ -26,8 +26,8 @@
 
 #include "coretypes.h"
 
-#define LOR_INTENSITY_MIN ((lor_intensity_t)0xF0)
-#define LOR_INTENSITY_MAX ((lor_intensity_t)0x01)
+#define LOR_INTENSITY_MIN ((lor_intensity_t) 0xF0)
+#define LOR_INTENSITY_MAX ((lor_intensity_t) 0x01)
 
 int lor_write_intensity(lor_intensity_t intensity, lor_uint8_t *buf);
 
@@ -41,4 +41,4 @@ lor_intensity_t lor_intensity_curve_linear(float normal);
 
 lor_intensity_t lor_intensity_curve_squared(float normal);
 
-#endif // LIGHTORAMA_INTENSITY_H
+#endif// LIGHTORAMA_INTENSITY_H

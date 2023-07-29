@@ -32,4 +32,4 @@
 #include "uid.h"
 #include "version.h"
 
-#endif // LIGHTORAMA_LIGHTORAMA_H
+#endif// LIGHTORAMA_LIGHTORAMA_H

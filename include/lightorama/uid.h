@@ -26,11 +26,11 @@
 
 #include "coretypes.h"
 
-#define LOR_UNIT_MIN ((lor_unit_t)0x01)
-#define LOR_UNIT_MAX ((lor_unit_t)0xF0)
+#define LOR_UNIT_MIN ((lor_unit_t) 0x01)
+#define LOR_UNIT_MAX ((lor_unit_t) 0xF0)
 
 // https://github.com/Cryptkeeper/lightorama-protocol/blob/master/PROTOCOL.md#unit-ids
-#define LOR_UNIT_ALL ((lor_unit_t)0xFF)
+#define LOR_UNIT_ALL ((lor_unit_t) 0xFF)
 
 int lor_write_unit(lor_unit_t unit, lor_uint8_t *b);
 
@@ -43,13 +43,15 @@ int lor_read_channel(lor_channel_t *channel, const lor_uint8_t *b);
 #define LOR_CHANNELSET_OFFSET_MAX ((1 << 6) - 1)
 
 struct lor_channelset_t {
-  lor_uint8_t offset;
-  lor_uint16_t channels;
-}; // typedef'd by coretypes.h
+    lor_uint8_t offset;
+    lor_uint16_t channels;
+};// typedef'd by coretypes.h
 
 int lor_write_channelset(lor_channelset_t channelset, lor_uint8_t *b);
 
-int lor_read_channelset(lor_channelset_t *channelset, lor_uint8_t cmd, const lor_uint8_t *b);
+int lor_read_channelset(lor_channelset_t *channelset,
+                        lor_uint8_t cmd,
+                        const lor_uint8_t *b);
 
 #define LOR_OFFSET_OPT_16        0x10
 #define LOR_OFFSET_OPT_8H        0x20
@@ -57,4 +59,4 @@ int lor_read_channelset(lor_channelset_t *channelset, lor_uint8_t cmd, const lor
 #define LOR_OFFSET_OPT_UNIT      0x40
 #define LOR_OFFSET_OPT_MULTIPART 0x50
 
-#endif // LIGHTORAMA_UID_H
+#endif// LIGHTORAMA_UID_H

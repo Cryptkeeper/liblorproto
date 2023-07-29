@@ -28,51 +28,52 @@
 #include <stdio.h>
 
 static void test_time_table(void) {
-  assert(lor_seconds_to_time(0.1F) == 5099);
-  assert(lor_seconds_to_time(0.5F) == 1019);
-  assert(lor_seconds_to_time(1.0F) == 509);
-  assert(lor_seconds_to_time(2.0F) == 254);
-  assert(lor_seconds_to_time(25.0F) == 20);
+    assert(lor_seconds_to_time(0.1F) == 5099);
+    assert(lor_seconds_to_time(0.5F) == 1019);
+    assert(lor_seconds_to_time(1.0F) == 509);
+    assert(lor_seconds_to_time(2.0F) == 254);
+    assert(lor_seconds_to_time(25.0F) == 20);
 }
 
 static void test_time_interval_diff(float f) {
-  const float real = lor_time_to_seconds(lor_seconds_to_time(f));
+    const float real = lor_time_to_seconds(lor_seconds_to_time(f));
 
-  // safely handle an offset between the expected seconds values
-  // this is caused by the encoding scheme being lossy with precision
-  const float diff = real > f ? real - f : f - real;
+    // safely handle an offset between the expected seconds values
+    // this is caused by the encoding scheme being lossy with precision
+    const float diff = real > f ? real - f : f - real;
 
-  printf("time: %f real: %f (∆%f)\n", f, real, diff);
+    printf("time: %f real: %f (∆%f)\n", f, real, diff);
 
-  assert(diff < 0.01);
+    assert(diff < 0.01);
 }
 
 static void test_time_encoding(float s) {
-  lor_uint8_t b[32];
+    lor_uint8_t b[32];
 
-  lor_time_t time, read_time;
-  int writtenb;
+    lor_time_t time, read_time;
+    int writtenb;
 
-  time = lor_seconds_to_time(s);
-  writtenb = lor_write_time(time, b);
+    time = lor_seconds_to_time(s);
+    writtenb = lor_write_time(time, b);
 
-  assert(lor_read_time(&read_time, b) == writtenb);
+    assert(lor_read_time(&read_time, b) == writtenb);
 
-  assert(time == read_time);
+    assert(time == read_time);
 }
 
-int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) {
-  float test_intervals[5] = {0.1F, 0.5F, 1.0F, 2.0F, 25.0F};
+int main(__attribute__((unused)) int argc,
+         __attribute__((unused)) char **argv) {
+    float test_intervals[5] = {0.1F, 0.5F, 1.0F, 2.0F, 25.0F};
 
-  size_t i;
-  for (i = 0; i < sizeof(test_intervals) / sizeof(float); i++) {
-    const float f = test_intervals[i];
+    size_t i;
+    for (i = 0; i < sizeof(test_intervals) / sizeof(float); i++) {
+        const float f = test_intervals[i];
 
-    test_time_interval_diff(f);
-    test_time_encoding(f);
-  }
+        test_time_interval_diff(f);
+        test_time_encoding(f);
+    }
 
-  test_time_table();
+    test_time_table();
 
-  return 0;
+    return 0;
 }

@@ -50,4 +50,4 @@ int lor_write_complex_effect(lor_effect_t primaryEffect,
                              lor_unit_t unit,
                              lor_uint8_t *b);
 
-#endif // LIGHTORAMA_EASY_H
+#endif// LIGHTORAMA_EASY_H

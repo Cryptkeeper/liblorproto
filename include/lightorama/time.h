@@ -26,10 +26,10 @@
 
 #include "coretypes.h"
 
-#define LOR_TIME_MAX         ((lor_time_t)0x8014)
+#define LOR_TIME_MAX         ((lor_time_t) 0x8014)
 #define LOR_TIME_MAX_SECONDS 25.0F
 
-#define LOR_TIME_MIN         ((lor_time_t)0x13EB)
+#define LOR_TIME_MIN         ((lor_time_t) 0x13EB)
 #define LOR_TIME_MIN_SECONDS 0.1F
 
 /**
@@ -54,4 +54,4 @@ int lor_write_time(lor_time_t time, lor_uint8_t *b);
 
 int lor_read_time(lor_time_t *time, const lor_uint8_t *b);
 
-#endif // LIGHTORAMA_TIME_H
+#endif// LIGHTORAMA_TIME_H

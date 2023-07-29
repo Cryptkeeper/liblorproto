@@ -267,7 +267,8 @@ static void fade_channel_while_shimmering(lor_unit_t unit_id, lor_channel_t chan
 
 ### Memory Allocations
 
-liblightorama does not allocate any memory internally, and requires a `lor_uint8_t *` be passed to functions for writing to
+liblightorama does not allocate any memory internally, and requires a `lor_uint8_t *` be passed to functions for writing
+to
 memory. To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest
 write call will not write more than 32 bytes.
 

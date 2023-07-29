@@ -31,29 +31,29 @@ int lor_write_channel_effect(lor_effect_t effect,
                              lor_channel_t channel,
                              lor_unit_t unit,
                              lor_uint8_t *b) {
-  int n = 0;
-  n += lor_write_unit(unit, &b[n]);
-  b[n++] = effect;
-  n += lor_write_effect_struct(effect, effectStruct, &b[n]);
-  n += lor_write_channel(channel, &b[n]);
-  return n;
+    int n = 0;
+    n += lor_write_unit(unit, &b[n]);
+    b[n++] = effect;
+    n += lor_write_effect_struct(effect, effectStruct, &b[n]);
+    n += lor_write_channel(channel, &b[n]);
+    return n;
 }
 
 static lor_uint8_t lor_get_channelset_offset_opts(lor_channelset_t channelset) {
-  if (channelset.offset > 0) {
-    return LOR_OFFSET_OPT_MULTIPART;
-  } else {
-    const lor_uint8_t bank0 = (channelset.channels & 0x00FF);
-    const lor_uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
+    if (channelset.offset > 0) {
+        return LOR_OFFSET_OPT_MULTIPART;
+    } else {
+        const lor_uint8_t bank0 = (channelset.channels & 0x00FF);
+        const lor_uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
 
-    if (bank0 > 0x00 && bank1 > 0x00) {
-      return LOR_OFFSET_OPT_16;
-    } else if (bank0 > 0) {
-      return LOR_OFFSET_OPT_8L;
-    } else /* if (bank1 > 0) */ {
-      return LOR_OFFSET_OPT_8H;
+        if (bank0 > 0x00 && bank1 > 0x00) {
+            return LOR_OFFSET_OPT_16;
+        } else if (bank0 > 0) {
+            return LOR_OFFSET_OPT_8L;
+        } else /* if (bank1 > 0) */ {
+            return LOR_OFFSET_OPT_8H;
+        }
     }
-  }
 }
 
 int lor_write_channelset_effect(lor_effect_t effect,
@@ -61,31 +61,29 @@ int lor_write_channelset_effect(lor_effect_t effect,
                                 lor_channelset_t channelset,
                                 lor_unit_t unit,
                                 lor_uint8_t *b) {
-  int n = 0;
-  n += lor_write_unit(unit, &b[n]);
-  b[n++] = effect | lor_get_channelset_offset_opts(channelset);
-  n += lor_write_effect_struct(effect, effectStruct, &b[n]);
-  n += lor_write_channelset(channelset, &b[n]);
-  return n;
+    int n = 0;
+    n += lor_write_unit(unit, &b[n]);
+    b[n++] = effect | lor_get_channelset_offset_opts(channelset);
+    n += lor_write_effect_struct(effect, effectStruct, &b[n]);
+    n += lor_write_channelset(channelset, &b[n]);
+    return n;
 }
 
 int lor_write_unit_effect(lor_effect_t effect,
                           const void *effectStruct,
                           lor_unit_t unit,
                           lor_uint8_t *b) {
-  int n = 0;
-  n += lor_write_unit(unit, &b[n]);
-  b[n++] = effect | LOR_OFFSET_OPT_UNIT;
-  n += lor_write_effect_struct(effect, effectStruct, &b[n]);
-  return n;
+    int n = 0;
+    n += lor_write_unit(unit, &b[n]);
+    b[n++] = effect | LOR_OFFSET_OPT_UNIT;
+    n += lor_write_effect_struct(effect, effectStruct, &b[n]);
+    return n;
 }
 
 static int lor_write_channel2(lor_channel_t channel, lor_uint8_t *b) {
-  int written = lor_write_channel(channel, b);
-  if (written < 2) {
-    b[written++] = 0x81;
-  }
-  return written;
+    int written = lor_write_channel(channel, b);
+    if (written < 2) { b[written++] = 0x81; }
+    return written;
 }
 
 int lor_write_complex_effect(lor_effect_t primaryEffect,
@@ -94,11 +92,11 @@ int lor_write_complex_effect(lor_effect_t primaryEffect,
                              lor_channel_t channel,
                              lor_unit_t unit,
                              lor_uint8_t *b) {
-  int n = 0;
-  n += lor_write_unit(unit, &b[n]);
-  b[n++] = primaryEffect;
-  n += lor_write_channel2(channel, &b[n]);
-  b[n++] = secondaryEffect;
-  n += lor_write_effect_struct(secondaryEffect, effectStruct, &b[n]);
-  return n;
+    int n = 0;
+    n += lor_write_unit(unit, &b[n]);
+    b[n++] = primaryEffect;
+    n += lor_write_channel2(channel, &b[n]);
+    b[n++] = secondaryEffect;
+    n += lor_write_effect_struct(secondaryEffect, effectStruct, &b[n]);
+    return n;
 }

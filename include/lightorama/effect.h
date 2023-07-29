@@ -26,35 +26,37 @@
 
 #include "coretypes.h"
 
-#define LOR_EFFECT_SET_LIGHTS    ((lor_effect_t)0x01)
-#define LOR_EFFECT_SET_OFF       ((lor_effect_t)0x02)
-#define LOR_EFFECT_SET_INTENSITY ((lor_effect_t)0x03)
-#define LOR_EFFECT_FADE          ((lor_effect_t)0x04)
-#define LOR_EFFECT_PULSE         ((lor_effect_t)0x05)
-#define LOR_EFFECT_TWINKLE       ((lor_effect_t)0x06)
-#define LOR_EFFECT_SHIMMER       ((lor_effect_t)0x07)
+#define LOR_EFFECT_SET_LIGHTS    ((lor_effect_t) 0x01)
+#define LOR_EFFECT_SET_OFF       ((lor_effect_t) 0x02)
+#define LOR_EFFECT_SET_INTENSITY ((lor_effect_t) 0x03)
+#define LOR_EFFECT_FADE          ((lor_effect_t) 0x04)
+#define LOR_EFFECT_PULSE         ((lor_effect_t) 0x05)
+#define LOR_EFFECT_TWINKLE       ((lor_effect_t) 0x06)
+#define LOR_EFFECT_SHIMMER       ((lor_effect_t) 0x07)
 
 struct lor_effect_setintensity_t {
-  lor_intensity_t intensity;
+    lor_intensity_t intensity;
 };
 
 struct lor_effect_fade_t {
-  lor_intensity_t startIntensity;
-  lor_intensity_t endIntensity;
-  lor_time_t duration;
+    lor_intensity_t startIntensity;
+    lor_intensity_t endIntensity;
+    lor_time_t duration;
 };
 
 struct lor_effect_pulse_t {
-  lor_time_t halfInterval;
+    lor_time_t halfInterval;
 };
 
 union lor_effect_any_t {
-  struct lor_effect_setintensity_t setIntensity;
-  struct lor_effect_fade_t fade;
-  struct lor_effect_pulse_t pulse;
+    struct lor_effect_setintensity_t setIntensity;
+    struct lor_effect_fade_t fade;
+    struct lor_effect_pulse_t pulse;
 };
 
-int lor_write_effect_struct(lor_effect_t effect, const void *effectStruct, lor_uint8_t *b);
+int lor_write_effect_struct(lor_effect_t effect,
+                            const void *effectStruct,
+                            lor_uint8_t *b);
 
 int lor_read_effect_struct(lor_effect_t effect,
                            union lor_effect_any_t *effectStruct,
@@ -79,4 +81,4 @@ int lor_read_effect_struct(lor_effect_t effect,
  */
 int lor_is_effect_eq(lor_effect_t effect, const void *aes, const void *bes);
 
-#endif // LIGHTORAMA_EFFECT_H
+#endif// LIGHTORAMA_EFFECT_H

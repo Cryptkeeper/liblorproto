@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(lightorama
-        VERSION 2.6.1
-        DESCRIPTION "C90 library implementing the Light-O-Rama \(LOR\) communication protocol"
+        VERSION 3.0.0
+        DESCRIPTION "C99 library implementing the Light-O-Rama \(LOR\) communication protocol"
         HOMEPAGE_URL "https://github.com/Cryptkeeper/liblightorama"
         LANGUAGES C)
 
-set(CMAKE_C_STANDARD 90)
+set(CMAKE_C_STANDARD 99)
 
 if (APPLE)
     include_directories(/usr/local/include)

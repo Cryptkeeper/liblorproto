@@ -27,53 +27,54 @@
 #include <assert.h>
 
 static void test_channelset_encoding(int offset, int channels) {
-  lor_uint8_t b[32];
+    lor_uint8_t b[32];
 
-  struct lor_channelset_t channelset, read_channelset;
-  int writtenb;
+    struct lor_channelset_t channelset, read_channelset;
+    int writtenb;
 
-  lor_uint8_t encode_opts;
+    lor_uint8_t encode_opts;
 
-  channelset.offset = offset;
+    channelset.offset = offset;
 
-  // rather than test each 2^16-1 value of `.channels` per offset, test each bit flag position,
-  // instead creating 16 test cases per offset
-  assert(channels < 16);
-  channelset.channels = 1 << channels;
+    // rather than test each 2^16-1 value of `.channels` per offset, test each bit flag position,
+    // instead creating 16 test cases per offset
+    assert(channels < 16);
+    channelset.channels = 1 << channels;
 
-  writtenb = lor_write_channelset(channelset, b);
+    writtenb = lor_write_channelset(channelset, b);
 
-  // copy of `lor_get_channelset_opts` from src/effect.c
-  // used to generate a set of bitflag options valid within an encoded channelset context
-  if (channelset.offset > 0) {
-    encode_opts = LOR_OFFSET_OPT_MULTIPART;
-  } else {
-    const lor_uint8_t bank0 = (channelset.channels & 0x00FF);
-    const lor_uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
-
-    if (bank0 > 0x00 && bank1 > 0x00) {
-      encode_opts = LOR_OFFSET_OPT_16;
-    } else if (bank0 > 0) {
-      encode_opts = LOR_OFFSET_OPT_8L;
+    // copy of `lor_get_channelset_opts` from src/effect.c
+    // used to generate a set of bitflag options valid within an encoded channelset context
+    if (channelset.offset > 0) {
+        encode_opts = LOR_OFFSET_OPT_MULTIPART;
     } else {
-      encode_opts = LOR_OFFSET_OPT_8H;
+        const lor_uint8_t bank0 = (channelset.channels & 0x00FF);
+        const lor_uint8_t bank1 = (channelset.channels & 0xFF00) >> 8;
+
+        if (bank0 > 0x00 && bank1 > 0x00) {
+            encode_opts = LOR_OFFSET_OPT_16;
+        } else if (bank0 > 0) {
+            encode_opts = LOR_OFFSET_OPT_8L;
+        } else {
+            encode_opts = LOR_OFFSET_OPT_8H;
+        }
     }
-  }
 
-  assert(lor_read_channelset(&read_channelset, encode_opts, b) == writtenb);
+    assert(lor_read_channelset(&read_channelset, encode_opts, b) == writtenb);
 
-  assert(channelset.offset == read_channelset.offset);
-  assert(channelset.channels == read_channelset.channels);
+    assert(channelset.offset == read_channelset.offset);
+    assert(channelset.channels == read_channelset.channels);
 }
 
-int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) {
-  int offset;
-  for (offset = 1; offset <= LOR_CHANNELSET_OFFSET_MAX; offset++) {
-    int channels;
-    for (channels = 0; channels < 16; channels++) {
-      test_channelset_encoding(offset, channels);
+int main(__attribute__((unused)) int argc,
+         __attribute__((unused)) char **argv) {
+    int offset;
+    for (offset = 1; offset <= LOR_CHANNELSET_OFFSET_MAX; offset++) {
+        int channels;
+        for (channels = 0; channels < 16; channels++) {
+            test_channelset_encoding(offset, channels);
+        }
     }
-  }
 
-  return 0;
+    return 0;
 }

@@ -26,16 +26,16 @@
 
 typedef unsigned char lor_uint8_t;
 
-typedef lor_uint8_t lor_effect_t;    // see effect.h
-typedef lor_uint8_t lor_intensity_t; // see intensity.h
-typedef lor_uint8_t lor_unit_t;      // see uid.h
+typedef lor_uint8_t lor_effect_t;   // see effect.h
+typedef lor_uint8_t lor_intensity_t;// see intensity.h
+typedef lor_uint8_t lor_unit_t;     // see uid.h
 
 typedef unsigned short lor_uint16_t;
 
-typedef lor_uint16_t lor_time_t;    // see time.h
-typedef lor_uint16_t lor_channel_t; // see uid.h
+typedef lor_uint16_t lor_time_t;   // see time.h
+typedef lor_uint16_t lor_channel_t;// see uid.h
 
-struct lor_channelset_t; // see uid.h
+struct lor_channelset_t;// see uid.h
 typedef struct lor_channelset_t lor_channelset_t;
 
-#endif // LIGHTORAMA_CORETYPES_H
+#endif// LIGHTORAMA_CORETYPES_H
