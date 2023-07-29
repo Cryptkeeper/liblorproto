@@ -23,41 +23,43 @@
  */
 #include "lightorama/intensity.h"
 
-int lor_write_intensity(lor_intensity_t intensity, lor_uint8_t *buf) {
-    buf[0] = intensity;
-    return 1;
-}
+LorResult lorEncodeIntensity(const LorIntensity intensity,
+                             unsigned char *const b,
+                             const size_t bSize) {
+    if (b != NULL) {
+        if (bSize < 1) return LorErrOutOfBuffer;
 
-int lor_read_intensity(lor_intensity_t *intensity, const lor_uint8_t *buf) {
-    *intensity = buf[0];
+        b[0] = intensity;
+    }
+
     return 1;
 }
 
 #define LOR_CLAMPF(val, min, max)                                              \
     ((val) < (min) ? (min) : ((val) > (max)) ? (max) : (val))
-#define LOR_INTENSITY_RANGE                                                    \
-    ((lor_intensity_t) (LOR_INTENSITY_MAX - LOR_INTENSITY_MIN))
 
-lor_intensity_t lor_intensity_curve_vendor(float normal) {
+#define LOR_INTENSITY_RANGE                                                    \
+    ((LorIntensity) (LOR_INTENSITY_MAX - LOR_INTENSITY_MIN))
+
+inline LorIntensity lorIntensityCurveVendor(float normal) {
     const float clamped = LOR_CLAMPF(normal, 0, 1);
     if (clamped == 0) {
         return LOR_INTENSITY_MIN;
     } else if (clamped == 1) {
         return LOR_INTENSITY_MAX;
     } else {
-        return ((lor_intensity_t) 0xE4) - (lor_intensity_t) (clamped * 200);
+        return ((LorIntensity) 0xE4) - (LorIntensity) (clamped * 200);
     }
 }
 
-lor_intensity_t lor_intensity_curve_linear(float normal) {
-    return ((lor_intensity_t) (LOR_CLAMPF(normal, 0, 1) *
-                               LOR_INTENSITY_RANGE)) +
+inline LorIntensity lorIntensityCurveLinear(float normal) {
+    return ((LorIntensity) (LOR_CLAMPF(normal, 0, 1) * LOR_INTENSITY_RANGE)) +
            LOR_INTENSITY_MIN;
 }
 
-lor_intensity_t lor_intensity_curve_squared(float normal) {
+inline LorIntensity lorIntensityCurveSquared(float normal) {
     const float clamped = LOR_CLAMPF(normal, 0, 1);
     const float squared = 1 - (1 - clamped) * (1 - clamped);
-    return ((lor_intensity_t) (squared * LOR_INTENSITY_RANGE)) +
-           LOR_INTENSITY_MIN;
+
+    return ((LorIntensity) (squared * LOR_INTENSITY_RANGE)) + LOR_INTENSITY_MIN;
 }

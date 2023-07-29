@@ -36,7 +36,7 @@ typedef uint8_t LorChannel;
 typedef uint16_t LorTime;
 
 typedef struct LorChannelSet {
-    uint8_t offset;
+    uint8_t offset; /* 6-bit unsigned int, max value of 64 */
     uint16_t channelBits;
 } LorChannelSet;
 

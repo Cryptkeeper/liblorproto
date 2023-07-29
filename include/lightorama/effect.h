@@ -68,13 +68,15 @@ typedef struct LorPulseArgs {
  * Any other effect value MUST provide a NULL `args` value with `argsSize` of 0.
  *
  * `lorWriteEffectArgs` encodes the arguments into binary protocol binary data into
- * the provided buffer pointer, `b`. If `b` is NULL, no data is encoded and instead
- * the minimum buffer size for encoding the arguments is returned. This is useful
- * for determining buffer sizes prior to allocating.
+ * the provided buffer pointer, `b`.
  *
- * Prior to encoding the data, `bSize` is checked to ensure `b` has available
- * capacity. If `bSize` is too small, `LorErrOutOfBuffer` is returned and `b` remains
- * unmodified by the function.
+ * If `b` is NULL, no data is encoded and instead the minimum buffer size for
+ * encoding the arguments is returned. This is useful for determining buffer sizes
+ * prior to allocating. `bufSize` is ignored in this scenario, but the value
+ * should be zero for clarity.
+ *
+ * Otherwise, `bSize` is checked to ensure `b` has available capacity. If `bSize`
+ * is too small, `LorErrOutOfBuffer` is returned and `b` remains unmodified.
  *
  * Return Values:
  *
@@ -91,8 +93,8 @@ typedef struct LorPulseArgs {
  *                      when it should be OR `argsSize` does not match the expected
  *                      sizeof value according to the table
  *
- *  LorErrOutOfBuffer: the size of the output buffer `b`, according to `bSize`, is
- *                    too small
+ *  LorErrOutOfBuffer: the size of the output buffer `b`, according to `bSize`,
+ *                       is too small
  *
  */
 LorResult lorEncodeEffectArgs(LorEffect effect,

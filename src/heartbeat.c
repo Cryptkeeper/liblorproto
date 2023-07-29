@@ -23,16 +23,21 @@
  */
 #include "lightorama/heartbeat.h"
 
-#include "lightorama/uid.h"
+LorResult lorEncodeUnitHeartbeat(const LorUnit unit,
+                                 unsigned char *const b,
+                                 const size_t bSize) {
+    if (b != NULL) {
+        if (bSize < 3) return LorErrOutOfBuffer;
 
-int lor_write_unit_heartbeat(lor_unit_t unit, lor_uint8_t *b) {
-    int n = 0;
-    n += lor_write_unit(unit, b);
-    b[n++] = 0x81;
-    b[n++] = 0x56;
-    return n;
+        b[0] = unit;
+        b[1] = 0x81;
+        b[2] = 0x56;
+    }
+
+    return 3;
 }
 
-int lor_write_heartbeat(lor_uint8_t *b) {
-    return lor_write_unit_heartbeat(LOR_UNIT_ALL, b);
+LorResult lorEncodeHeartbeat(unsigned char *const b, const size_t bSize) {
+    // 0xFF is a magic protocol value that matches all connected units
+    return lorEncodeUnitHeartbeat(0xFF, b, bSize);
 }

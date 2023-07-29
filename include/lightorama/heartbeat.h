@@ -30,8 +30,8 @@
 #define LOR_HEARTBEAT_DELAY_MS 500
 #define LOR_HEARTBEAT_DELAY_S  0.5F
 
-int lor_write_unit_heartbeat(lor_unit_t unit, lor_uint8_t *b);
+LorResult lorEncodeUnitHeartbeat(LorUnit unit, unsigned char *b, size_t bSize);
 
-int lor_write_heartbeat(lor_uint8_t *b);
+LorResult lorEncodeHeartbeat(unsigned char *b, size_t bSize);
 
 #endif// LIGHTORAMA_HEARTBEAT_H

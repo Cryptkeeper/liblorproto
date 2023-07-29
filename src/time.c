@@ -42,13 +42,14 @@ float lorTimeToSeconds(const LorTime time) {
 
 LorResult
 lorEncodeTime(const LorTime time, unsigned char *const b, const size_t bSize) {
-    if (b == NULL) return LorErrInvalidArg;
-    if (bSize < 2) return LorErrOutOfBuffer;
+    if (b != NULL) {
+        if (bSize < 2) return LorErrOutOfBuffer;
 
-    const uint16_t bits = time | LOR_DURATION_MASK;
+        const uint16_t bits = time | LOR_DURATION_MASK;
 
-    b[0] = bits >> 8;
-    b[1] = bits & 0xFF;
+        b[0] = bits >> 8;
+        b[1] = bits & 0xFF;
+    }
 
     return 2;
 }

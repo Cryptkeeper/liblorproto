@@ -26,6 +26,8 @@
 
 #include "coretypes.h"
 
+#include "effect.h"
+
 int lor_write_channel_effect(lor_effect_t effect,
                              const void *effectStruct,
                              lor_channel_t channel,
