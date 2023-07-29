@@ -26,59 +26,79 @@
 
 #include "coretypes.h"
 
-#define LOR_EFFECT_SET_LIGHTS    ((lor_effect_t) 0x01)
-#define LOR_EFFECT_SET_OFF       ((lor_effect_t) 0x02)
-#define LOR_EFFECT_SET_INTENSITY ((lor_effect_t) 0x03)
-#define LOR_EFFECT_FADE          ((lor_effect_t) 0x04)
-#define LOR_EFFECT_PULSE         ((lor_effect_t) 0x05)
-#define LOR_EFFECT_TWINKLE       ((lor_effect_t) 0x06)
-#define LOR_EFFECT_SHIMMER       ((lor_effect_t) 0x07)
+typedef enum LorEffect {
+    LOR_EFFECT_SET_LIGHTS = 0b0001,   // 0x01
+    LOR_EFFECT_SET_OFF = 0b0010,      // 0x02
+    LOR_EFFECT_SET_INTENSITY = 0b0011,// 0x03
+    LOR_EFFECT_FADE = 0b0100,         // 0x04
+    LOR_EFFECT_PULSE = 0b0101,        // 0x05
+    LOR_EFFECT_TWINKLE = 0b0110,      // 0x06
+    LOR_EFFECT_SHIMMER = 0b0111,      // 0x07
+} LorEffect;
 
-struct lor_effect_setintensity_t {
-    lor_intensity_t intensity;
-};
+typedef struct LorSetIntensityArgs {
+    LorIntensity intensity;
+} LorSetIntensityArgs;
 
-struct lor_effect_fade_t {
-    lor_intensity_t startIntensity;
-    lor_intensity_t endIntensity;
-    lor_time_t duration;
-};
+typedef struct LorFadeArgs {
+    LorIntensity startIntensity;
+    LorIntensity endIntensity;
+    LorTime duration;
+} LorFadeArgs;
 
-struct lor_effect_pulse_t {
-    lor_time_t halfInterval;
-};
+typedef struct LorPulseArgs {
+    LorTime halfInterval;
+} LorPulseArgs;
 
-union lor_effect_any_t {
-    struct lor_effect_setintensity_t setIntensity;
-    struct lor_effect_fade_t fade;
-    struct lor_effect_pulse_t pulse;
-};
-
-int lor_write_effect_struct(lor_effect_t effect,
-                            const void *effectStruct,
-                            lor_uint8_t *b);
-
-int lor_read_effect_struct(lor_effect_t effect,
-                           union lor_effect_any_t *effectStruct,
-                           const lor_uint8_t *b);
-
-/**
- * Compares two effect metadata structures to test if their member fields (within `aes` & `bes`) are
- * equal. Assumes `aes` & `bes` are not NULL if the value of `effect` requires an associated
- * metadata struct. If a metadata struct is NOT required, the pointers will be ignored by the
- * function and may be non-NULL.
+/*
+ * `lorWriteEffectArgs` encodes the `args` structure as binary protocol data into
+ * `b`, according to the value of `effect`.
  *
- * Metadata structs may take the form of any `struct lor_effect_*_t` type, or `union
- * lor_effect_any_t`. The two parameters do not need to match types for the purposes of the
- * comparison.
+ * `args` MUST be a non-NULL when `effect` is `LOR_EFFECT_SET_INTENSITY`,
+ * `LOR_EFFECT_FADE` or `LOR_EFFECT_PULSE`. The value of `args` should be a pointer
+ * to the corresponding structure for a given `effect` value in the table below.
+ * `argsSize` MUST be set to the `sizeof` of the corresponding structure.
  *
- * @param effect
- * @param aes A pointer to a `struct lor_effect_*_t` or `union lor_effect_any_t`, if the `effect`
- * value requires an associated metadata struct
- * @param bes A pointer to a `struct lor_effect_*_t` or `union lor_effect_any_t` used to compare for
- * equality
- * @return 1 if equal, 0 if not, -1 if `effect` is an unknown/unsupported value
+ * Effect Argument Structures:
+ *
+ *  `LOR_EFFECT_SET_INTENSITY`        `LorSetIntensityArgs`
+ *  `LOR_EFFECT_FADE`                 `LorFadeArgs`
+ *  `LOR_EFFECT_PULSE`                `LorPulseArgs`
+ *
+ * Any other effect value MUST provide a NULL `args` value with `argsSize` of 0.
+ *
+ * `lorWriteEffectArgs` encodes the arguments into binary protocol binary data into
+ * the provided buffer pointer, `b`. If `b` is NULL, no data is encoded and instead
+ * the minimum buffer size for encoding the arguments is returned. This is useful
+ * for determining buffer sizes prior to allocating.
+ *
+ * Prior to encoding the data, `bSize` is checked to ensure `b` has available
+ * capacity. If `bSize` is too small, `LorErrOutOfBuffer` is returned and `b` remains
+ * unmodified by the function.
+ *
+ * Return Values:
+ *
+ *  If successful (>= 0), the return value is the number of bytes written to `b`.
+ *  Zero bytes written is normal behavior for some uses and does not indicate an
+ *  error.
+ *
+ *  If `b` is NULL, this represents the minimum value of `bSize` required for encoding
+ *  the arguments with a non-NULL `b` buffer.
+ *
+ * Errors:
+ *
+ *  LorErrInvalidArg: `args` is NULL when it should not be OR `args` is not NULL
+ *                      when it should be OR `argsSize` does not match the expected
+ *                      sizeof value according to the table
+ *
+ *  LorErrOutOfBuffer: the size of the output buffer `b`, according to `bSize`, is
+ *                    too small
+ *
  */
-int lor_is_effect_eq(lor_effect_t effect, const void *aes, const void *bes);
+LorResult lorEncodeEffectArgs(LorEffect effect,
+                              const void *args,
+                              size_t argsSize,
+                              unsigned char *b,
+                              size_t bSize);
 
 #endif// LIGHTORAMA_EFFECT_H

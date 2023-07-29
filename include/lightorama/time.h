@@ -26,32 +26,16 @@
 
 #include "coretypes.h"
 
-#define LOR_TIME_MAX         ((lor_time_t) 0x8014)
+#define LOR_TIME_MAX         ((LorTime) 0x8014)
 #define LOR_TIME_MAX_SECONDS 25.0F
 
-#define LOR_TIME_MIN         ((lor_time_t) 0x13EB)
+#define LOR_TIME_MIN         ((LorTime) 0x13EB)
 #define LOR_TIME_MIN_SECONDS 0.1F
 
-/**
- * Encodes a float representation of seconds (`seconds`) into a `lor_time_t` value. `seconds` is
- * automatically clamped within the `LOR_TIME_MIN_SECONDS` and `LOR_TIME_MAX_SECONDS` bounds.
- *
- * `lor_time_t` is encoded as a uint16, and does not support the full precision of float. It is
- * recommended to use decisecond (0.1) increments only.
- */
-lor_time_t lor_seconds_to_time(float seconds);
+LorTime lorSecondsToTime(float seconds);
 
-/**
- * Encodes a `lor_time_t` value (`time`) into a float representation of seconds. The resulting value
- * is automatically clamped within the `LOR_TIME_MIN_SECONDS` and `LOR_TIME_MAX_SECONDS` bounds.
- *
- * `lor_time_t` is encoded as a uint16, and does not support the full precision of float. It is
- * recommended to use decisecond (0.1) increments only.
- */
-float lor_time_to_seconds(lor_time_t time);
+float lorTimeToSeconds(LorTime time);
 
-int lor_write_time(lor_time_t time, lor_uint8_t *b);
-
-int lor_read_time(lor_time_t *time, const lor_uint8_t *b);
+LorResult lorEncodeTime(LorTime, unsigned char *b, size_t bSize);
 
 #endif// LIGHTORAMA_TIME_H

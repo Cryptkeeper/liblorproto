@@ -25,30 +25,30 @@
 
 #define LOR_CLAMPF(x, min, max) (x < min ? min : (x > max ? max : x))
 
-lor_time_t lor_seconds_to_time(float seconds) {
-    seconds = LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
-    return (lor_time_t) (LOR_TIME_MIN / (seconds / LOR_TIME_MIN_SECONDS));
+LorTime lorSecondsToTime(const float seconds) {
+    const float s =
+            LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
+
+    return (LorTime) (LOR_TIME_MIN / (s / LOR_TIME_MIN_SECONDS));
 }
 
-float lor_time_to_seconds(lor_uint16_t time) {
+float lorTimeToSeconds(const LorTime time) {
     const float seconds = (LOR_TIME_MIN / (float) time) * LOR_TIME_MIN_SECONDS;
+
     return LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
 }
 
 #define LOR_DURATION_MASK 0x8000
 
-int lor_write_time(lor_time_t time, lor_uint8_t *b) {
-    // include required 0x8000 protocol mask if the upper duration byte is zero
-    const lor_uint16_t t = time | LOR_DURATION_MASK;
-    b[0] = (t & 0xFF00) >> 8;
-    b[1] = (t & 0x00FF);
-    return 2;
-}
+LorResult
+lorEncodeTime(const LorTime time, unsigned char *const b, const size_t bSize) {
+    if (b == NULL) return LorErrInvalidArg;
+    if (bSize < 2) return LorErrOutOfBuffer;
 
-int lor_read_time(lor_time_t *time, const lor_uint8_t *b) {
-    // strip protocol mask bit (indicates the byte value is zero)
-    lor_uint16_t t = ((lor_uint16_t) (b[0] << 8)) | b[1];
-    t &= ~LOR_DURATION_MASK;
-    *time = (lor_time_t) (t);
+    const uint16_t bits = time | LOR_DURATION_MASK;
+
+    b[0] = bits >> 8;
+    b[1] = bits & 0xFF;
+
     return 2;
 }
