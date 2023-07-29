@@ -8,11 +8,6 @@ project(lightorama
 
 set(CMAKE_C_STANDARD 99)
 
-if (APPLE)
-    include_directories(/usr/local/include)
-    link_directories(/usr/local/lib)
-endif ()
-
 file(GLOB_RECURSE PUBLIC_HEADERS "include/lightorama/*.h")
 
 add_library(lightorama
