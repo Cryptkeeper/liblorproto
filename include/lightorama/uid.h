@@ -32,19 +32,23 @@
 // https://github.com/Cryptkeeper/lightorama-protocol/blob/master/PROTOCOL.md#unit-ids
 #define LOR_UNIT_ALL ((LorUnit) 0xFF)
 
-LorResult lorEncodeUnit(LorUnit unit, unsigned char *b, size_t bSize);
+LorResult lorEncodeUnit(LorUnit unit, LorWriteFn write);
 
-LorResult lorEncodeChannel(LorChannel channel, unsigned char *b, size_t bSize);
+LorResult lorEncodeChannel(LorChannel channel, LorWriteFn write);
 
-LorResult
-lorEncodeChannelSet(LorChannelSet channelSet, unsigned char *b, size_t bSize);
+LorResult lorEncodeChannel2(LorChannel channel, int align, LorWriteFn write);
 
-#define LOR_CHANNELSET_OFFSET_MAX ((1 << 6) - 1)
+typedef enum LorChannelFormat {
+    LOR_FORMAT_SINGLE    = 0,
+    LOR_FORMAT_16        = 0b00010000, /* 0x10 */
+    LOR_FORMAT_8L        = 0b00100000, /* 0x20 */
+    LOR_FORMAT_8H        = 0b00110000, /* 0x30 */
+    LOR_FORMAT_UNIT      = 0b01000000, /* 0x40 */
+    LOR_FORMAT_MULTIPART = 0b01010000, /* 0x50 */
+} LorChannelFormat;
 
-#define LOR_OFFSET_OPT_16        0x10
-#define LOR_OFFSET_OPT_8H        0x20
-#define LOR_OFFSET_OPT_8L        0x30
-#define LOR_OFFSET_OPT_UNIT      0x40
-#define LOR_OFFSET_OPT_MULTIPART 0x50
+LorResult lorGetChannelSetFormat(LorChannelSet channelSet);
+
+LorResult lorEncodeChannelSet(LorChannelSet channelSet, LorWriteFn write);
 
 #endif// LIGHTORAMA_UID_H

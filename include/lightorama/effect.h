@@ -26,15 +26,20 @@
 
 #include "coretypes.h"
 
+#include "uid.h"
+
 typedef enum LorEffect {
-    LOR_EFFECT_SET_LIGHTS = 0b0001,   // 0x01
-    LOR_EFFECT_SET_OFF = 0b0010,      // 0x02
+    LOR_EFFECT_SET_LIGHTS    = 0b0001,// 0x01
+    LOR_EFFECT_SET_OFF       = 0b0010,// 0x02
     LOR_EFFECT_SET_INTENSITY = 0b0011,// 0x03
-    LOR_EFFECT_FADE = 0b0100,         // 0x04
-    LOR_EFFECT_PULSE = 0b0101,        // 0x05
-    LOR_EFFECT_TWINKLE = 0b0110,      // 0x06
-    LOR_EFFECT_SHIMMER = 0b0111,      // 0x07
+    LOR_EFFECT_FADE          = 0b0100,// 0x04
+    LOR_EFFECT_PULSE         = 0b0101,// 0x05
+    LOR_EFFECT_TWINKLE       = 0b0110,// 0x06
+    LOR_EFFECT_SHIMMER       = 0b0111,// 0x07
 } LorEffect;
+
+LorResult
+lorEncodeEffect(LorEffect effect, LorChannelFormat format, LorWriteFn write);
 
 typedef struct LorSetIntensityArgs {
     LorIntensity intensity;
@@ -99,8 +104,7 @@ typedef struct LorPulseArgs {
  */
 LorResult lorEncodeEffectArgs(LorEffect effect,
                               const void *args,
-                              size_t argsSize,
-                              unsigned char *b,
-                              size_t bSize);
+                              int argsSize,
+                              LorWriteFn write);
 
 #endif// LIGHTORAMA_EFFECT_H

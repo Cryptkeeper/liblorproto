@@ -24,10 +24,9 @@
 #ifndef LIGHTORAMA_CORETYPES_H
 #define LIGHTORAMA_CORETYPES_H
 
-#include <stddef.h>// `size_t`
-#include <stdint.h>// `uint8_t`, `uint16_t`
+#include <stdint.h>
 
-#include "error.h"
+#include "result.h"
 
 typedef uint8_t LorUnit;
 typedef uint8_t LorIntensity;
@@ -39,5 +38,7 @@ typedef struct LorChannelSet {
     uint8_t offset; /* 6-bit unsigned int, max value of 64 */
     uint16_t channelBits;
 } LorChannelSet;
+
+typedef void (*LorWriteFn)(unsigned char b);
 
 #endif// LIGHTORAMA_CORETYPES_H

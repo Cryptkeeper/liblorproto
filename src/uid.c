@@ -25,15 +25,14 @@
 
 #include <stdbool.h>
 
-LorResult
-lorEncodeUnit(const LorUnit unit, unsigned char *const b, const size_t bSize) {
-    if (b != NULL) {
-        if (bSize < 1) return LorErrOutOfBuffer;
+LorResult lorEncodeUnit(const LorUnit unit, const LorWriteFn write) {
+    if (write) write(unit);
 
-        b[0] = unit;
-    }
+    return LorOK;
+}
 
-    return 1;
+LorResult lorEncodeChannel(LorChannel channel, LorWriteFn write) {
+    return lorEncodeChannel2(channel, 8, write);
 }
 
 // Light-O-Rama protocol requires all values be non-zero, so the highest order bit
@@ -42,31 +41,54 @@ lorEncodeUnit(const LorUnit unit, unsigned char *const b, const size_t bSize) {
 #define LOR_CHANNEL_OPT_HAS_OFFSET (0b01000000 | LOR_CHANNEL_OPT) /* 0xC0 */
 #define LOR_CHANNEL_OPT_DATA_MASK  0b00111111                     /* 0x3F */
 
-LorResult lorEncodeChannel(const LorChannel channel,
-                           unsigned char *const b,
-                           const size_t bSize) {
+LorResult lorEncodeChannel2(const LorChannel channel,
+                            const int align,
+                            const LorWriteFn write) {
     // 2 highest bits are reserved as flags
     const int MaxChannel = 1 << 6;
 
     const bool requiresOffset = channel > MaxChannel;
-    const int size = requiresOffset ? 2 : 1;
 
-    if (b != NULL) {
-        if (bSize < size) return LorErrOutOfBuffer;
-
+    if (write) {
         if (requiresOffset) {
             const int offset = channel / MaxChannel;
 
             if (offset < 0 || offset > MaxChannel) return LorErrInvalidChannel;
 
-            b[0] = (channel % MaxChannel) | LOR_CHANNEL_OPT_HAS_OFFSET;
-            b[1] = offset | LOR_CHANNEL_OPT;
+            write((channel % MaxChannel) | LOR_CHANNEL_OPT_HAS_OFFSET);
+            write(offset | LOR_CHANNEL_OPT);
         } else {
-            b[0] = channel | LOR_CHANNEL_OPT;
+            write(channel | LOR_CHANNEL_OPT);
+
+            // some protocol usages of channel restructures require 16-bit alignment
+            // this optionally pads using a magic protocol value
+            if (align == 16) write(0x81);
         }
     }
 
-    return size;
+    return LorOK;
+}
+
+static inline void lorGetChannelSetBanks(const LorChannelSet channelSet,
+                                         uint8_t *const bankL,
+                                         uint8_t *const bankH) {
+    *bankL = channelSet.channelBits & 0xFF;
+    *bankH = channelSet.channelBits >> 8;
+}
+
+LorResult lorGetChannelSetFormat(const LorChannelSet channelSet) {
+    if (channelSet.offset > 0) return (LorResult) LOR_FORMAT_MULTIPART;
+
+    uint8_t bankL, bankH;
+    lorGetChannelSetBanks(channelSet, &bankL, &bankH);
+
+    if (bankL > 0 && bankH > 0) return (LorResult) LOR_FORMAT_16;
+    else if (bankL > 0)
+        return (LorResult) LOR_FORMAT_8L;
+    else if (bankH > 0)
+        return (LorResult) LOR_FORMAT_8H;
+
+    return 0;
 }
 
 #define LOR_CHANNELSET_OPT_8L        0b01000000 /* 0x40 */
@@ -74,36 +96,27 @@ LorResult lorEncodeChannel(const LorChannel channel,
 #define LOR_CHANNELSET_OPT_DATA_MASK 0b00111111 /* 0x3F */
 
 LorResult lorEncodeChannelSet(const LorChannelSet channelSet,
-                              unsigned char *const b,
-                              const size_t bSize) {
+                              const LorWriteFn write) {
     // 6-bit unsigned int, max value of 64
     if (channelSet.offset > 64) return LorErrInvalidArg;
 
-    const uint8_t bankL = channelSet.channelBits & 0xFF;
-    const uint8_t bankH = channelSet.channelBits >> 8;
+    uint8_t bankL, bankH;
+    lorGetChannelSetBanks(channelSet, &bankL, &bankH);
 
-    int size = 0;
-
-    if (bankL > 0) size++;
-    if (bankH > 0) size++;
-    if (channelSet.offset > 0) size++;
-
-    if (b != NULL) {
-        if (bSize < size) return LorErrOutOfBuffer;
-
+    if (write) {
         if (channelSet.offset > 0) {
             if (bankL > 0 && bankH > 0) {
-                b[0] = channelSet.offset;
+                write(channelSet.offset);
             } else if (bankL > 0) {
-                b[0] = channelSet.offset | LOR_CHANNELSET_OPT_8L;
+                write(channelSet.offset | LOR_CHANNELSET_OPT_8L);
             } else if (bankH > 0) {
-                b[0] = channelSet.offset | LOR_CHANNELSET_OPT_8H;
+                write(channelSet.offset | LOR_CHANNELSET_OPT_8H);
             }
         }
 
-        if (bankL > 0) b[size - 2] = bankL;
-        if (bankH > 0) b[size - 1] = bankH;
+        if (bankL > 0) write(bankL);
+        if (bankH > 0) write(bankH);
     }
 
-    return size;
+    return LorOK;
 }

@@ -36,6 +36,6 @@ LorTime lorSecondsToTime(float seconds);
 
 float lorTimeToSeconds(LorTime time);
 
-LorResult lorEncodeTime(LorTime, unsigned char *b, size_t bSize);
+LorResult lorEncodeTime(LorTime, LorWriteFn write);
 
 #endif// LIGHTORAMA_TIME_H

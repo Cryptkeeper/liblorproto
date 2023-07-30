@@ -24,15 +24,10 @@
 #include "lightorama/intensity.h"
 
 LorResult lorEncodeIntensity(const LorIntensity intensity,
-                             unsigned char *const b,
-                             const size_t bSize) {
-    if (b != NULL) {
-        if (bSize < 1) return LorErrOutOfBuffer;
+                             const LorWriteFn write) {
+    if (write) write(intensity);
 
-        b[0] = intensity;
-    }
-
-    return 1;
+    return LorOK;
 }
 
 #define LOR_CLAMPF(val, min, max)                                              \
@@ -43,6 +38,7 @@ LorResult lorEncodeIntensity(const LorIntensity intensity,
 
 inline LorIntensity lorIntensityCurveVendor(float normal) {
     const float clamped = LOR_CLAMPF(normal, 0, 1);
+
     if (clamped == 0) {
         return LOR_INTENSITY_MIN;
     } else if (clamped == 1) {

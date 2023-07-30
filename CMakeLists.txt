@@ -9,16 +9,9 @@ project(lightorama
 set(CMAKE_C_STANDARD 99)
 
 file(GLOB_RECURSE PUBLIC_HEADERS "include/lightorama/*.h")
+file(GLOB_RECURSE SRC_FILES "src/*.c")
 
-add_library(lightorama
-        ${PUBLIC_HEADERS}
-        src/easy.c
-        src/effect.c
-        src/heartbeat.c
-        src/intensity.c
-        src/model.c
-        src/time.c
-        src/uid.c)
+add_library(lightorama ${PUBLIC_HEADERS} ${SRC_FILES})
 
 set_target_properties(lightorama PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 

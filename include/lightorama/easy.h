@@ -28,28 +28,32 @@
 
 #include "effect.h"
 
-int lor_write_channel_effect(lor_effect_t effect,
-                             const void *effectStruct,
-                             lor_channel_t channel,
-                             lor_unit_t unit,
-                             lor_uint8_t *b);
+LorResult lorEncodeChannelEffect(LorEffect effect,
+                                 const void *args,
+                                 int argsSize,
+                                 LorChannel channel,
+                                 LorUnit unit,
+                                 LorWriteFn write);
 
-int lor_write_channelset_effect(lor_effect_t effect,
-                                const void *effectStruct,
-                                lor_channelset_t channelset,
-                                lor_unit_t unit,
-                                lor_uint8_t *b);
+LorResult lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
+                                        LorEffect secondaryEffect,
+                                        const void *args,
+                                        int argsSize,
+                                        LorChannel channel,
+                                        LorUnit unit,
+                                        LorWriteFn write);
 
-int lor_write_unit_effect(lor_effect_t effect,
-                          const void *effectStruct,
-                          lor_unit_t unit,
-                          lor_uint8_t *b);
+LorResult lorEncodeChannelSetEffect(LorEffect effect,
+                                    const void *args,
+                                    int argsSize,
+                                    LorChannelSet channelSet,
+                                    LorUnit unit,
+                                    LorWriteFn write);
 
-int lor_write_complex_effect(lor_effect_t primaryEffect,
-                             lor_effect_t secondaryEffect,
-                             const void *effectStruct,
-                             lor_channel_t channel,
-                             lor_unit_t unit,
-                             lor_uint8_t *b);
+LorResult lorEncodeUnitEffect(LorEffect effect,
+                              const void *args,
+                              int argsSize,
+                              LorUnit unit,
+                              LorWriteFn write);
 
 #endif// LIGHTORAMA_EASY_H

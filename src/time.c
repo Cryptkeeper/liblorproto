@@ -40,16 +40,13 @@ float lorTimeToSeconds(const LorTime time) {
 
 #define LOR_DURATION_MASK 0x8000
 
-LorResult
-lorEncodeTime(const LorTime time, unsigned char *const b, const size_t bSize) {
-    if (b != NULL) {
-        if (bSize < 2) return LorErrOutOfBuffer;
-
+LorResult lorEncodeTime(const LorTime time, LorWriteFn write) {
+    if (write) {
         const uint16_t bits = time | LOR_DURATION_MASK;
 
-        b[0] = bits >> 8;
-        b[1] = bits & 0xFF;
+        write(bits >> 8);
+        write(bits & 0xFF);
     }
 
-    return 2;
+    return LorOK;
 }
