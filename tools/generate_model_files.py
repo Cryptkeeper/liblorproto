@@ -38,7 +38,7 @@ class HardwareModel:
         # which would otherwise create a naming collision
         id += f"_{self.pid:X}"
 
-        return f"#define {id:36} ((lor_model_t){str(self.pid):>3}) /* {hex(self.pid)} */"
+        return f"#define {id:36} ((LorModel){str(self.pid):>3}) /* {hex(self.pid)} */"
 
     def table_init_str(self, lowestPid):
         return f"\t[{self.pid - lowestPid}] = \"{self.name}\","
@@ -129,13 +129,15 @@ def fmt_model_h():
 #ifndef LIGHTORAMA_MODEL_H
 #define LIGHTORAMA_MODEL_H
 
-typedef int lor_model_t;
+#include "result.h"
+
+typedef int LorModel;
 
 {models_str}
 
-int lor_get_model_name(lor_model_t model, const char **name);
+LorResult lorGetModelName(LorModel model, const char **name);
 
-#define lor_get_max_model() ((lor_model_t){highestPid})
+#define lorGetMaxModel() ((lor_model_t){highestPid})
 
 #endif //LIGHTORAMA_MODEL_H
 """
@@ -156,16 +158,16 @@ def fmt_model_c():
     {table_init_str}
 }};
 
-int lor_get_model_name(lor_model_t model, const char **name) {{
+LorResult lorGetModelName(const LorModel model, const char **const name) {{
     if (model < {lowestPid} || model > {highestPid}) {{
-        return 0;
+        return LorErrUnknownModel;
     }}
-    const char *model_name = LOR_MODEL_NAMES[(int)(model - {lowestPid})];
-    if (!model_name) {{
-        return 0;
+    const char *modelName = LOR_MODEL_NAMES[(int)(model - {lowestPid})];
+    if (!modelName) {{
+        return LorErrUnknownModel;
     }}
-    *name = model_name;
-    return 1;
+    *name = modelName;
+    return LorOK;
 }}"""
 
     return f"""{get_auto_generated_warning()}

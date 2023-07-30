@@ -29,13 +29,13 @@
 #include "uid.h"
 
 typedef enum LorEffect {
-    LOR_EFFECT_SET_LIGHTS    = 0b0001,// 0x01
-    LOR_EFFECT_SET_OFF       = 0b0010,// 0x02
-    LOR_EFFECT_SET_INTENSITY = 0b0011,// 0x03
-    LOR_EFFECT_FADE          = 0b0100,// 0x04
-    LOR_EFFECT_PULSE         = 0b0101,// 0x05
-    LOR_EFFECT_TWINKLE       = 0b0110,// 0x06
-    LOR_EFFECT_SHIMMER       = 0b0111,// 0x07
+    LOR_EFFECT_SET_LIGHTS    = 0x01, /* 0b0001 */
+    LOR_EFFECT_SET_OFF       = 0x02, /* 0b0010 */
+    LOR_EFFECT_SET_INTENSITY = 0x03, /* 0b0011 */
+    LOR_EFFECT_FADE          = 0x04, /* 0b0100 */
+    LOR_EFFECT_PULSE         = 0x05, /* 0b0101 */
+    LOR_EFFECT_TWINKLE       = 0x06, /* 0b0110 */
+    LOR_EFFECT_SHIMMER       = 0x07, /* 0b0111 */
 } LorEffect;
 
 LorResult

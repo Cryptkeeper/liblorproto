@@ -39,12 +39,12 @@ LorResult lorEncodeChannel(LorChannel channel, LorWriteFn write);
 LorResult lorEncodeChannel2(LorChannel channel, int align, LorWriteFn write);
 
 typedef enum LorChannelFormat {
-    LOR_FORMAT_SINGLE    = 0,
-    LOR_FORMAT_16        = 0b00010000, /* 0x10 */
-    LOR_FORMAT_8L        = 0b00100000, /* 0x20 */
-    LOR_FORMAT_8H        = 0b00110000, /* 0x30 */
-    LOR_FORMAT_UNIT      = 0b01000000, /* 0x40 */
-    LOR_FORMAT_MULTIPART = 0b01010000, /* 0x50 */
+    LOR_FORMAT_SINGLE    = 0x00, /* 0b0000 */
+    LOR_FORMAT_16        = 0x10, /* 0b0001 */
+    LOR_FORMAT_8L        = 0x20, /* 0b0010 */
+    LOR_FORMAT_8H        = 0x30, /* 0b0011 */
+    LOR_FORMAT_UNIT      = 0x40, /* 0b0100 */
+    LOR_FORMAT_MULTIPART = 0x50, /* 0b0101 */
 } LorChannelFormat;
 
 LorResult lorGetChannelSetFormat(LorChannelSet channelSet);

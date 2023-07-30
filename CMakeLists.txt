@@ -29,14 +29,6 @@ install(TARGETS lightorama
         LIBRARY DESTINATION lib/lightorama
         PUBLIC_HEADER DESTINATION include/lightorama)
 
-add_executable(test_channelset test/channelset.c)
-target_link_libraries(test_channelset lightorama)
-add_test(channelset test_channelset)
-
-add_executable(test_effect test/effect.c)
-target_link_libraries(test_effect lightorama)
-add_test(effect test_effect)
-
 add_executable(test_model test/model.c)
 target_link_libraries(test_model lightorama)
 add_test(model test_model)

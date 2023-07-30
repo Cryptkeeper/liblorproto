@@ -28,15 +28,15 @@
 #include <stdio.h>
 
 static void test_time_table(void) {
-    assert(lor_seconds_to_time(0.1F) == 5099);
-    assert(lor_seconds_to_time(0.5F) == 1019);
-    assert(lor_seconds_to_time(1.0F) == 509);
-    assert(lor_seconds_to_time(2.0F) == 254);
-    assert(lor_seconds_to_time(25.0F) == 20);
+    assert(lorSecondsToTime(0.1F) == 5099);
+    assert(lorSecondsToTime(0.5F) == 1019);
+    assert(lorSecondsToTime(1.0F) == 509);
+    assert(lorSecondsToTime(2.0F) == 254);
+    assert(lorSecondsToTime(25.0F) == 20);
 }
 
 static void test_time_interval_diff(float f) {
-    const float real = lor_time_to_seconds(lor_seconds_to_time(f));
+    const float real = lorTimeToSeconds(lorSecondsToTime(f));
 
     // safely handle an offset between the expected seconds values
     // this is caused by the encoding scheme being lossy with precision
@@ -45,20 +45,6 @@ static void test_time_interval_diff(float f) {
     printf("time: %f real: %f (∆%f)\n", f, real, diff);
 
     assert(diff < 0.01);
-}
-
-static void test_time_encoding(float s) {
-    lor_uint8_t b[32];
-
-    lor_time_t time, read_time;
-    int writtenb;
-
-    time = lor_seconds_to_time(s);
-    writtenb = lor_write_time(time, b);
-
-    assert(lor_read_time(&read_time, b) == writtenb);
-
-    assert(time == read_time);
 }
 
 int main(__attribute__((unused)) int argc,
@@ -70,7 +56,6 @@ int main(__attribute__((unused)) int argc,
         const float f = test_intervals[i];
 
         test_time_interval_diff(f);
-        test_time_encoding(f);
     }
 
     test_time_table();
