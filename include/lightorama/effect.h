@@ -25,7 +25,6 @@
 #define LIGHTORAMA_EFFECT_H
 
 #include "coretypes.h"
-
 #include "uid.h"
 
 typedef enum LorEffect {
