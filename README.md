@@ -64,7 +64,7 @@ Light Control Packet
 ### Implementation Notes
 
 * Additional packet structures exist for remote management/firmware update/system configuration feature sets, but are entirely undocumented and more time-consuming to explore. As a result, liblightorama focuses purely on lighting control packets.
-*  A `LorAnyArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
+*  A `LorEffectArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
 
 ## Referencing Channels
 
@@ -131,7 +131,7 @@ liblightorama does not allocate any memory internally, and requires a `void writ
 
 ### Error Values
 
-Due to the simplicity of most encoding routines, many functions do not return a value. Those which provide basic value checking (where possible) return type `bool` with true indicating an encoding success. No further error information is available and users should check the function implementation for failure causes. I recommend a debug mode in your application which prints the basic routing information (unit, channel, effect args) prior to invoking encoding calls.
+Due to the simplicity of most encoding routines encoding functions do not return a value. A select few encoding issues (e.g. overflow/underflow issues) may be raised via `lorAssert` (by default a macro to `assert`) which I recommend enabling in development builds. In most cases, there is no ability for the library to discern invalid values given the nature of the protocol and its loosely undocumented bounds. 
 
 ### Brightness Curves
 
@@ -157,7 +157,7 @@ Layered effects allow the unit to apply two effects simultaneously to a single c
 
 The underlying LOR protocol functionality seems to only support single channel IDs (i.e. `LorChannel`). However, any single channel ID that is encoded within a single byte, is padded by an additional `0x81` byte. As a result, the encoded channel routing bytes should always be exactly two bytes in length.
 
-liblightorama has provided a `lorEncodeChannel2` function within [`uid.h`](include/lightorama/uid.h) that when invoked with the `align` parameter set to 16 (normally 8), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorEncodeLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lightorama/easy.h).
+liblightorama has provided a `lorEncodeChannel2` function within [`uid.h`](include/lightorama/uid.h) that when invoked with the `align` parameter set to `LOR_ALIGN_16` (normally `LOR_ALIGN_8`), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorEncodeLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lightorama/easy.h).
 
 ## Compatibility
 

@@ -27,8 +27,8 @@ void lorEncodeUnit(const LorUnit unit, const LorWriteFn write) {
     write(unit);
 }
 
-bool lorEncodeChannel(LorChannel channel, LorWriteFn write) {
-    return lorEncodeChannel2(channel, 8, write);
+void lorEncodeChannel(LorChannel channel, LorWriteFn write) {
+    lorEncodeChannel2(channel, LOR_ALIGN_8, write);
 }
 
 // Light-O-Rama protocol requires all values be non-zero, so the highest order bit
@@ -37,8 +37,8 @@ bool lorEncodeChannel(LorChannel channel, LorWriteFn write) {
 #define LOR_CHANNEL_OPT_HAS_OFFSET (0b01000000 | LOR_CHANNEL_OPT) /* 0xC0 */
 #define LOR_CHANNEL_OPT_DATA_MASK  0b00111111                     /* 0x3F */
 
-bool lorEncodeChannel2(const LorChannel channel,
-                       const int align,
+void lorEncodeChannel2(const LorChannel channel,
+                       const LorChannelAlign align,
                        const LorWriteFn write) {
     // 2 highest bits are reserved as flags
     const int MaxChannel = 1 << 6;
@@ -46,7 +46,7 @@ bool lorEncodeChannel2(const LorChannel channel,
     if (channel > MaxChannel) {
         const int offset = channel / MaxChannel;
 
-        if (offset < 0 || offset > MaxChannel) return false;
+        lorAssert(offset >= 0 && offset <= MaxChannel);
 
         write((channel % MaxChannel) | LOR_CHANNEL_OPT_HAS_OFFSET);
         write(offset | LOR_CHANNEL_OPT);
@@ -55,10 +55,8 @@ bool lorEncodeChannel2(const LorChannel channel,
 
         // some protocol usages of channel restructures require 16-bit alignment
         // this optionally pads using a magic protocol value
-        if (align == 16) write(0x81);
+        if (align == LOR_ALIGN_16) write(0x81);
     }
-
-    return true;
 }
 
 static inline void lorGetChannelSetBanks(const LorChannelSet channelSet,
@@ -87,10 +85,10 @@ LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
 #define LOR_CHANNELSET_OPT_8H        0b10000000 /* 0x80 */
 #define LOR_CHANNELSET_OPT_DATA_MASK 0b00111111 /* 0x3F */
 
-bool lorEncodeChannelSet(const LorChannelSet channelSet,
+void lorEncodeChannelSet(const LorChannelSet channelSet,
                          const LorWriteFn write) {
     // 6-bit unsigned int, max value of 64
-    if (channelSet.offset > 64) return false;
+    lorAssert(channelSet.offset <= 64);
 
     uint8_t bankL, bankH;
     lorGetChannelSetBanks(channelSet, &bankL, &bankH);
@@ -107,6 +105,4 @@ bool lorEncodeChannelSet(const LorChannelSet channelSet,
 
     if (bankL > 0) write(bankL);
     if (bankH > 0) write(bankH);
-
-    return true;
 }

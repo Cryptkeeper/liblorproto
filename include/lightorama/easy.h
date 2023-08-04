@@ -27,31 +27,27 @@
 #include "coretypes.h"
 #include "effect.h"
 
-bool lorEncodeChannelEffect(LorEffect effect,
-                            const void *args,
-                            int argsSize,
+void lorEncodeChannelEffect(LorEffect effect,
+                            const LorEffectArgs *args,
                             LorChannel channel,
                             LorUnit unit,
                             LorWriteFn write);
 
-bool lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
+void lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
                                    LorEffect secondaryEffect,
-                                   const void *args,
-                                   int argsSize,
+                                   const LorEffectArgs *args,
                                    LorChannel channel,
                                    LorUnit unit,
                                    LorWriteFn write);
 
-bool lorEncodeChannelSetEffect(LorEffect effect,
-                               const void *args,
-                               int argsSize,
+void lorEncodeChannelSetEffect(LorEffect effect,
+                               const LorEffectArgs *args,
                                LorChannelSet channelSet,
                                LorUnit unit,
                                LorWriteFn write);
 
-bool lorEncodeUnitEffect(LorEffect effect,
-                         const void *args,
-                         int argsSize,
+void lorEncodeUnitEffect(LorEffect effect,
+                         const LorEffectArgs *args,
                          LorUnit unit,
                          LorWriteFn write);
 

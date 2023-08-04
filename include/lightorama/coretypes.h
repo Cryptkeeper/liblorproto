@@ -24,8 +24,10 @@
 #ifndef LIGHTORAMA_CORETYPES_H
 #define LIGHTORAMA_CORETYPES_H
 
-#include <stdbool.h>
+#include <assert.h>
 #include <stdint.h>
+
+#define lorAssert(e) assert(e)
 
 typedef uint8_t LorUnit;
 typedef uint8_t LorIntensity;

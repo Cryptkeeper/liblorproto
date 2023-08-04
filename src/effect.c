@@ -25,49 +25,45 @@
 
 #include "lightorama/time.h"
 
+#include <assert.h>
+
 void lorEncodeEffect(const LorEffect effect,
                      const LorChannelFormat format,
                      const LorWriteFn write) {
     write(effect | format);
 }
 
-bool lorEncodeEffectArgs(const LorEffect effect,
-                         const void *const args,
-                         const int argsSize,
+void lorEncodeEffectArgs(const LorEffect effect,
+                         const LorEffectArgs *const args,
                          const LorWriteFn write) {
     switch (effect) {
         case LOR_EFFECT_SET_INTENSITY:
-            if (!args || argsSize != sizeof(LorSetIntensityArgs)) return false;
+            lorAssert(args);
 
-            const LorSetIntensityArgs *const setArgs =
-                    (LorSetIntensityArgs *) args;
+            write(args->setIntensity.intensity);
 
-            write(setArgs->intensity);
-
-            return true;
+            break;
 
         case LOR_EFFECT_FADE:
-            if (!args || argsSize != sizeof(LorFadeArgs)) return false;
+            lorAssert(args);
 
-            const LorFadeArgs *const fadeArgs = (LorFadeArgs *) args;
+            write(args->fade.startIntensity);
+            write(args->fade.endIntensity);
 
-            write(fadeArgs->startIntensity);
-            write(fadeArgs->endIntensity);
+            lorEncodeTime(args->fade.duration, write);
 
-            lorEncodeTime(fadeArgs->duration, write);
-
-            return true;
+            break;
 
         case LOR_EFFECT_PULSE:
-            if (!args || argsSize != sizeof(LorPulseArgs)) return false;
+            lorAssert(args);
 
-            const LorPulseArgs *const pulseArgs = (LorPulseArgs *) args;
+            lorEncodeTime(args->pulse.halfInterval, write);
 
-            lorEncodeTime(pulseArgs->halfInterval, write);
-
-            return true;
+            break;
 
         default:
-            return false;
+            lorAssert(!args);
+
+            break;
     }
 }

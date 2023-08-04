@@ -26,44 +26,32 @@
 #include "lightorama/effect.h"
 #include "lightorama/uid.h"
 
-bool lorEncodeChannelEffect(LorEffect effect,
-                            const void *args,
-                            int argsSize,
+void lorEncodeChannelEffect(LorEffect effect,
+                            const LorEffectArgs *const args,
                             LorChannel channel,
                             LorUnit unit,
                             LorWriteFn write) {
     lorEncodeUnit(unit, write);
     lorEncodeEffect(effect, LOR_FORMAT_SINGLE, write);
-
-    if (args && !lorEncodeEffectArgs(effect, args, argsSize, write))
-        return false;
-
-    return lorEncodeChannel(channel, write);
+    lorEncodeEffectArgs(effect, args, write);
+    lorEncodeChannel(channel, write);
 }
 
-bool lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
+void lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
                                    LorEffect secondaryEffect,
-                                   const void *args,
-                                   int argsSize,
+                                   const LorEffectArgs *const args,
                                    LorChannel channel,
                                    LorUnit unit,
                                    LorWriteFn write) {
     lorEncodeUnit(unit, write);
     lorEncodeEffect(primaryEffect, LOR_FORMAT_SINGLE, write);
-
-    if (!lorEncodeChannel2(channel, 16, write)) return false;
-
+    lorEncodeChannel2(channel, LOR_ALIGN_16, write);
     lorEncodeEffect(secondaryEffect, LOR_FORMAT_SINGLE, write);
-
-    if (args && !lorEncodeEffectArgs(secondaryEffect, args, argsSize, write))
-        return false;
-
-    return true;
+    lorEncodeEffectArgs(secondaryEffect, args, write);
 }
 
-bool lorEncodeChannelSetEffect(LorEffect effect,
-                               const void *args,
-                               int argsSize,
+void lorEncodeChannelSetEffect(LorEffect effect,
+                               const LorEffectArgs *const args,
                                LorChannelSet channelSet,
                                LorUnit unit,
                                LorWriteFn write) {
@@ -71,23 +59,15 @@ bool lorEncodeChannelSetEffect(LorEffect effect,
 
     lorEncodeUnit(unit, write);
     lorEncodeEffect(effect, format, write);
-
-    if (args && !lorEncodeEffectArgs(effect, args, argsSize, write))
-        return false;
-
-    return lorEncodeChannelSet(channelSet, write);
+    lorEncodeEffectArgs(effect, args, write);
+    lorEncodeChannelSet(channelSet, write);
 }
 
-bool lorEncodeUnitEffect(LorEffect effect,
-                         const void *args,
-                         int argsSize,
+void lorEncodeUnitEffect(LorEffect effect,
+                         const LorEffectArgs *const args,
                          LorUnit unit,
                          LorWriteFn write) {
     lorEncodeUnit(unit, write);
     lorEncodeEffect(effect, LOR_FORMAT_UNIT, write);
-
-    if (args && !lorEncodeEffectArgs(effect, args, argsSize, write))
-        return false;
-
-    return true;
+    lorEncodeEffectArgs(effect, args, write);
 }

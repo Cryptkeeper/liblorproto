@@ -59,11 +59,10 @@ typedef union LorAnyArgs {
     LorSetIntensityArgs setIntensity;
     LorFadeArgs fade;
     LorPulseArgs pulse;
-} LorAnyArgs;
+} LorEffectArgs;
 
-bool lorEncodeEffectArgs(LorEffect effect,
-                         const void *args,
-                         int argsSize,
+void lorEncodeEffectArgs(LorEffect effect,
+                         const LorEffectArgs *args,
                          LorWriteFn write);
 
 #endif// LIGHTORAMA_EFFECT_H

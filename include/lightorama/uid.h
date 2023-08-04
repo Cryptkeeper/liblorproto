@@ -34,9 +34,16 @@
 
 void lorEncodeUnit(LorUnit unit, LorWriteFn write);
 
-bool lorEncodeChannel(LorChannel channel, LorWriteFn write);
+void lorEncodeChannel(LorChannel channel, LorWriteFn write);
 
-bool lorEncodeChannel2(LorChannel channel, int align, LorWriteFn write);
+typedef enum LorChannelAlign {
+    LOR_ALIGN_8,
+    LOR_ALIGN_16,
+} LorChannelAlign;
+
+void lorEncodeChannel2(LorChannel channel,
+                       LorChannelAlign align,
+                       LorWriteFn write);
 
 typedef enum LorChannelFormat {
     LOR_FORMAT_SINGLE    = 0x00, /* 0b0000 */
@@ -49,6 +56,6 @@ typedef enum LorChannelFormat {
 
 LorChannelFormat lorGetChannelSetFormat(LorChannelSet channelSet);
 
-bool lorEncodeChannelSet(LorChannelSet channelSet, LorWriteFn write);
+void lorEncodeChannelSet(LorChannelSet channelSet, LorWriteFn write);
 
 #endif// LIGHTORAMA_UID_H
