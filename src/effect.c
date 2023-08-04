@@ -62,8 +62,6 @@ void lorEncodeEffectArgs(const LorEffect effect,
             break;
 
         default:
-            lorAssert(!args);
-
             break;
     }
 }
