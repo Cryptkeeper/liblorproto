@@ -55,6 +55,12 @@ typedef struct LorPulseArgs {
     LorTime halfInterval;
 } LorPulseArgs;
 
+typedef union LorAnyArgs {
+    LorSetIntensityArgs setIntensity;
+    LorFadeArgs fade;
+    LorPulseArgs pulse;
+} LorAnyArgs;
+
 bool lorEncodeEffectArgs(LorEffect effect,
                          const void *args,
                          int argsSize,

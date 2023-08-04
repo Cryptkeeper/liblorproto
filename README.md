@@ -64,6 +64,7 @@ Light Control Packet
 ### Implementation Notes
 
 * Additional packet structures exist for remote management/firmware update/system configuration feature sets, but are entirely undocumented and more time-consuming to explore. As a result, liblightorama focuses purely on lighting control packets.
+*  A `LorAnyArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
 
 ## Referencing Channels
 
