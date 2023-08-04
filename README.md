@@ -8,19 +8,19 @@ Usage of liblightorama assumes existing familiarity with the [LOR protocol](http
 
 | Header                                          | Purpose                                                                                                                                                                             |
 |-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`lightorama/coretypes.h`](include/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                                                                            |
-| [`lightorama/easy.h`](include/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                                                                                 |
-| [`lightorama/effect.h`](include/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                                                                               |
-| [`lightorama/heartbeat.h`](include/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                                                                  |
-| [`lightorama/intensity.h`](include/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values                                                      |
-| [`lightorama/model.h`](include/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt), includes helper functions for referencing model names |
-| [`lightorama/time.h`](include/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                                                                  |
-| [`lightorama/uid.h`](include/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs)                                                   |
-| [`lightorama/version.h`](include/version.h)     | Named constants of liblightorama version information                                                                                                                                |
+| [`lightorama/coretypes.h`](include/lightorama/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                                                                            |
+| [`lightorama/easy.h`](include/lightorama/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                                                                                 |
+| [`lightorama/effect.h`](include/lightorama/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                                                                               |
+| [`lightorama/heartbeat.h`](include/lightorama/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                                                                  |
+| [`lightorama/intensity.h`](include/lightorama/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values                                                      |
+| [`lightorama/model.h`](include/lightorama/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt), includes helper functions for referencing model names |
+| [`lightorama/time.h`](include/lightorama/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                                                                  |
+| [`lightorama/uid.h`](include/lightorama/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs)                                                   |
+| [`lightorama/version.h`](include/lightorama/version.h)     | Named constants of liblightorama version information                                                                                                                                |
 
 You may optionally use `lightorama/lightorama.h` to automatically include all library header files (except `model.h` due to its strings, please include as needed).
 
-liblightorama strives to be fairly portable (typically for use in microcontrollers) and requires no external dependencies or headers. The few core data types used by liblightorama (e.g. fixed size ints and booleans) are defined in [`include/coretypes.h`](include/coretypes.h). Limited use of floating-point arithmetic is present in the [`intensity.c`](src/intensity.c) math functions.
+liblightorama strives to be fairly portable (typically for use in microcontrollers) and requires no external dependencies or headers. The few core data types used by liblightorama (e.g. fixed size ints and booleans) are defined in [`coretypes.h`](include/lightorama/coretypes.h). Limited use of floating-point arithmetic is present in the [`intensity.c`](src/intensity.c) math functions.
 
 ## Installation
 
@@ -150,7 +150,7 @@ Brightness curves are responsible for converting a normalized brightness value [
 
 Any brightness curve may be implemented assuming it adheres to the `LorIntensityCurveFn` function signature: `LorIntensity (*LorIntensityCurveFn)(float normal)`
 
-Each brightness curve is designed to return a `LorIntensity` value representing the LOR protocol equivalent value of the normalized input, as adapted by the curve. Several consts have been defined within [`intensity.h`](include/intensity.h) to avoid using magic numbers in your implementations. See [`intensity.c`](src/intensity.c) for implementation examples.
+Each brightness curve is designed to return a `LorIntensity` value representing the LOR protocol equivalent value of the normalized input, as adapted by the curve. Several consts have been defined within [`intensity.h`](include/lightorama/intensity.h) to avoid using magic numbers in your implementations. See [`intensity.c`](src/intensity.c) for implementation examples.
 
 #### Layered Effects
 
@@ -158,7 +158,7 @@ Layered effects allow the unit to apply two effects simultaneously to a single c
 
 The underlying LOR protocol functionality seems to only support single channel IDs (i.e. `LorChannel`). However, any single channel ID that is encoded within a single byte, is padded by an additional `0x81` byte. As a result, the encoded channel routing bytes should always be exactly two bytes in length.
 
-liblightorama has provided a `lorEncodeChannel2` function within [`include/uid.h`](include/uid.h) that when invoked with the `align` parameter set to 16 (normally 8), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorEncodeLayeredChannelEffect`) is provided as a part of [`include/easy.h`](include/easy.h).
+liblightorama has provided a `lorEncodeChannel2` function within [`uid.h`](include/lightorama/uid.h) that when invoked with the `align` parameter set to 16 (normally 8), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorEncodeLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lightorama/easy.h).
 
 ## Compatibility
 
