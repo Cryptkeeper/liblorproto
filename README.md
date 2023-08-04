@@ -34,6 +34,10 @@ liblightorama uses [CMake](https://cmake.org/) for building and packaging the li
 
 If optionally installed, `install_manifest.txt` will be created, containing the installed file paths for easy removal.
 
+## Usage Examples
+
+See [`examples/common-methods.c`](examples/common-methods.c) for usage examples.
+
 ## Packet Structure
 
 The majority of data is lighting control packets. Each follows a basic structure, prefixed by the target unit ID, and followed by a table directory and its corresponding data entry rows, in matching order. The corresponding data structures used by liblightorama for each field are shown in the diagram below.
@@ -118,10 +122,6 @@ LorChannelSet only_channel_32 = {
 };
 ```
 
-## Usage Examples
-
-See [`examples/common-methods.c`](examples/common-methods.c) for usage examples.
-
 ## Library Structure
 
 ### Memory Allocations
@@ -130,9 +130,7 @@ liblightorama does not allocate any memory internally, and requires a `void writ
 
 ### Error Values
 
-This library has limited input validation features by design (e.g. liblightorama assumes that buffers are correctly sized and void pointers are of the correct type). liblightorama consists primarily of encoding/decoding functions which are mostly used as small elements within function chains when assembling packet structures. Error checking within this structure (without an error sum type) is cumbersome, repetitive, and likely to be skipped by most programmers.
-
-As encoding/decoding functions do not return error values, you may consider validating the written byte count return value sum against a manually calculated (or previously valid) sample value.
+Due to the simplicity of most encoding routines, many functions do not return a value. Those which provide basic value checking (where possible) return type `bool` with true indicating an encoding success. No further error information is available and users should check the function implementation for failure causes. I recommend a debug mode in your application which prints the basic routing information (unit, channel, effect args) prior to invoking encoding calls.
 
 ### Brightness Curves
 
