@@ -141,9 +141,9 @@ Brightness curves are responsible for converting a normalized brightness value [
 
 | Function                   | Description                                                                                           |
 |----------------------------|-------------------------------------------------------------------------------------------------------|
-| `lorIntensityCurveLinear`  | Encodes the normalized value as its direct LOR protocol equivalent value without changes              |
-| `lorIntensityCurveSquared` | A smoothed version of `lorIntensityCurveLinear` designed to emphasize changes in brightness values    |
-| `lorIntensityCurveVendor`  | The most vanilla intensity curve for anyone with the goal of recreating a Light-O-Rama look           |
+| `LorIntensityCurveLinear`  | Encodes the normalized value as its direct LOR protocol equivalent value without changes              |
+| `LorIntensityCurveSquared` | A smoothed version of `lorIntensityCurveLinear` designed to emphasize changes in brightness values    |
+| `LorIntensityCurveVendor`  | The most vanilla intensity curve for anyone with the goal of recreating a Light-O-Rama look           |
 
 #### Custom Brightness Curves
 

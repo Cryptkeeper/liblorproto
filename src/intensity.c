@@ -33,7 +33,7 @@ void lorEncodeIntensity(const LorIntensity intensity, const LorWriteFn write) {
 #define LOR_INTENSITY_RANGE                                                    \
     ((LorIntensity) (LOR_INTENSITY_MAX - LOR_INTENSITY_MIN))
 
-inline LorIntensity lorIntensityCurveVendor(float normal) {
+inline LorIntensity LorIntensityCurveVendor(float normal) {
     const float clamped = LOR_CLAMPF(normal, 0, 1);
 
     if (clamped == 0) {
@@ -45,12 +45,12 @@ inline LorIntensity lorIntensityCurveVendor(float normal) {
     }
 }
 
-inline LorIntensity lorIntensityCurveLinear(float normal) {
+inline LorIntensity LorIntensityCurveLinear(float normal) {
     return ((LorIntensity) (LOR_CLAMPF(normal, 0, 1) * LOR_INTENSITY_RANGE)) +
            LOR_INTENSITY_MIN;
 }
 
-inline LorIntensity lorIntensityCurveSquared(float normal) {
+inline LorIntensity LorIntensityCurveSquared(float normal) {
     const float clamped = LOR_CLAMPF(normal, 0, 1);
     const float squared = 1 - (1 - clamped) * (1 - clamped);
 
