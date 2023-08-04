@@ -30,12 +30,10 @@
 
 int main(__attribute__((unused)) int argc,
          __attribute__((unused)) char **argv) {
-    const char *model_name = NULL;
+    for (LorModel model = 0; model <= lorGetMaxModel(); model++) {
+        const char *name = NULL;
 
-    lor_model_t model;
-    for (model = 0; model <= lor_get_max_model(); model++) {
-        if (lor_get_model_name(model, &model_name)) {
-            assert(model_name != NULL && strlen(model_name) > 0);
-        }
+        if (lorGetModelName(model, &name))
+            assert(name != NULL && strlen(name) > 0);
     }
 }

@@ -38,8 +38,9 @@ typedef enum LorEffect {
     LOR_EFFECT_SHIMMER       = 0x07, /* 0b0111 */
 } LorEffect;
 
-LorResult
-lorEncodeEffect(LorEffect effect, LorChannelFormat format, LorWriteFn write);
+void lorEncodeEffect(LorEffect effect,
+                     LorChannelFormat format,
+                     LorWriteFn write);
 
 typedef struct LorSetIntensityArgs {
     LorIntensity intensity;
@@ -55,56 +56,9 @@ typedef struct LorPulseArgs {
     LorTime halfInterval;
 } LorPulseArgs;
 
-/*
- * `lorWriteEffectArgs` encodes the `args` structure as binary protocol data into
- * `b`, according to the value of `effect`.
- *
- * `args` MUST be a non-NULL when `effect` is `LOR_EFFECT_SET_INTENSITY`,
- * `LOR_EFFECT_FADE` or `LOR_EFFECT_PULSE`. The value of `args` should be a pointer
- * to the corresponding structure for a given `effect` value in the table below.
- * `argsSize` MUST be set to the `sizeof` of the corresponding structure.
- *
- * Effect Argument Structures:
- *
- *  `LOR_EFFECT_SET_INTENSITY`        `LorSetIntensityArgs`
- *  `LOR_EFFECT_FADE`                 `LorFadeArgs`
- *  `LOR_EFFECT_PULSE`                `LorPulseArgs`
- *
- * Any other effect value MUST provide a NULL `args` value with `argsSize` of 0.
- *
- * `lorWriteEffectArgs` encodes the arguments into binary protocol binary data into
- * the provided buffer pointer, `b`.
- *
- * If `b` is NULL, no data is encoded and instead the minimum buffer size for
- * encoding the arguments is returned. This is useful for determining buffer sizes
- * prior to allocating. `bufSize` is ignored in this scenario, but the value
- * should be zero for clarity.
- *
- * Otherwise, `bSize` is checked to ensure `b` has available capacity. If `bSize`
- * is too small, `LorErrOutOfBuffer` is returned and `b` remains unmodified.
- *
- * Return Values:
- *
- *  If successful (>= 0), the return value is the number of bytes written to `b`.
- *  Zero bytes written is normal behavior for some uses and does not indicate an
- *  error.
- *
- *  If `b` is NULL, this represents the minimum value of `bSize` required for encoding
- *  the arguments with a non-NULL `b` buffer.
- *
- * Errors:
- *
- *  LorErrInvalidArg: `args` is NULL when it should not be OR `args` is not NULL
- *                      when it should be OR `argsSize` does not match the expected
- *                      sizeof value according to the table
- *
- *  LorErrOutOfBuffer: the size of the output buffer `b`, according to `bSize`,
- *                       is too small
- *
- */
-LorResult lorEncodeEffectArgs(LorEffect effect,
-                              const void *args,
-                              int argsSize,
-                              LorWriteFn write);
+bool lorEncodeEffectArgs(LorEffect effect,
+                         const void *args,
+                         int argsSize,
+                         LorWriteFn write);
 
 #endif// LIGHTORAMA_EFFECT_H

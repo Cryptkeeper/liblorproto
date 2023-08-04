@@ -24,9 +24,8 @@
 #ifndef LIGHTORAMA_CORETYPES_H
 #define LIGHTORAMA_CORETYPES_H
 
+#include <stdbool.h>
 #include <stdint.h>
-
-#include "result.h"
 
 typedef uint8_t LorUnit;
 typedef uint8_t LorIntensity;

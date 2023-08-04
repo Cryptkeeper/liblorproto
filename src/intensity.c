@@ -23,11 +23,8 @@
  */
 #include "lightorama/intensity.h"
 
-LorResult lorEncodeIntensity(const LorIntensity intensity,
-                             const LorWriteFn write) {
-    if (write) write(intensity);
-
-    return LorOK;
+void lorEncodeIntensity(const LorIntensity intensity, const LorWriteFn write) {
+    write(intensity);
 }
 
 #define LOR_CLAMPF(val, min, max)                                              \

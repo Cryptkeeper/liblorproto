@@ -95,14 +95,14 @@ static const char *LOR_MODEL_NAMES[211] = {
 	[210] = "BootLoader-PIX16",
 };
 
-LorResult lorGetModelName(const LorModel model, const char **const name) {
+bool lorGetModelName(const LorModel model, const char **const name) {
     if (model < 25 || model > 235) {
-        return LorErrUnknownModel;
+        return false;
     }
     const char *modelName = LOR_MODEL_NAMES[(int)(model - 25)];
     if (!modelName) {
-        return LorErrUnknownModel;
+        return false;
     }
     *name = modelName;
-    return LorOK;
+    return true;
 }

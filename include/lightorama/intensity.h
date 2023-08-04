@@ -29,7 +29,7 @@
 #define LOR_INTENSITY_MIN ((LorIntensity) 0xF0)
 #define LOR_INTENSITY_MAX ((LorIntensity) 0x01)
 
-LorResult lorEncodeIntensity(LorIntensity intensity, LorWriteFn write);
+void lorEncodeIntensity(LorIntensity intensity, LorWriteFn write);
 
 typedef LorIntensity (*LorIntensityCurveFn)(float normal);
 

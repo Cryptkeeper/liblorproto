@@ -25,18 +25,14 @@
 
 #include "lightorama/uid.h"
 
-LorResult lorEncodeUnitHeartbeat(const LorUnit unit, const LorWriteFn write) {
-    if (write) {
-        lorEncodeUnit(unit, write);
+void lorEncodeUnitHeartbeat(const LorUnit unit, const LorWriteFn write) {
+    lorEncodeUnit(unit, write);
 
-        write(0x81);
-        write(0x56);
-    }
-
-    return LorOK;
+    write(0x81);
+    write(0x56);
 }
 
-LorResult lorEncodeHeartbeat(const LorWriteFn write) {
+void lorEncodeHeartbeat(const LorWriteFn write) {
     // 0xFF is a magic protocol value that matches all connected units
-    return lorEncodeUnitHeartbeat(0xFF, write);
+    lorEncodeUnitHeartbeat(0xFF, write);
 }

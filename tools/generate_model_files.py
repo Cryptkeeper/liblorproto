@@ -129,15 +129,15 @@ def fmt_model_h():
 #ifndef LIGHTORAMA_MODEL_H
 #define LIGHTORAMA_MODEL_H
 
-#include "result.h"
+#include <stdbool.h>
 
 typedef int LorModel;
 
 {models_str}
 
-LorResult lorGetModelName(LorModel model, const char **name);
+bool lorGetModelName(LorModel model, const char **name);
 
-#define lorGetMaxModel() ((lor_model_t){highestPid})
+#define lorGetMaxModel() ((LorModel){highestPid})
 
 #endif //LIGHTORAMA_MODEL_H
 """
@@ -158,16 +158,16 @@ def fmt_model_c():
     {table_init_str}
 }};
 
-LorResult lorGetModelName(const LorModel model, const char **const name) {{
+bool lorGetModelName(const LorModel model, const char **const name) {{
     if (model < {lowestPid} || model > {highestPid}) {{
-        return LorErrUnknownModel;
+        return false;
     }}
     const char *modelName = LOR_MODEL_NAMES[(int)(model - {lowestPid})];
     if (!modelName) {{
-        return LorErrUnknownModel;
+        return false;
     }}
     *name = modelName;
-    return LorOK;
+    return true;
 }}"""
 
     return f"""{get_auto_generated_warning()}

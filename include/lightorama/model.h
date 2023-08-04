@@ -4,7 +4,7 @@
 #ifndef LIGHTORAMA_MODEL_H
 #define LIGHTORAMA_MODEL_H
 
-#include "result.h"
+#include <stdbool.h>
 
 typedef int LorModel;
 
@@ -98,8 +98,8 @@ typedef int LorModel;
 #define LOR_MODEL_BOOTLOADER_PIX08_EA        ((LorModel)234) /* 0xea */
 #define LOR_MODEL_BOOTLOADER_PIX16_EB        ((LorModel)235) /* 0xeb */
 
-LorResult lorGetModelName(LorModel model, const char **name);
+bool lorGetModelName(LorModel model, const char **name);
 
-#define lorGetMaxModel() ((lor_model_t)235)
+#define lorGetMaxModel() ((LorModel)235)
 
 #endif //LIGHTORAMA_MODEL_H

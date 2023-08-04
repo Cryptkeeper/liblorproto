@@ -25,35 +25,34 @@
 #define LIGHTORAMA_EASY_H
 
 #include "coretypes.h"
-
 #include "effect.h"
 
-LorResult lorEncodeChannelEffect(LorEffect effect,
-                                 const void *args,
-                                 int argsSize,
-                                 LorChannel channel,
-                                 LorUnit unit,
-                                 LorWriteFn write);
+bool lorEncodeChannelEffect(LorEffect effect,
+                            const void *args,
+                            int argsSize,
+                            LorChannel channel,
+                            LorUnit unit,
+                            LorWriteFn write);
 
-LorResult lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
-                                        LorEffect secondaryEffect,
-                                        const void *args,
-                                        int argsSize,
-                                        LorChannel channel,
-                                        LorUnit unit,
-                                        LorWriteFn write);
+bool lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
+                                   LorEffect secondaryEffect,
+                                   const void *args,
+                                   int argsSize,
+                                   LorChannel channel,
+                                   LorUnit unit,
+                                   LorWriteFn write);
 
-LorResult lorEncodeChannelSetEffect(LorEffect effect,
-                                    const void *args,
-                                    int argsSize,
-                                    LorChannelSet channelSet,
-                                    LorUnit unit,
-                                    LorWriteFn write);
+bool lorEncodeChannelSetEffect(LorEffect effect,
+                               const void *args,
+                               int argsSize,
+                               LorChannelSet channelSet,
+                               LorUnit unit,
+                               LorWriteFn write);
 
-LorResult lorEncodeUnitEffect(LorEffect effect,
-                              const void *args,
-                              int argsSize,
-                              LorUnit unit,
-                              LorWriteFn write);
+bool lorEncodeUnitEffect(LorEffect effect,
+                         const void *args,
+                         int argsSize,
+                         LorUnit unit,
+                         LorWriteFn write);
 
 #endif// LIGHTORAMA_EASY_H
