@@ -23,45 +23,47 @@
  */
 #include "lightorama/effect.h"
 
-#include "lightorama/time.h"
-
 #include <assert.h>
 
-void lorEncodeEffect(const LorEffect effect,
-                     const LorChannelFormat format,
-                     const LorWriteFn write) {
-    write(effect | format);
+#include "lightorama/intensity.h"
+#include "lightorama/time.h"
+
+void lorAppendEffect(LorBuffer *const b,
+                     const LorEffect effect,
+                     const LorChannelFormat format) {
+    lorAppendU8(b, effect | format);
 }
 
-void lorEncodeEffectArgs(const LorEffect effect,
-                         const LorEffectArgs *const args,
-                         const LorWriteFn write) {
+void lorAppendEffectArgs(LorBuffer *const b,
+                         const LorEffect effect,
+                         const union LorEffectArgs *const args) {
     switch (effect) {
         case LOR_EFFECT_SET_INTENSITY:
-            lorAssert(args);
+            assert(args);
 
-            write(args->setIntensity.intensity);
+            lorAppendIntensity(b, args->setIntensity.intensity);
 
             break;
 
         case LOR_EFFECT_FADE:
-            lorAssert(args);
+            assert(args);
 
-            write(args->fade.startIntensity);
-            write(args->fade.endIntensity);
-
-            lorEncodeTime(args->fade.duration, write);
+            lorAppendIntensity(b, args->fade.startIntensity);
+            lorAppendIntensity(b, args->fade.endIntensity);
+            lorAppendTime(b, args->fade.duration);
 
             break;
 
         case LOR_EFFECT_PULSE:
-            lorAssert(args);
+            assert(args);
 
-            lorEncodeTime(args->pulse.halfInterval, write);
+            lorAppendTime(b, args->pulse.halfInterval);
 
             break;
 
         default:
+            assert(!args);
+
             break;
     }
 }

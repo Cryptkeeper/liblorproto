@@ -1,36 +1,81 @@
 #include <lightorama/lightorama.h>
 
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-// this is where your program would receive a written byte from the library
-// and should either insert it into a queue/buffer, or pass it along to
-// the serial port for writing to the hardware
-static void write(const unsigned char b) {
-    printf("%02x\b", b);
+static bool allocSingleMessageBuffer(LorBuffer *const b) {
+    const size_t memSize = 32;
+
+    // allocate an array used by the buffer for storing the encoded data
+    // use `lorBufferMemorySize()` to allocate a preferred size
+    // more likely this is a pointer to a single outbound buffer you're appending to
+    uint8_t *mem = (uint8_t *) malloc(memSize);
+
+    if (mem == NULL) {
+        printf("error: out of memory?\n");
+
+        return false;
+    }
+
+    // buffer tracks read/write index handling for bounds checking
+    // nothing is allocated internally by LorBuffer, it uses the provided alloc
+    *b = lorBufferInit(mem, memSize);
+
+    return true;
+}
+
+static void freeBuffer(LorBuffer *const b) {
+    // nothing is allocated internally by LorBuffer, it uses the provided alloc
+    // this means it doesn't know how to free and the caller (us) must free it
+    free(b->buffer);
+
+    b->buffer = NULL;
 }
 
 static void turnOffUnit(const LorUnit unit) {
+    LorBuffer b;
+    if (!allocSingleMessageBuffer(&b)) return;
+
     // turn off all channels on the specified unit
-    lorEncodeUnitEffect(LOR_EFFECT_SET_OFF, NULL, 0, unit, write);
+    lorAppendUnitEffect(&b, LOR_EFFECT_SET_OFF, NULL, unit);
+
+    // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+    freeBuffer(&b);
 }
 
 static void turnOffAllUnits(void) {
+    LorBuffer b;
+    if (!allocSingleMessageBuffer(&b)) return;
+
     // turn off all channels on the specified unit
-    lorEncodeUnitEffect(LOR_EFFECT_SET_OFF, NULL, 0, LOR_UNIT_ALL, write);
+    lorAppendUnitEffect(&b, LOR_EFFECT_SET_OFF, NULL, LOR_UNIT_ALL);
+
+    // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+    freeBuffer(&b);
 }
 
 static void setChannelBrightness(const LorUnit unit,
                                  const LorChannel channel,
                                  const float brightness) {
-    const LorSetIntensityArgs args = {
-            // the "vendor" curve is most likely what you want, but you can use
-            // others or write your own
-            .intensity = LorIntensityCurveVendor(brightness),
-    };
+    LorBuffer b;
+    if (!allocSingleMessageBuffer(&b)) return;
+
+    const union LorEffectArgs args = {
+            .setIntensity = {
+                    // the "vendor" curve is most likely what you want, but you can use
+                    // others or write your own
+                    .intensity = LorIntensityCurveVendor(brightness),
+            }};
 
     // sets the brightness (0.0-1.0 range) for the specified unit->channel
-    lorEncodeChannelEffect(LOR_EFFECT_SET_INTENSITY, &args, sizeof(args),
-                           channel, unit, write);
+    lorAppendChannelEffect(&b, LOR_EFFECT_SET_INTENSITY, &args, channel, unit);
+
+    // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+    freeBuffer(&b);
 }
 
 static void fadeChannel(const LorUnit unit,
@@ -38,37 +83,72 @@ static void fadeChannel(const LorUnit unit,
                         const float from,
                         const float to,
                         const float seconds) {
-    const LorFadeArgs args = {
-            .startIntensity = LorIntensityCurveVendor(from),
-            .endIntensity   = LorIntensityCurveVendor(to),
-            .duration       = lorSecondsToTime(seconds),
-    };
+    LorBuffer b;
+    if (!allocSingleMessageBuffer(&b)) return;
+
+    const union LorEffectArgs args = {
+            .fade = {
+                    .startIntensity = LorIntensityCurveVendor(from),
+                    .endIntensity   = LorIntensityCurveVendor(to),
+                    .duration       = lorSecondsToTime(seconds),
+            }};
 
     // starts a fade effect between the two brightness values for the specified
     // unit->channel over the specified period of time (0.1s - 25s range)
-    lorEncodeChannelEffect(LOR_EFFECT_FADE, &args, sizeof(args), channel, unit,
-                           write);
+    lorAppendChannelEffect(&b, LOR_EFFECT_FADE, &args, channel, unit);
+
+    // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+    freeBuffer(&b);
 }
 
 static void variousChannelEffects(const LorUnit unit,
                                   const LorChannel channel) {
-    lorEncodeChannelEffect(LOR_EFFECT_TWINKLE, NULL, 0, channel, unit, write);
+    {// "twinkle" protocol effect
+        LorBuffer b;
 
-    lorEncodeChannelEffect(LOR_EFFECT_SHIMMER, NULL, 0, channel, unit, write);
+        if (allocSingleMessageBuffer(&b)) {
+            lorAppendChannelEffect(&b, LOR_EFFECT_TWINKLE, NULL, channel, unit);
+
+            // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+            freeBuffer(&b);
+        }
+    }
+
+    {// "shimmer" protocol effect
+        LorBuffer b;
+
+        if (allocSingleMessageBuffer(&b)) {
+            lorAppendChannelEffect(&b, LOR_EFFECT_SHIMMER, NULL, channel, unit);
+
+            // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+            freeBuffer(&b);
+        }
+    }
 }
 
 static void setMultipleChannelBrightness(const LorUnit unit,
                                          const LorChannelSet channelSet,
                                          const float brightness) {
-    const LorSetIntensityArgs args = {
-            // the "vendor" curve is most likely what you want, but you can use
-            // others or write your own
-            .intensity = LorIntensityCurveVendor(brightness),
-    };
+    LorBuffer b;
+    if (!allocSingleMessageBuffer(&b)) return;
+
+    const union LorEffectArgs args = {
+            .setIntensity = {
+                    // the "vendor" curve is most likely what you want, but you can use
+                    // others or write your own
+                    .intensity = LorIntensityCurveVendor(brightness),
+            }};
 
     // sets the brightness (0.0-1.0 range) for the specified channels on `unit`
-    lorEncodeChannelSetEffect(LOR_EFFECT_SET_INTENSITY, &args, sizeof(args),
-                              channelSet, unit, write);
+    lorAppendChannelSetEffect(&b, LOR_EFFECT_SET_INTENSITY, &args, channelSet,
+                              unit);
+
+    // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+    freeBuffer(&b);
 }
 
 static void shimmerWhileFading(const LorUnit unit,
@@ -76,15 +156,23 @@ static void shimmerWhileFading(const LorUnit unit,
                                const float from,
                                const float to,
                                const float seconds) {
-    const LorFadeArgs args = {
-            .startIntensity = LorIntensityCurveVendor(from),
-            .endIntensity   = LorIntensityCurveVendor(to),
-            .duration       = lorSecondsToTime(seconds),
-    };
+    LorBuffer b;
+    if (!allocSingleMessageBuffer(&b)) return;
+
+    const union LorEffectArgs args = {
+            .fade = {
+                    .startIntensity = LorIntensityCurveVendor(from),
+                    .endIntensity   = LorIntensityCurveVendor(to),
+                    .duration       = lorSecondsToTime(seconds),
+            }};
 
     // starts a fade effect between the two brightness values for the specified
     // unit->channel over the specified period of time (0.1s - 25s range)
     // while fading, the shimmer effect is also applied - `LOR_EFFECT_TWINKLE` can also be used
-    lorEncodeLayeredChannelEffect(LOR_EFFECT_SHIMMER, LOR_EFFECT_FADE, &args,
-                                  sizeof(args), channel, unit, write);
+    lorAppendLayeredChannelEffect(&b, LOR_EFFECT_SHIMMER, LOR_EFFECT_FADE,
+                                  &args, channel, unit);
+
+    // TODO: copy and send up to `b.offset` number of bytes starting @ `b.buffer`
+
+    freeBuffer(&b);
 }

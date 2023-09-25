@@ -1,8 +1,10 @@
 # liblightorama
 
-An unofficial C99 library implementing the [Light-O-Rama (LOR) communication protocol](https://github.com/Cryptkeeper/lightorama-protocol) alongside related APIs, aiming to reduce usage of magic values and competing encoding & helper methods.
+An **unofficial** C99 library implementing the [Light-O-Rama (LOR) communication protocol](https://github.com/Cryptkeeper/lightorama-protocol) alongside related APIs, aiming to reduce usage of magic values and competing encoding & helper methods.
 
 Usage of liblightorama assumes existing familiarity with the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
+
+The previous v2.x release is available by checking out the `v2.x` branch. Only v3.x is actively supported by the author.
 
 ## Project Structure
 
@@ -64,7 +66,7 @@ Light Control Packet
 ### Implementation Notes
 
 * Additional packet structures exist for remote management/firmware update/system configuration feature sets, but are entirely undocumented and more time-consuming to explore. As a result, liblightorama focuses purely on lighting control packets.
-*  A `LorEffectArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
+*  A `union LorEffectArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
 
 ## Referencing Channels
 
@@ -102,23 +104,23 @@ Within liblightorama a single channel ID is represented by the `LorChannel` type
 
 For using channel groups and channel banks, the `LorChannelSet` type contains a `channels` field for defining the channel banks and an optional `offset` value for providing a channel group offset. liblightorama's `LorChannelSet` encoding logic will apply a few protocol optimizations that can help minimize memory usage when referencing a single channel bank.
 
-Depending on your type (`LorChannel`, `LorChannelSet`, `LorUnit`) you will use different functions when encoding/decoding (e.g. `lorEncodeChannelEffect` vs `lorEncodeChannelSetEffect` vs `lorEncodeUnitEffect`). A missing function signature for your type may mean it is unsupported by the protocol.
+Depending on your type (`LorChannel`, `LorChannelSet`, `LorUnit`) you will use different functions when encoding/decoding (e.g. `lorAppendChannelEffect` vs `lorAppendChannelSetEffect` vs `lorAppendUnitEffect`). A missing function signature for your type may mean it is unsupported by the protocol.
 
 ### Channel Set Code Examples
 
 ```C
 LorChannelSet first_8_channels = { 
-        .channels = 0xFF00, // set first 8 high bits
+        .channelBits = 0xFF00, // set first 8 high bits
         .offset = 0, // channel group 0
 };
 
 LorChannelSet channels_96_to_112 = {
-        .channels = 0xFFFF, // all 16 channels
+        .channelBits = 0xFFFF, // all 16 channels
         .offset = 5, // start at channel 96 (96/16 == 6 - 1 [because group #1 is 0] == 5)
 };
 
 LorChannelSet only_channel_32 = {
-        .channels = 0x1, // only set lowest order bit (channel 16)
+        .channelBits = 0x1, // only set lowest order bit (channel 16)
         .offset = 1, // offset channels by +16
 };
 ```
@@ -127,11 +129,11 @@ LorChannelSet only_channel_32 = {
 
 ### Memory Allocations
 
-liblightorama does not allocate any memory internally, and requires a `void write(unsigned char b)` function be passed to functions for writing to memory. To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest write call will not write more than 32 bytes.
+liblightorama does not allocate any memory internally, and requires a `LorBuffer *` struct be passed to functions for writing to memory (with basic write bounds checking via an `assert` call). To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest single lighting control packet will not write more than 32 bytes.
 
 ### Error Values
 
-Due to the simplicity of most encoding routines encoding functions do not return a value. A select few encoding issues (e.g. overflow/underflow issues) may be raised via `lorAssert` (by default a macro to `assert`) which I recommend enabling in development builds. In most cases, there is no ability for the library to discern invalid values given the nature of the protocol and its loosely undocumented bounds. 
+Due to the simplicity of most encoding routines encoding functions do not return a value. A select few encoding issues (e.g. overflow/underflow issues) may be raised via `assert` which I recommend enabling in development builds. In most cases, there is no strong ability for the library to identify invalid values given the protocol's unknown limitations besides my adhoc testing. 
 
 ### Brightness Curves
 
@@ -157,7 +159,7 @@ Layered effects allow the unit to apply two effects simultaneously to a single c
 
 The underlying LOR protocol functionality seems to only support single channel IDs (i.e. `LorChannel`). However, any single channel ID that is encoded within a single byte, is padded by an additional `0x81` byte. As a result, the encoded channel routing bytes should always be exactly two bytes in length.
 
-liblightorama has provided a `lorEncodeChannel2` function within [`uid.h`](include/lightorama/uid.h) that when invoked with the `align` parameter set to `LOR_ALIGN_16` (normally `LOR_ALIGN_8`), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorEncodeLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lightorama/easy.h).
+liblightorama has provided a `lorAppendAlignedChannel` function within [`uid.h`](include/lightorama/uid.h) that when invoked with the `align` parameter set to `LOR_ALIGN_16` (normally `LOR_ALIGN_8`), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorAppendLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lightorama/easy.h).
 
 ## Compatibility
 

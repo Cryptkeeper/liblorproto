@@ -32,18 +32,18 @@
 // https://github.com/Cryptkeeper/lightorama-protocol/blob/master/PROTOCOL.md#unit-ids
 #define LOR_UNIT_ALL ((LorUnit) 0xFF)
 
-void lorEncodeUnit(LorUnit unit, LorWriteFn write);
+void lorAppendUnit(LorBuffer *b, LorUnit unit);
 
-void lorEncodeChannel(LorChannel channel, LorWriteFn write);
+void lorAppendChannel(LorBuffer *b, LorChannel channel);
 
 typedef enum LorChannelAlign {
     LOR_ALIGN_8,
     LOR_ALIGN_16,
 } LorChannelAlign;
 
-void lorEncodeChannel2(LorChannel channel,
-                       LorChannelAlign align,
-                       LorWriteFn write);
+void lorAppendAlignedChannel(LorBuffer *b,
+                             LorChannel channel,
+                             LorChannelAlign align);
 
 typedef enum LorChannelFormat {
     LOR_FORMAT_SINGLE    = 0x00, /* 0b0000 */
@@ -56,6 +56,6 @@ typedef enum LorChannelFormat {
 
 LorChannelFormat lorGetChannelSetFormat(LorChannelSet channelSet);
 
-void lorEncodeChannelSet(LorChannelSet channelSet, LorWriteFn write);
+void lorAppendChannelSet(LorBuffer *b, LorChannelSet channelSet);
 
 #endif// LIGHTORAMA_UID_H

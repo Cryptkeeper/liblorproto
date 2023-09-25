@@ -25,14 +25,15 @@
 
 #include "lightorama/uid.h"
 
-void lorEncodeUnitHeartbeat(const LorUnit unit, const LorWriteFn write) {
-    lorEncodeUnit(unit, write);
-
-    write(0x81);
-    write(0x56);
+void lorAppendUnitHeartbeat(LorBuffer *const b, const LorUnit unit) {
+    lorAppendU8(b, 0);
+    lorAppendUnit(b, unit);
+    lorAppendU8(b, 0x81);
+    lorAppendU8(b, 0x56);
+    lorAppendU8(b, 0);
 }
 
-void lorEncodeHeartbeat(const LorWriteFn write) {
+void lorAppendHeartbeat(LorBuffer *const b) {
     // 0xFF is a magic protocol value that matches all connected units
-    lorEncodeUnitHeartbeat(0xFF, write);
+    lorAppendUnitHeartbeat(b, 0xFF);
 }

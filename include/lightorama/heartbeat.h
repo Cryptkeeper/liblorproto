@@ -30,8 +30,8 @@
 #define LOR_HEARTBEAT_DELAY_MS 500
 #define LOR_HEARTBEAT_DELAY_S  0.5F
 
-void lorEncodeUnitHeartbeat(LorUnit unit, LorWriteFn write);
+void lorAppendUnitHeartbeat(LorBuffer *b, LorUnit unit);
 
-void lorEncodeHeartbeat(LorWriteFn write);
+void lorAppendHeartbeat(LorBuffer *b);
 
 #endif// LIGHTORAMA_HEARTBEAT_H

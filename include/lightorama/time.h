@@ -36,6 +36,6 @@ LorTime lorSecondsToTime(float seconds);
 
 float lorTimeToSeconds(LorTime time);
 
-void lorEncodeTime(LorTime, LorWriteFn write);
+void lorAppendTime(LorBuffer *b, LorTime time);
 
 #endif// LIGHTORAMA_TIME_H

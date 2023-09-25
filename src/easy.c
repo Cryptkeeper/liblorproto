@@ -26,48 +26,56 @@
 #include "lightorama/effect.h"
 #include "lightorama/uid.h"
 
-void lorEncodeChannelEffect(LorEffect effect,
-                            const LorEffectArgs *const args,
-                            LorChannel channel,
-                            LorUnit unit,
-                            LorWriteFn write) {
-    lorEncodeUnit(unit, write);
-    lorEncodeEffect(effect, LOR_FORMAT_SINGLE, write);
-    lorEncodeEffectArgs(effect, args, write);
-    lorEncodeChannel(channel, write);
+void lorAppendChannelEffect(LorBuffer *const b,
+                            const LorEffect effect,
+                            const union LorEffectArgs *const args,
+                            const LorChannel channel,
+                            const LorUnit unit) {
+    lorAppendU8(b, 0);
+    lorAppendUnit(b, unit);
+    lorAppendEffect(b, effect, LOR_FORMAT_SINGLE);
+    lorAppendEffectArgs(b, effect, args);
+    lorAppendChannel(b, channel);
+    lorAppendU8(b, 0);
 }
 
-void lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
-                                   LorEffect secondaryEffect,
-                                   const LorEffectArgs *const args,
-                                   LorChannel channel,
-                                   LorUnit unit,
-                                   LorWriteFn write) {
-    lorEncodeUnit(unit, write);
-    lorEncodeEffect(primaryEffect, LOR_FORMAT_SINGLE, write);
-    lorEncodeChannel2(channel, LOR_ALIGN_16, write);
-    lorEncodeEffect(secondaryEffect, LOR_FORMAT_SINGLE, write);
-    lorEncodeEffectArgs(secondaryEffect, args, write);
+void lorAppendLayeredChannelEffect(LorBuffer *const b,
+                                   const LorEffect primaryEffect,
+                                   const LorEffect secondaryEffect,
+                                   const union LorEffectArgs *const args,
+                                   const LorChannel channel,
+                                   const LorUnit unit) {
+    lorAppendU8(b, 0);
+    lorAppendUnit(b, unit);
+    lorAppendEffect(b, primaryEffect, LOR_FORMAT_SINGLE);
+    lorAppendAlignedChannel(b, channel, LOR_ALIGN_16);
+    lorAppendEffect(b, secondaryEffect, LOR_FORMAT_SINGLE);
+    lorAppendEffectArgs(b, secondaryEffect, args);
+    lorAppendU8(b, 0);
 }
 
-void lorEncodeChannelSetEffect(LorEffect effect,
-                               const LorEffectArgs *const args,
-                               LorChannelSet channelSet,
-                               LorUnit unit,
-                               LorWriteFn write) {
+void lorAppendChannelSetEffect(LorBuffer *const b,
+                               const LorEffect effect,
+                               const union LorEffectArgs *const args,
+                               const LorChannelSet channelSet,
+                               const LorUnit unit) {
     const LorChannelFormat format = lorGetChannelSetFormat(channelSet);
 
-    lorEncodeUnit(unit, write);
-    lorEncodeEffect(effect, format, write);
-    lorEncodeEffectArgs(effect, args, write);
-    lorEncodeChannelSet(channelSet, write);
+    lorAppendU8(b, 0);
+    lorAppendUnit(b, unit);
+    lorAppendEffect(b, effect, format);
+    lorAppendEffectArgs(b, effect, args);
+    lorAppendChannelSet(b, channelSet);
+    lorAppendU8(b, 0);
 }
 
-void lorEncodeUnitEffect(LorEffect effect,
-                         const LorEffectArgs *const args,
-                         LorUnit unit,
-                         LorWriteFn write) {
-    lorEncodeUnit(unit, write);
-    lorEncodeEffect(effect, LOR_FORMAT_UNIT, write);
-    lorEncodeEffectArgs(effect, args, write);
+void lorAppendUnitEffect(LorBuffer *const b,
+                         const LorEffect effect,
+                         const union LorEffectArgs *const args,
+                         const LorUnit unit) {
+    lorAppendU8(b, 0);
+    lorAppendUnit(b, unit);
+    lorAppendEffect(b, effect, LOR_FORMAT_UNIT);
+    lorAppendEffectArgs(b, effect, args);
+    lorAppendU8(b, 0);
 }

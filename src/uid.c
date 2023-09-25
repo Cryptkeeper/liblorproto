@@ -23,12 +23,14 @@
  */
 #include "lightorama/uid.h"
 
-void lorEncodeUnit(const LorUnit unit, const LorWriteFn write) {
-    write(unit);
+#include <assert.h>
+
+void lorAppendUnit(LorBuffer *const b, const LorUnit unit) {
+    lorAppendU8(b, unit);
 }
 
-void lorEncodeChannel(LorChannel channel, LorWriteFn write) {
-    lorEncodeChannel2(channel, LOR_ALIGN_8, write);
+void lorAppendChannel(LorBuffer *const b, const LorChannel channel) {
+    lorAppendAlignedChannel(b, channel, LOR_ALIGN_8);
 }
 
 // Light-O-Rama protocol requires all values be non-zero, so the highest order bit
@@ -37,25 +39,25 @@ void lorEncodeChannel(LorChannel channel, LorWriteFn write) {
 #define LOR_CHANNEL_OPT_HAS_OFFSET (0b01000000 | LOR_CHANNEL_OPT) /* 0xC0 */
 #define LOR_CHANNEL_OPT_DATA_MASK  0b00111111                     /* 0x3F */
 
-void lorEncodeChannel2(const LorChannel channel,
-                       const LorChannelAlign align,
-                       const LorWriteFn write) {
+void lorAppendAlignedChannel(LorBuffer *const b,
+                             const LorChannel channel,
+                             const LorChannelAlign align) {
     // 2 highest bits are reserved as flags
     const int MaxChannel = 1 << 6;
 
     if (channel > MaxChannel) {
         const int offset = channel / MaxChannel;
 
-        lorAssert(offset >= 0 && offset <= MaxChannel);
+        assert(offset >= 0 && offset < MaxChannel);
 
-        write((channel % MaxChannel) | LOR_CHANNEL_OPT_HAS_OFFSET);
-        write(offset | LOR_CHANNEL_OPT);
+        lorAppendU8(b, (channel % MaxChannel) | LOR_CHANNEL_OPT_HAS_OFFSET);
+        lorAppendU8(b, offset | LOR_CHANNEL_OPT);
     } else {
-        write(channel | LOR_CHANNEL_OPT);
+        lorAppendU8(b, channel | LOR_CHANNEL_OPT);
 
         // some protocol usages of channel restructures require 16-bit alignment
         // this optionally pads using a magic protocol value
-        if (align == LOR_ALIGN_16) write(0x81);
+        if (align == LOR_ALIGN_16) lorAppendU8(b, 0x81);
     }
 }
 
@@ -69,7 +71,9 @@ static inline void lorGetChannelSetBanks(const LorChannelSet channelSet,
 LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
     if (channelSet.offset > 0) return LOR_FORMAT_MULTIPART;
 
-    uint8_t bankL, bankH;
+    uint8_t bankL = 0;
+    uint8_t bankH = 0;
+
     lorGetChannelSetBanks(channelSet, &bankL, &bankH);
 
     if (bankL > 0 && bankH > 0) return LOR_FORMAT_16;
@@ -77,32 +81,33 @@ LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
         return LOR_FORMAT_8L;
     else if (bankH > 0)
         return LOR_FORMAT_8H;
-
-    return LOR_FORMAT_SINGLE;
+    else
+        return LOR_FORMAT_SINGLE;
 }
 
 #define LOR_CHANNELSET_OPT_8L        0b01000000 /* 0x40 */
 #define LOR_CHANNELSET_OPT_8H        0b10000000 /* 0x80 */
 #define LOR_CHANNELSET_OPT_DATA_MASK 0b00111111 /* 0x3F */
 
-void lorEncodeChannelSet(const LorChannelSet channelSet,
-                         const LorWriteFn write) {
+void lorAppendChannelSet(LorBuffer *const b, const LorChannelSet channelSet) {
     // 6-bit unsigned int, max value of 64
-    lorAssert(channelSet.offset <= 64);
+    assert(channelSet.offset < 64);
 
-    uint8_t bankL, bankH;
+    uint8_t bankL = 0;
+    uint8_t bankH = 0;
+
     lorGetChannelSetBanks(channelSet, &bankL, &bankH);
 
     if (channelSet.offset > 0) {
         if (bankL > 0 && bankH > 0) {
-            write(channelSet.offset);
+            lorAppendU8(b, channelSet.offset);
         } else if (bankL > 0) {
-            write(channelSet.offset | LOR_CHANNELSET_OPT_8L);
+            lorAppendU8(b, channelSet.offset | LOR_CHANNELSET_OPT_8L);
         } else if (bankH > 0) {
-            write(channelSet.offset | LOR_CHANNELSET_OPT_8H);
+            lorAppendU8(b, channelSet.offset | LOR_CHANNELSET_OPT_8H);
         }
     }
 
-    if (bankL > 0) write(bankL);
-    if (bankH > 0) write(bankH);
+    if (bankL > 0) lorAppendU8(b, bankL);
+    if (bankH > 0) lorAppendU8(b, bankH);
 }

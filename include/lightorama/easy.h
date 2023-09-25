@@ -27,28 +27,28 @@
 #include "coretypes.h"
 #include "effect.h"
 
-void lorEncodeChannelEffect(LorEffect effect,
-                            const LorEffectArgs *args,
+void lorAppendChannelEffect(LorBuffer *b,
+                            LorEffect effect,
+                            const union LorEffectArgs *args,
                             LorChannel channel,
-                            LorUnit unit,
-                            LorWriteFn write);
+                            LorUnit unit);
 
-void lorEncodeLayeredChannelEffect(LorEffect primaryEffect,
+void lorAppendLayeredChannelEffect(LorBuffer *b,
+                                   LorEffect primaryEffect,
                                    LorEffect secondaryEffect,
-                                   const LorEffectArgs *args,
+                                   const union LorEffectArgs *args,
                                    LorChannel channel,
-                                   LorUnit unit,
-                                   LorWriteFn write);
+                                   LorUnit unit);
 
-void lorEncodeChannelSetEffect(LorEffect effect,
-                               const LorEffectArgs *args,
+void lorAppendChannelSetEffect(LorBuffer *b,
+                               LorEffect effect,
+                               const union LorEffectArgs *args,
                                LorChannelSet channelSet,
-                               LorUnit unit,
-                               LorWriteFn write);
+                               LorUnit unit);
 
-void lorEncodeUnitEffect(LorEffect effect,
-                         const LorEffectArgs *args,
-                         LorUnit unit,
-                         LorWriteFn write);
+void lorAppendUnitEffect(LorBuffer *b,
+                         LorEffect effect,
+                         const union LorEffectArgs *args,
+                         LorUnit unit);
 
 #endif// LIGHTORAMA_EASY_H

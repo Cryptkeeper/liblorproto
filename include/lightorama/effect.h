@@ -37,9 +37,7 @@ typedef enum LorEffect {
     LOR_EFFECT_SHIMMER       = 0x07, /* 0b0111 */
 } LorEffect;
 
-void lorEncodeEffect(LorEffect effect,
-                     LorChannelFormat format,
-                     LorWriteFn write);
+void lorAppendEffect(LorBuffer *b, LorEffect effect, LorChannelFormat format);
 
 typedef struct LorSetIntensityArgs {
     LorIntensity intensity;
@@ -55,14 +53,14 @@ typedef struct LorPulseArgs {
     LorTime halfInterval;
 } LorPulseArgs;
 
-typedef union LorAnyArgs {
+union LorEffectArgs {
     LorSetIntensityArgs setIntensity;
     LorFadeArgs fade;
     LorPulseArgs pulse;
-} LorEffectArgs;
+};
 
-void lorEncodeEffectArgs(LorEffect effect,
-                         const LorEffectArgs *args,
-                         LorWriteFn write);
+void lorAppendEffectArgs(LorBuffer *b,
+                         LorEffect effect,
+                         const union LorEffectArgs *args);
 
 #endif// LIGHTORAMA_EFFECT_H
