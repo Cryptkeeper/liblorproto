@@ -29,6 +29,10 @@ install(TARGETS lightorama
         LIBRARY DESTINATION lib/lightorama
         PUBLIC_HEADER DESTINATION include/lightorama)
 
+add_executable(test_buffer test/buffer.c)
+target_link_libraries(test_buffer lightorama)
+add_test(buffer test_buffer)
+
 add_executable(test_model test/model.c)
 target_link_libraries(test_model lightorama)
 add_test(model test_model)

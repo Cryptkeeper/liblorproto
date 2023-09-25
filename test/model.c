@@ -36,4 +36,6 @@ int main(__attribute__((unused)) int argc,
         if (lorGetModelName(model, &name))
             assert(name != NULL && strlen(name) > 0);
     }
+
+    return 0;
 }

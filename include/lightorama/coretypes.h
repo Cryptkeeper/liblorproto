@@ -45,7 +45,7 @@ typedef struct LorBuffer {
 
 LorBuffer lorBufferInit(uint8_t *mem, uint32_t size);
 
-void lorBufferFree(LorBuffer *b);
+uint32_t lorBufferRemaining(LorBuffer b);
 
 void lorAppendU8(LorBuffer *b, uint8_t v);
 
