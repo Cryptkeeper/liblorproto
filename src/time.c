@@ -40,8 +40,8 @@ float lorTimeToSeconds(const LorTime time) {
 
 #define LOR_DURATION_MASK 0x8000
 
-void lorAppendTime(LorBuffer *const b, LorTime time) {
-    const uint16_t bits = time | LOR_DURATION_MASK;
+void lorAppendTime(LorBuffer *const b, const LorTime time) {
+    const uint16_t bits = time > 0xFF ? time : time | LOR_DURATION_MASK;
 
     lorAppendU8(b, bits >> 8);
     lorAppendU8(b, bits & 0xFF);
