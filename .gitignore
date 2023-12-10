@@ -18,6 +18,8 @@ Testing/
 CTestTestfile.cmake
 
 # Test binaries
+test_buffer
 test_channelset
 test_effect
 test_time
+test_model
