@@ -127,6 +127,9 @@ int lorCompressorGenerate(const LorCompressor *const compressor,
                 .effect = compressor->effects[i],
                 .args = compressor->effectArgs[i],
         };
+
+        // break early if all channels are updated
+        if (updatedBits == compressor->occupancySet) break;
     }
 
     return generated;
