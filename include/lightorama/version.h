@@ -26,7 +26,7 @@
 
 #define LIBLIGHTORAMA_VERSION_MAJOR  ((unsigned char) 3)
 #define LIBLIGHTORAMA_VERSION_MINOR  ((unsigned char) 1)
-#define LIBLIGHTORAMA_VERSION_PATCH  ((unsigned char) 0)
-#define LIBLIGHTORAMA_VERSION_STRING "3.1.0"
+#define LIBLIGHTORAMA_VERSION_PATCH  ((unsigned char) 1)
+#define LIBLIGHTORAMA_VERSION_STRING "3.1.1"
 
 #endif// LIGHTORAMA_VERSION_H
