@@ -24,6 +24,7 @@
 #include "lightorama/uid.h"
 
 #include <assert.h>
+#include <stdbool.h>
 
 void lorAppendUnit(LorBuffer *const b, const LorUnit unit) {
     lorAppendU8(b, unit);
@@ -61,25 +62,17 @@ void lorAppendAlignedChannel(LorBuffer *const b,
     }
 }
 
-static void lorGetChannelSetBanks(const LorChannelSet channelSet,
-                                  uint8_t *const bankL,
-                                  uint8_t *const bankH) {
-    *bankL = channelSet.channelBits & 0xFF;
-    *bankH = channelSet.channelBits >> 8;
-}
-
 LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
     if (channelSet.offset > 0) return LOR_FORMAT_MULTIPART;
 
-    uint8_t bankL = 0;
-    uint8_t bankH = 0;
+    const bool bankL = (channelSet.channelBits & 0x00FF) > 0;
+    const bool bankH = (channelSet.channelBits & 0xFF00) > 0;
 
-    lorGetChannelSetBanks(channelSet, &bankL, &bankH);
+    if (bankL && bankH) return LOR_FORMAT_16;
+    if (bankL) return LOR_FORMAT_8L;
+    if (bankH) return LOR_FORMAT_8H;
 
-    if (bankL > 0 && bankH > 0) return LOR_FORMAT_16;
-    else if (bankL > 0) return LOR_FORMAT_8L;
-    else if (bankH > 0) return LOR_FORMAT_8H;
-    else return LOR_FORMAT_SINGLE;
+    return LOR_FORMAT_SINGLE;
 }
 
 #define LOR_CHANNELSET_OPT_8L        0b01000000 /* 0x40 */
@@ -90,10 +83,8 @@ void lorAppendChannelSet(LorBuffer *const b, const LorChannelSet channelSet) {
     // 6-bit unsigned int, max value of 64
     assert(channelSet.offset < 64);
 
-    uint8_t bankL = 0;
-    uint8_t bankH = 0;
-
-    lorGetChannelSetBanks(channelSet, &bankL, &bankH);
+    const uint8_t bankL = channelSet.channelBits & 0xFF;
+    const uint8_t bankH = channelSet.channelBits >> 8;
 
     if (channelSet.offset > 0) {
         if (bankL > 0 && bankH > 0) {
