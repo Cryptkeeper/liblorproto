@@ -65,6 +65,18 @@ void lorAppendAlignedChannel(LorBuffer *const b,
 LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
     if (channelSet.offset > 0) return LOR_FORMAT_MULTIPART;
 
+    const int count = __builtin_popcount(channelSet.channelBits);
+
+    // FIXME: this is more likely an error scenario (an empty ChannelSets has no format)
+    // legacy impl. returns _SINGLE by accident and we'll maintain that here for compat.
+    // encoding an empty ChannelSets as _SINGLE will result in a 0-byte payload which
+    // breaks up the message and results in a no-op, which means while it is wrong,
+    // it is harmless and can be ignored.
+    if (count == 0) return LOR_FORMAT_SINGLE;
+
+    // detect truly single ChannelSets to avoid re-encoding using a bitset
+    if (count == 1) return LOR_FORMAT_SINGLE;
+
     const bool bankL = (channelSet.channelBits & 0x00FF) > 0;
     const bool bankH = (channelSet.channelBits & 0xFF00) > 0;
 
@@ -72,7 +84,11 @@ LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
     if (bankL) return LOR_FORMAT_8L;
     if (bankH) return LOR_FORMAT_8H;
 
-    return LOR_FORMAT_SINGLE;
+    assert(bankL || bankH);
+
+    // popcount check above ensures at least one 8-bit bank is present
+    // this should never be reached
+    __builtin_unreachable();
 }
 
 #define LOR_CHANNELSET_OPT_8L        0b01000000 /* 0x40 */

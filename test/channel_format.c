@@ -39,11 +39,17 @@ static void test_channelset_result(const unsigned offset,
 
 int main(__attribute__((unused)) int argc,
          __attribute__((unused)) char **argv) {
+    // legacy behavior treats an empty ChannelSet as a single channel
+    test_channelset_result(0, 0, LOR_FORMAT_SINGLE);
+
     test_channelset_result(0, 0x00FF, LOR_FORMAT_8L);
-    test_channelset_result(0, 0x0001, LOR_FORMAT_8L);
 
     test_channelset_result(0, 0xFF00, LOR_FORMAT_8H);
-    test_channelset_result(0, 0x1000, LOR_FORMAT_8H);
+
+    test_channelset_result(0, 0x0001, LOR_FORMAT_SINGLE);
+    test_channelset_result(0, 0x0010, LOR_FORMAT_SINGLE);
+    test_channelset_result(0, 0x0100, LOR_FORMAT_SINGLE);
+    test_channelset_result(0, 0x1000, LOR_FORMAT_SINGLE);
 
     test_channelset_result(0, 0xFFFF, LOR_FORMAT_16);
     test_channelset_result(0, 0x1001, LOR_FORMAT_16);
