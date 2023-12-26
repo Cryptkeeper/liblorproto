@@ -102,11 +102,13 @@ int main(__attribute__((unused)) int argc,
     assert(generated == 2);/* 2 effects generated to match min/maxBrightness */
 
     assert(results[0].effect == effect);
+    assert(results[0].channelSet.offset == 1);
     assert(
             results[0].args.setIntensity.intensity == maxBrightness.
             setIntensity.intensity);
 
     assert(results[1].effect == effect);
+    assert(results[1].channelSet.offset == 1);
     assert(
             results[1].args.setIntensity.intensity == minBrightness.
             setIntensity.intensity);
@@ -117,6 +119,28 @@ int main(__attribute__((unused)) int argc,
     generated = lorCompressorGenerate(&c, results);
 
     assert(generated == 0);
+
+    // test output with a single effect that compresses into all available outputs
+    // this also uses zero as the first channel to test that offsets remain zero
+    assert(lorCompressorSetBaseChannel(&c, 0) == LOR_COMPRESSOR_OK);
+
+    for (int i = 0; i < 16; i++) {
+        assert(
+                lorCompressorSetEffect(&c, i, LOR_EFFECT_SET_INTENSITY,
+                    maxBrightness) == LOR_COMPRESSOR_OK);
+    }
+
+    generated = lorCompressorGenerate(&c, results);
+
+    assert(generated == 1);
+    assert(results[0].effect == LOR_EFFECT_SET_INTENSITY);
+    assert(
+            results[0].args.setIntensity.intensity == maxBrightness.
+            setIntensity.intensity);
+
+    // validate channel set includes all 16 channels starting at zero
+    assert(results[0].channelSet.offset == 0);
+    assert(results[0].channelSet.channelBits == 0xFFFF);
 
     return 0;
 }
