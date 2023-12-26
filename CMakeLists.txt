@@ -33,9 +33,17 @@ add_executable(test_buffer test/buffer.c)
 target_link_libraries(test_buffer lightorama)
 add_test(buffer test_buffer)
 
+add_executable(test_channel_format test/channel_format.c)
+target_link_libraries(test_channel_format lightorama)
+add_test(channel_format test_channel_format)
+
 add_executable(test_compress test/compress.c)
 target_link_libraries(test_compress lightorama)
 add_test(compress test_compress)
+
+add_executable(test_intensity test/intensity.c)
+target_link_libraries(test_intensity lightorama)
+add_test(intensity test_intensity)
 
 add_executable(test_model test/model.c)
 target_link_libraries(test_model lightorama)
@@ -44,9 +52,5 @@ add_test(model test_model)
 add_executable(test_time test/time.c)
 target_link_libraries(test_time lightorama)
 add_test(time test_time)
-
-add_executable(test_intensity test/intensity.c)
-target_link_libraries(test_intensity lightorama)
-add_test(intensity test_intensity)
 
 enable_testing()
