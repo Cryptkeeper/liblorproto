@@ -117,7 +117,7 @@ static void test_multiple_results_usage(void) {
 
     // test generated output
     struct LorCompressorResult results[LOR_COMPRESSOR_SIZE] = {0};
-    int generated = lorCompressorGenerate(&c, results);
+    const int generated = lorCompressorGenerate(&c, results);
 
     assert(generated == 2);/* 2 effects generated to match min/maxBrightness */
 

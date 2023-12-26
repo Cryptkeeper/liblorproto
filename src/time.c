@@ -33,7 +33,7 @@ LorTime lorSecondsToTime(const float seconds) {
 }
 
 float lorTimeToSeconds(const LorTime time) {
-    const float seconds = (LOR_TIME_MIN / (float) time) * LOR_TIME_MIN_SECONDS;
+    const float seconds = LOR_TIME_MIN / (float) time * LOR_TIME_MIN_SECONDS;
 
     return LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
 }

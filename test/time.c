@@ -35,7 +35,7 @@ static void test_time_table(void) {
     assert(lorSecondsToTime(25.0F) == 20);
 }
 
-static void test_time_interval_diff(float f) {
+static void test_time_interval_diff(const float f) {
     const float real = lorTimeToSeconds(lorSecondsToTime(f));
 
     // safely handle an offset between the expected seconds values
@@ -49,10 +49,9 @@ static void test_time_interval_diff(float f) {
 
 int main(__attribute__((unused)) int argc,
          __attribute__((unused)) char **argv) {
-    float test_intervals[5] = {0.1F, 0.5F, 1.0F, 2.0F, 25.0F};
+    const float test_intervals[5] = {0.1F, 0.5F, 1.0F, 2.0F, 25.0F};
 
-    size_t i;
-    for (i = 0; i < sizeof(test_intervals) / sizeof(float); i++) {
+    for (size_t i = 0; i < sizeof(test_intervals) / sizeof(float); i++) {
         const float f = test_intervals[i];
 
         test_time_interval_diff(f);

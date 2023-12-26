@@ -39,8 +39,8 @@ enum LorCompressorError lorCompressorSetBaseChannel(
 
 enum LorCompressorError lorCompressorSetEffect(LorCompressor *const compressor,
                                                const uint32_t channel,
-                                               LorEffect effect,
-                                               union LorEffectArgs args) {
+                                               const LorEffect effect,
+                                               const union LorEffectArgs args) {
     if (compressor->baseChannel > channel) return LOR_COMPRESSOR_OUT_OF_RANGE;
 
     // relativize index according to the base index for the compressor range

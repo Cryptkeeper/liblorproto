@@ -50,7 +50,7 @@ void lorAppendAlignedChannel(LorBuffer *const b,
 
         assert(offset >= 0 && offset < MaxChannel);
 
-        lorAppendU8(b, (channel % MaxChannel) | LOR_CHANNEL_OPT_HAS_OFFSET);
+        lorAppendU8(b, channel % MaxChannel | LOR_CHANNEL_OPT_HAS_OFFSET);
         lorAppendU8(b, offset | LOR_CHANNEL_OPT);
     } else {
         lorAppendU8(b, channel | LOR_CHANNEL_OPT);
@@ -61,9 +61,9 @@ void lorAppendAlignedChannel(LorBuffer *const b,
     }
 }
 
-static inline void lorGetChannelSetBanks(const LorChannelSet channelSet,
-                                         uint8_t *const bankL,
-                                         uint8_t *const bankH) {
+static void lorGetChannelSetBanks(const LorChannelSet channelSet,
+                                  uint8_t *const bankL,
+                                  uint8_t *const bankH) {
     *bankL = channelSet.channelBits & 0xFF;
     *bankH = channelSet.channelBits >> 8;
 }
@@ -77,12 +77,9 @@ LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
     lorGetChannelSetBanks(channelSet, &bankL, &bankH);
 
     if (bankL > 0 && bankH > 0) return LOR_FORMAT_16;
-    else if (bankL > 0)
-        return LOR_FORMAT_8L;
-    else if (bankH > 0)
-        return LOR_FORMAT_8H;
-    else
-        return LOR_FORMAT_SINGLE;
+    else if (bankL > 0) return LOR_FORMAT_8L;
+    else if (bankH > 0) return LOR_FORMAT_8H;
+    else return LOR_FORMAT_SINGLE;
 }
 
 #define LOR_CHANNELSET_OPT_8L        0b01000000 /* 0x40 */

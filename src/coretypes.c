@@ -39,7 +39,7 @@ inline uint32_t lorBufferRemaining(const LorBuffer b) {
     return b.offset >= b.size ? 0 : b.size - b.offset;
 }
 
-void lorAppendU8(struct LorBuffer *const b, const uint8_t v) {
+void lorAppendU8(LorBuffer *const b, const uint8_t v) {
     assert(b->offset < b->size);
 
     b->buffer[b->offset] = v;
