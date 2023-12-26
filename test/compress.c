@@ -124,7 +124,7 @@ int main(__attribute__((unused)) int argc,
     // this also uses zero as the first channel to test that offsets remain zero
     assert(lorCompressorSetBaseChannel(&c, 0) == LOR_COMPRESSOR_OK);
 
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < LOR_COMPRESSOR_SIZE; i++) {
         assert(
                 lorCompressorSetEffect(&c, i, LOR_EFFECT_SET_INTENSITY,
                     maxBrightness) == LOR_COMPRESSOR_OK);
