@@ -45,4 +45,8 @@ add_executable(test_time test/time.c)
 target_link_libraries(test_time lightorama)
 add_test(time test_time)
 
+add_executable(test_intensity test/intensity.c)
+target_link_libraries(test_intensity lightorama)
+add_test(intensity test_intensity)
+
 enable_testing()

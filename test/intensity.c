@@ -21,27 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/coretypes.h"
+#include "lightorama/intensity.h"
 
+#undef NDEBUG
 #include <assert.h>
 
-LorBuffer lorBufferInit(uint8_t *const mem, const uint32_t size) {
-    assert(mem);
-
-    return (LorBuffer){
-            .buffer = mem,
-            .size = size,
-            .offset = 0,
-    };
+static void test_intensity_pair(const float f, const LorIntensity i) {
+    // validate clamping behavior across builtin intensity curves
+    // users implementing the type should test their own curves
+    assert(LorIntensityCurveVendor(f) == i);
+    assert(LorIntensityCurveLinear(f) == i);
+    assert(LorIntensityCurveSquared(f) == i);
 }
 
-inline uint32_t lorBufferRemaining(const LorBuffer b) {
-    return b.offset >= b.size ? 0 : b.size - b.offset;
-}
+int main(__attribute__((unused)) int argc,
+         __attribute__((unused)) char **argv) {
+    test_intensity_pair(-0.01, LOR_INTENSITY_MIN);
+    test_intensity_pair(-1, LOR_INTENSITY_MIN);
+    test_intensity_pair(-2, LOR_INTENSITY_MIN);
 
-void lorAppendU8(struct LorBuffer *const b, const uint8_t v) {
-    assert(b->offset < b->size);
+    test_intensity_pair(1.01, LOR_INTENSITY_MAX);
+    test_intensity_pair(1, LOR_INTENSITY_MAX);
+    test_intensity_pair(2, LOR_INTENSITY_MAX);
 
-    b->buffer[b->offset] = v;
-    b->offset++;
+    return 0;
 }
