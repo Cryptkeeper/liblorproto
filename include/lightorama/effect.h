@@ -28,13 +28,14 @@
 #include "uid.h"
 
 typedef enum LorEffect {
-    LOR_EFFECT_SET_LIGHTS    = 0x01, /* 0b0001 */
-    LOR_EFFECT_SET_OFF       = 0x02, /* 0b0010 */
-    LOR_EFFECT_SET_INTENSITY = 0x03, /* 0b0011 */
-    LOR_EFFECT_FADE          = 0x04, /* 0b0100 */
-    LOR_EFFECT_PULSE         = 0x05, /* 0b0101 */
-    LOR_EFFECT_TWINKLE       = 0x06, /* 0b0110 */
-    LOR_EFFECT_SHIMMER       = 0x07, /* 0b0111 */
+    LOR_EFFECT_SET_LIGHTS        = 0x01, /* 0b0001 */
+    LOR_EFFECT_SET_OFF           = 0x02, /* 0b0010 */
+    LOR_EFFECT_SET_INTENSITY     = 0x03, /* 0b0011 */
+    LOR_EFFECT_FADE              = 0x04, /* 0b0100 */
+    LOR_EFFECT_PULSE             = 0x05, /* 0b0101 */
+    LOR_EFFECT_TWINKLE           = 0x06, /* 0b0110 */
+    LOR_EFFECT_SHIMMER           = 0x07, /* 0b0111 */
+    LOR_EFFECT_SET_DMX_INTENSITY = 0x08, /* 0b1000 */
 } LorEffect;
 
 void lorAppendEffect(LorBuffer *b, LorEffect effect, LorChannelFormat format);
@@ -42,6 +43,10 @@ void lorAppendEffect(LorBuffer *b, LorEffect effect, LorChannelFormat format);
 typedef struct LorSetIntensityArgs {
     LorIntensity intensity;
 } LorSetIntensityArgs;
+
+typedef struct LorSetDMXIntensityArgs {
+    uint8_t intensity;
+} LorSetDMXIntensityArgs;
 
 typedef struct LorFadeArgs {
     LorIntensity startIntensity;
@@ -57,6 +62,7 @@ union LorEffectArgs {
     LorSetIntensityArgs setIntensity;
     LorFadeArgs fade;
     LorPulseArgs pulse;
+    LorSetDMXIntensityArgs setDMXIntensity;
 };
 
 void lorAppendEffectArgs(LorBuffer *b,

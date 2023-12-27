@@ -40,30 +40,28 @@ void lorAppendEffectArgs(LorBuffer *const b,
     switch (effect) {
         case LOR_EFFECT_SET_INTENSITY:
             assert(args);
-
             lorAppendIntensity(b, args->setIntensity.intensity);
-
             break;
 
         case LOR_EFFECT_FADE:
             assert(args);
-
             lorAppendIntensity(b, args->fade.startIntensity);
             lorAppendIntensity(b, args->fade.endIntensity);
             lorAppendTime(b, args->fade.duration);
-
             break;
 
         case LOR_EFFECT_PULSE:
             assert(args);
-
             lorAppendTime(b, args->pulse.halfInterval);
+            break;
 
+        case LOR_EFFECT_SET_DMX_INTENSITY:
+            assert(args);
+            lorAppendU8(b, args->setDMXIntensity.intensity);
             break;
 
         default:
             assert(!args);
-
             break;
     }
 }

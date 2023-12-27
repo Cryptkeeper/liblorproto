@@ -78,6 +78,10 @@ static bool lorCompressorEffectMatches(const LorCompressor *const compressor,
         case LOR_EFFECT_PULSE:
             return aArgs.pulse.halfInterval == bArgs.pulse.halfInterval;
 
+        case LOR_EFFECT_SET_DMX_INTENSITY:
+            return aArgs.setDMXIntensity.intensity == bArgs.setDMXIntensity.
+                   intensity;
+
         default:
             return false;
     }
