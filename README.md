@@ -156,7 +156,7 @@ Each brightness curve is designed to return a `LorIntensity` value representing 
 
 #### Layered Effects
 
-Layered effects allow the unit to apply two effects simultaneously to a single channel (with limited options). The "primary" effect, sent first, must be stateless — i.e. no `args` option — which reduces your options to `LOR_EFFECT_TWINKLE` and `LOR_EFFECT_SHIMMER`. The "secondary" effect is followed by its respective metadata struct, restricting it to supporting `LOR_EFFECT_SET_LIGHTS`, `LOR_EFFECT_FADE`, or `LOR_EFFECT_PULSE`.
+Layered effects allow the unit to apply two effects simultaneously to a single channel (with limited options). The "primary" effect, sent first, must be stateless — i.e. no `args` option — which reduces your options to `LOR_EFFECT_TWINKLE` and `LOR_EFFECT_SHIMMER`. The "secondary" effect is followed by its respective metadata struct, restricting it to supporting `LOR_EFFECT_SET_INTENSITY`, `LOR_EFFECT_FADE`, or `LOR_EFFECT_PULSE`.
 
 The underlying LOR protocol functionality seems to only support single channel IDs (i.e. `LorChannel`). However, any single channel ID that is encoded within a single byte, is padded by an additional `0x81` byte. As a result, the encoded channel routing bytes should always be exactly two bytes in length.
 
