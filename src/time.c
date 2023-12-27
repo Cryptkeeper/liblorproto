@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Nick Krecklow
+ * Copyright (c) 2023 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,26 +23,38 @@
  */
 #include "lightorama/time.h"
 
-#define LOR_CLAMPF(x, min, max) (x < min ? min : (x > max ? max : x))
+static uint16_t lorGetFadeTime(int deciseconds,
+                               const LorIntensity start,
+                               const LorIntensity end) {
+    // clamp using `LOR_TIME_MIN_DS` and `LOR_TIME_MAX_DS`
+    deciseconds = deciseconds < 1 ? 1 : deciseconds > 25 ? 25 : deciseconds;
 
-LorTime lorSecondsToTime(const float seconds) {
-    const float s =
-            LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
+    const LorIntensity dist = end >= start ? end - start : start - end;
 
-    return (LorTime) (LOR_TIME_MIN / (s / LOR_TIME_MIN_SECONDS));
+    // this is the product of manually testing a large variable matrix
+    // magic values may be slightly inaccurate
+    const int sum = (dist * 256.0) / (deciseconds * 12.0);
+
+    return sum & 0xFFFF;
 }
 
-float lorTimeToSeconds(const LorTime time) {
-    const float seconds = LOR_TIME_MIN / (float) time * LOR_TIME_MIN_SECONDS;
+void lorAppendFadeTime(LorBuffer *const b,
+                       const int deciseconds,
+                       const LorIntensity start,
+                       const LorIntensity end) {
+    const uint16_t time = lorGetFadeTime(deciseconds, start, end);
 
-    return LOR_CLAMPF(seconds, LOR_TIME_MIN_SECONDS, LOR_TIME_MAX_SECONDS);
-}
+    const uint8_t b0 = time >> 8;
+    const uint8_t b1 = time & 0xFF;
 
-#define LOR_DURATION_MASK 0x8000
-
-void lorAppendTime(LorBuffer *const b, const LorTime time) {
-    const uint16_t bits = time > 0xFF ? time : time | LOR_DURATION_MASK;
-
-    lorAppendU8(b, bits >> 8);
-    lorAppendU8(b, bits & 0xFF);
+    if (b1 == 0) {
+        lorAppendU8(b, b0 | 0x40);
+        lorAppendU8(b, 1);
+    } else if (b0 == 0) {
+        lorAppendU8(b, b0 | 0x80);
+        lorAppendU8(b, b1);
+    } else {
+        lorAppendU8(b, b0);
+        lorAppendU8(b, b1);
+    }
 }

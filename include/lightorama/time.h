@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Nick Krecklow
+ * Copyright (c) 2023 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,12 @@
 
 #include "coretypes.h"
 
-#define LOR_TIME_MAX         ((LorTime) 0x8014)
-#define LOR_TIME_MAX_SECONDS 25.0F
+#define LOR_TIME_MIN_DS 1
+#define LOR_TIME_MAX_DS 25
 
-#define LOR_TIME_MIN         ((LorTime) 0x13EB)
-#define LOR_TIME_MIN_SECONDS 0.1F
-
-LorTime lorSecondsToTime(float seconds);
-
-float lorTimeToSeconds(LorTime time);
-
-void lorAppendTime(LorBuffer *b, LorTime time);
+void lorAppendFadeTime(LorBuffer *b,
+                       int deciseconds,
+                       LorIntensity start,
+                       LorIntensity end);
 
 #endif// LIGHTORAMA_TIME_H
