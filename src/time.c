@@ -33,7 +33,7 @@ static uint16_t lorGetFadeTime(int deciseconds,
 
     // this is the product of manually testing a large variable matrix
     // magic values may be slightly inaccurate
-    const int sum = (dist * 256.0) / (deciseconds * 12.0);
+    const int sum = dist * 256.0 / (deciseconds * 12.0);
 
     return sum & 0xFFFF;
 }

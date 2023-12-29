@@ -36,12 +36,13 @@ void lorAppendIntensity(LorBuffer *const b, const LorIntensity intensity) {
 inline LorIntensity LorIntensityCurveVendor(const float normal) {
     const float clamped = LOR_CLAMPF(normal, 0, 1);
 
-    if (clamped == 0) {
-        return LOR_INTENSITY_MIN;
-    } else if (clamped == 1) {
-        return LOR_INTENSITY_MAX;
-    } else {
-        return (LorIntensity) 0xE4 - (LorIntensity) (clamped * 200);
+    switch (clamped) {
+        case 0:
+            return LOR_INTENSITY_MIN;
+        case 1:
+            return LOR_INTENSITY_MAX;
+        default:
+            return (LorIntensity) 0xE4 - (LorIntensity) (clamped * 200);
     }
 }
 
