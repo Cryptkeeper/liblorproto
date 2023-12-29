@@ -41,6 +41,10 @@ add_executable(test_compress test/compress.c)
 target_link_libraries(test_compress lightorama)
 add_test(compress test_compress)
 
+add_executable(test_effect test/effect.c)
+target_link_libraries(test_effect lightorama)
+add_test(effect test_effect)
+
 add_executable(test_intensity test/intensity.c)
 target_link_libraries(test_intensity lightorama)
 add_test(intensity test_intensity)
