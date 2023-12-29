@@ -23,11 +23,12 @@
  */
 #include "lightorama/time.h"
 
+#define inline_clamp(v, min, max) (v < min ? min : v > max ? max : v)
+
 static uint16_t lorGetFadeTime(int deciseconds,
                                const LorIntensity start,
                                const LorIntensity end) {
-    // clamp using `LOR_TIME_MIN_DS` and `LOR_TIME_MAX_DS`
-    deciseconds = deciseconds < 1 ? 1 : deciseconds > 25 ? 25 : deciseconds;
+    deciseconds = inline_clamp(deciseconds, LOR_TIME_MIN_DS, LOR_TIME_MAX_DS);
 
     const LorIntensity dist = end >= start ? end - start : start - end;
 
