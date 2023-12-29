@@ -49,4 +49,8 @@ add_executable(test_model test/model.c)
 target_link_libraries(test_model lightorama)
 add_test(model test_model)
 
+add_executable(test_time test/time.c)
+target_link_libraries(test_time lightorama)
+add_test(time test_time)
+
 enable_testing()

@@ -21,17 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_TIME_H
-#define LIGHTORAMA_TIME_H
+#include "lightorama/model.h"
 
-#include "coretypes.h"
+#undef NDEBUG
+#include "lightorama/time.h"
 
-#define LOR_TIME_MIN_DS 1
-#define LOR_TIME_MAX_DS 250
+#include "lightorama/intensity.h"
 
-void lorAppendFadeTime(LorBuffer *b,
-                       int deciseconds,
-                       LorIntensity start,
-                       LorIntensity end);
+#include <assert.h>
+#include <stdint.h>
 
-#endif// LIGHTORAMA_TIME_H
+int main(__attribute__((unused)) int argc,
+         __attribute__((unused)) char **argv) {
+    uint8_t buf[32] = {0};
+
+    // all encoded fade time values should be two bytes in length and contain no
+    //  null/zero values
+    for (int ds = LOR_TIME_MIN_DS; ds <= LOR_TIME_MAX_DS; ds++) {
+        LorBuffer b = lorBufferInit(buf, sizeof(buf));
+
+        lorAppendFadeTime(&b, ds, LOR_INTENSITY_MIN, LOR_INTENSITY_MAX);
+
+        assert(b.offset == 2);
+
+        for (uint16_t i = 0; i < b.offset; i++)
+            assert(buf[i] != 0);
+    }
+
+    return 0;
+}
