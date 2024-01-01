@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(lightorama
-        VERSION 3.1.1
+        VERSION 3.2.0
         DESCRIPTION "C99 library implementing the Light-O-Rama \(LOR\) communication protocol"
         HOMEPAGE_URL "https://github.com/Cryptkeeper/liblightorama"
         LANGUAGES C)
@@ -40,6 +40,10 @@ add_test(channel_format test_channel_format)
 add_executable(test_compress test/compress.c)
 target_link_libraries(test_compress lightorama)
 add_test(compress test_compress)
+
+add_executable(test_effect test/effect.c)
+target_link_libraries(test_effect lightorama)
+add_test(effect test_effect)
 
 add_executable(test_intensity test/intensity.c)
 target_link_libraries(test_intensity lightorama)

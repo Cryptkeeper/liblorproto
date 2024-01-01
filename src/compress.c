@@ -73,10 +73,10 @@ static bool lorCompressorEffectMatches(const LorCompressor *const compressor,
         case LOR_EFFECT_FADE:
             return aArgs.fade.startIntensity == bArgs.fade.startIntensity &&
                    aArgs.fade.endIntensity == bArgs.fade.endIntensity &&
-                   aArgs.fade.duration == bArgs.fade.duration;
+                   aArgs.fade.deciseconds == bArgs.fade.deciseconds;
 
         case LOR_EFFECT_PULSE:
-            return aArgs.pulse.halfInterval == bArgs.pulse.halfInterval;
+            return aArgs.pulse.deciseconds == bArgs.pulse.deciseconds;
 
         case LOR_EFFECT_SET_DMX_INTENSITY:
             return aArgs.setDMXIntensity.intensity == bArgs.setDMXIntensity.

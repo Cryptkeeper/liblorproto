@@ -27,31 +27,27 @@ void lorAppendIntensity(LorBuffer *const b, const LorIntensity intensity) {
     lorAppendU8(b, intensity);
 }
 
-#define LOR_CLAMPF(val, min, max)                                              \
-    ((val) < (min) ? (min) : ((val) > (max)) ? (max) : (val))
+#define inline_clamp(v, min, max) (v < min ? min : v > max ? max : v)
 
 #define LOR_INTENSITY_RANGE                                                    \
     ((LorIntensity) (LOR_INTENSITY_MAX - LOR_INTENSITY_MIN))
 
 inline LorIntensity LorIntensityCurveVendor(const float normal) {
-    const float clamped = LOR_CLAMPF(normal, 0, 1);
+    const float clamped = inline_clamp(normal, 0, 1);
 
-    if (clamped == 0) {
-        return LOR_INTENSITY_MIN;
-    } else if (clamped == 1) {
-        return LOR_INTENSITY_MAX;
-    } else {
-        return (LorIntensity) 0xE4 - (LorIntensity) (clamped * 200);
-    }
+    if (clamped <= 0) return LOR_INTENSITY_MIN;
+    if (clamped >= 1) return LOR_INTENSITY_MAX;
+
+    return (LorIntensity) 0xE4 - (LorIntensity) (clamped * 200);
 }
 
 inline LorIntensity LorIntensityCurveLinear(const float normal) {
-    return (LorIntensity) (LOR_CLAMPF(normal, 0, 1) * LOR_INTENSITY_RANGE) +
+    return (LorIntensity) (inline_clamp(normal, 0, 1) * LOR_INTENSITY_RANGE) +
            LOR_INTENSITY_MIN;
 }
 
 inline LorIntensity LorIntensityCurveSquared(const float normal) {
-    const float clamped = LOR_CLAMPF(normal, 0, 1);
+    const float clamped = inline_clamp(normal, 0, 1);
     const float squared = 1 - (1 - clamped) * (1 - clamped);
 
     return (LorIntensity) (squared * LOR_INTENSITY_RANGE) + LOR_INTENSITY_MIN;

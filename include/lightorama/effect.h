@@ -51,11 +51,11 @@ typedef struct LorSetDMXIntensityArgs {
 typedef struct LorFadeArgs {
     LorIntensity startIntensity;
     LorIntensity endIntensity;
-    LorTime duration;
+    uint16_t deciseconds;
 } LorFadeArgs;
 
 typedef struct LorPulseArgs {
-    LorTime halfInterval;
+    uint16_t deciseconds;
 } LorPulseArgs;
 
 union LorEffectArgs {

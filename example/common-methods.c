@@ -8,8 +8,7 @@ static bool allocSingleMessageBuffer(LorBuffer *const b) {
     const size_t memSize = 32;
 
     // allocate an array used by the buffer for storing the encoded data
-    // use `lorBufferMemorySize()` to allocate a preferred size
-    // more likely this is a pointer to a single outbound buffer you're appending to
+    // most likely this is a pointer to a single outbound buffer you're appending to
     uint8_t *mem = (uint8_t *) malloc(memSize);
 
     if (mem == NULL) {
@@ -82,7 +81,7 @@ static void fadeChannel(const LorUnit unit,
                         const LorChannel channel,
                         const float from,
                         const float to,
-                        const float seconds) {
+                        const int deciseconds) {
     LorBuffer b;
     if (!allocSingleMessageBuffer(&b)) return;
 
@@ -90,7 +89,7 @@ static void fadeChannel(const LorUnit unit,
             .fade = {
                     .startIntensity = LorIntensityCurveVendor(from),
                     .endIntensity   = LorIntensityCurveVendor(to),
-                    .duration       = lorSecondsToTime(seconds),
+                    .deciseconds    = deciseconds,
             }};
 
     // starts a fade effect between the two brightness values for the specified
@@ -155,7 +154,7 @@ static void shimmerWhileFading(const LorUnit unit,
                                const LorChannel channel,
                                const float from,
                                const float to,
-                               const float seconds) {
+                               const int deciseconds) {
     LorBuffer b;
     if (!allocSingleMessageBuffer(&b)) return;
 
@@ -163,7 +162,7 @@ static void shimmerWhileFading(const LorUnit unit,
             .fade = {
                     .startIntensity = LorIntensityCurveVendor(from),
                     .endIntensity   = LorIntensityCurveVendor(to),
-                    .duration       = lorSecondsToTime(seconds),
+                    .deciseconds    = deciseconds,
             }};
 
     // starts a fade effect between the two brightness values for the specified

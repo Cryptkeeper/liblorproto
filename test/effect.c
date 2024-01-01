@@ -22,28 +22,36 @@
  * SOFTWARE.
  */
 #undef NDEBUG
-#include "lightorama/time.h"
-
-#include "lightorama/intensity.h"
+#include "lightorama/effect.h"
 
 #include <assert.h>
 #include <stdint.h>
 
+static void test_effect_pair(const LorEffect effect,
+                             const LorChannelFormat format,
+                             const uint8_t expected) {
+    uint8_t vstack[8] = {0};
+
+    LorBuffer b = lorBufferInit(vstack, 8);
+
+    lorAppendEffect(&b, effect, format);
+
+    assert(b.offset == 1);
+    assert(b.buffer[0] == expected);
+}
+
 int main(__attribute__((unused)) int argc,
          __attribute__((unused)) char **argv) {
-    uint8_t buf[32] = {0};
-
-    // all encoded fade time values should be two bytes in length and contain no
-    //  null/zero values
-    for (int ds = LOR_TIME_MIN_DS; ds <= LOR_TIME_MAX_DS; ds++) {
-        LorBuffer b = lorBufferInit(buf, sizeof(buf));
-
-        lorAppendFadeTime(&b, ds, LOR_INTENSITY_MIN, LOR_INTENSITY_MAX);
-
-        assert(b.offset == 2);
-
-        for (uint16_t i = 0; i < b.offset; i++)
-            assert(buf[i] != 0);
+    // tests encoding all effects values in each channel format and verifies
+    // that the correct value is encoded using a known good table
+    for (LorEffect effect = LOR_EFFECT_SET_LIGHTS;
+         effect <= LOR_EFFECT_SET_DMX_INTENSITY; effect++) {
+        test_effect_pair(effect, LOR_FORMAT_SINGLE, effect);
+        test_effect_pair(effect, LOR_FORMAT_16, effect | 0x10);
+        test_effect_pair(effect, LOR_FORMAT_8L, effect | 0x20);
+        test_effect_pair(effect, LOR_FORMAT_8H, effect | 0x30);
+        test_effect_pair(effect, LOR_FORMAT_UNIT, effect | 0x40);
+        test_effect_pair(effect, LOR_FORMAT_MULTIPART, effect | 0x50);
     }
 
     return 0;

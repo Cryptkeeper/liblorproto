@@ -47,12 +47,16 @@ void lorAppendEffectArgs(LorBuffer *const b,
             assert(args);
             lorAppendIntensity(b, args->fade.startIntensity);
             lorAppendIntensity(b, args->fade.endIntensity);
-            lorAppendTime(b, args->fade.duration);
+            lorAppendFadeTime(b, args->fade.deciseconds,
+                              args->fade.startIntensity,
+                              args->fade.endIntensity);
             break;
 
         case LOR_EFFECT_PULSE:
             assert(args);
-            lorAppendTime(b, args->pulse.halfInterval);
+            lorAppendFadeTime(b, args->pulse.deciseconds,
+                              LOR_INTENSITY_MIN,
+                              LOR_INTENSITY_MAX);
             break;
 
         case LOR_EFFECT_SET_DMX_INTENSITY:
