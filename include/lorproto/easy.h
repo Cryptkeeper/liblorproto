@@ -21,17 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_HEARTBEAT_H
-#define LIGHTORAMA_HEARTBEAT_H
+#ifndef LIBLORPROTO_EASY_H
+#define LIBLORPROTO_EASY_H
 
 #include "coretypes.h"
+#include "effect.h"
 
-#define LOR_HEARTBEAT_DELAY_NS 500000000
-#define LOR_HEARTBEAT_DELAY_MS 500
-#define LOR_HEARTBEAT_DELAY_S  0.5F
+void lorAppendChannelEffect(LorBuffer *b,
+                            LorEffect effect,
+                            const union LorEffectArgs *args,
+                            LorChannel channel,
+                            LorUnit unit);
 
-void lorAppendUnitHeartbeat(LorBuffer *b, LorUnit unit);
+void lorAppendLayeredChannelEffect(LorBuffer *b,
+                                   LorEffect primaryEffect,
+                                   LorEffect secondaryEffect,
+                                   const union LorEffectArgs *args,
+                                   LorChannel channel,
+                                   LorUnit unit);
 
-void lorAppendHeartbeat(LorBuffer *b);
+void lorAppendChannelSetEffect(LorBuffer *b,
+                               LorEffect effect,
+                               const union LorEffectArgs *args,
+                               LorChannelSet channelSet,
+                               LorUnit unit);
 
-#endif// LIGHTORAMA_HEARTBEAT_H
+void lorAppendUnitEffect(LorBuffer *b,
+                         LorEffect effect,
+                         const union LorEffectArgs *args,
+                         LorUnit unit);
+
+#endif// LIBLORPROTO_EASY_H

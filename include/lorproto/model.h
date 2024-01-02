@@ -1,8 +1,8 @@
 // AUTOMATICALLY GENERATED FILE, DO NOT MODIFY!
 // YOUR CHANGES WILL BE OVERWRITTEN BY SCRIPT:
-// liblightorama/tools/generate_model_files.py
-#ifndef LIGHTORAMA_MODEL_H
-#define LIGHTORAMA_MODEL_H
+// tools/generate_model_files.py
+#ifndef LORPROTO_MODEL_H
+#define LORPROTO_MODEL_H
 
 #include <stdbool.h>
 
@@ -102,4 +102,4 @@ bool lorGetModelName(LorModel model, const char **name);
 
 #define lorGetMaxModel() ((LorModel)235)
 
-#endif //LIGHTORAMA_MODEL_H
+#endif //LORPROTO_MODEL_H

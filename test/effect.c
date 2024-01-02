@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #undef NDEBUG
-#include "lightorama/effect.h"
+#include "lorproto/effect.h"
 
 #include <assert.h>
 #include <stdint.h>

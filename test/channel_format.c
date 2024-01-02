@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/uid.h"
+#include "lorproto/uid.h"
 
 #undef NDEBUG
 #include <assert.h>

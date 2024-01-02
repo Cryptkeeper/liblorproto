@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/intensity.h"
+#include "lorproto/intensity.h"
 
 void lorAppendIntensity(LorBuffer *const b, const LorIntensity intensity) {
     lorAppendU8(b, intensity);

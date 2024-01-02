@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_EFFECT_H
-#define LIGHTORAMA_EFFECT_H
+#ifndef LIBLORPROTO_EFFECT_H
+#define LIBLORPROTO_EFFECT_H
 
 #include "coretypes.h"
 #include "uid.h"
@@ -69,4 +69,4 @@ void lorAppendEffectArgs(LorBuffer *b,
                          LorEffect effect,
                          const union LorEffectArgs *args);
 
-#endif// LIGHTORAMA_EFFECT_H
+#endif// LIBLORPROTO_EFFECT_H

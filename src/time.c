@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/time.h"
+#include "lorproto/time.h"
 
 #define inline_clamp(v, min, max) (v < min ? min : v > max ? max : v)
 

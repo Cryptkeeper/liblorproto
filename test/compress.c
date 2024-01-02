@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/coretypes.h"
+#include "lorproto/coretypes.h"
 
 #undef NDEBUG
-#include "lightorama/intensity.h"
-#include "lightorama/compress.h"
+#include "lorproto/intensity.h"
+#include "lorproto/compress.h"
 
 #include <assert.h>
 

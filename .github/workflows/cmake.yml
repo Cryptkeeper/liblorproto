@@ -42,7 +42,7 @@ jobs:
         with:
           name: ubuntu-${{matrix.compiler}}-bin
           path: |
-            build/liblightorama.a
+            build/liblorproto.a
 
   macos:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
@@ -74,4 +74,4 @@ jobs:
         with:
           name: macos-bin
           path: |
-            build/liblightorama.a
+            build/liblorproto.a

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 #undef NDEBUG
-#include "lightorama/time.h"
+#include "lorproto/time.h"
 
-#include "lightorama/intensity.h"
+#include "lorproto/intensity.h"
 
 #include <assert.h>
 #include <stdint.h>

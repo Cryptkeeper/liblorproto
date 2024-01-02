@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Nick Krecklow
+ * Copyright (c) 2022 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_TIME_H
-#define LIGHTORAMA_TIME_H
+#ifndef LIBLORPROTO_CORETYPES_H
+#define LIBLORPROTO_CORETYPES_H
 
-#include "coretypes.h"
+#include <stdint.h>
 
-#define LOR_TIME_MIN_DS 1
-#define LOR_TIME_MAX_DS 250
+typedef uint8_t LorUnit;
+typedef uint8_t LorIntensity;
+typedef uint8_t LorChannel;
 
-void lorAppendFadeTime(LorBuffer *b,
-                       int deciseconds,
-                       LorIntensity start,
-                       LorIntensity end);
+typedef struct LorChannelSet {
+    uint8_t offset;       /* 6-bit unsigned int, max value of 64 */
+    uint16_t channelBits; /* 16-bit bitset of channels to apply changes to */
+} LorChannelSet;
 
-#endif// LIGHTORAMA_TIME_H
+typedef struct LorBuffer {
+    uint8_t *buffer; /* pointer to backing alloc for reading/writing bytes */
+    uint32_t size;   /* buffer memory allocation size for write bounds checks */
+    uint32_t offset; /* relative position of write head, # of bytes written */
+} LorBuffer;
+
+LorBuffer lorBufferInit(uint8_t *mem, uint32_t size);
+
+uint32_t lorBufferRemaining(LorBuffer b);
+
+void lorAppendU8(LorBuffer *b, uint8_t v);
+
+#endif// LIBLORPROTO_CORETYPES_H

@@ -1,7 +1,7 @@
 // AUTOMATICALLY GENERATED FILE, DO NOT MODIFY!
 // YOUR CHANGES WILL BE OVERWRITTEN BY SCRIPT:
-// liblightorama/tools/generate_model_files.py
-#include "lightorama/model.h"
+// tools/generate_model_files.py
+#include "lorproto/model.h"
 
 static const char *LOR_MODEL_NAMES[211] = {
     	[0] = "CTB08",

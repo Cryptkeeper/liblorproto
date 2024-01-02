@@ -114,7 +114,7 @@ def get_model_id_range(models):
 def get_auto_generated_warning():
     return """// AUTOMATICALLY GENERATED FILE, DO NOT MODIFY!
 // YOUR CHANGES WILL BE OVERWRITTEN BY SCRIPT:
-// liblightorama/tools/generate_model_files.py"""
+// tools/generate_model_files.py"""
 
 
 models = deduplicate_models(parse_models(devfile))
@@ -126,8 +126,8 @@ print(f"parsed {len(models)} models (id range {lowestPid}-{highestPid})")
 def fmt_model_h():
     models_str = "\n".join(list(map(HardwareModel.define_str, models)))
     return f"""{get_auto_generated_warning()}
-#ifndef LIGHTORAMA_MODEL_H
-#define LIGHTORAMA_MODEL_H
+#ifndef LORPROTO_MODEL_H
+#define LORPROTO_MODEL_H
 
 #include <stdbool.h>
 
@@ -139,11 +139,11 @@ bool lorGetModelName(LorModel model, const char **name);
 
 #define lorGetMaxModel() ((LorModel){highestPid})
 
-#endif //LIGHTORAMA_MODEL_H
+#endif //LORPROTO_MODEL_H
 """
 
 
-f = open("../include/lightorama/model.h", "w")
+f = open("../include/lorproto/model.h", "w")
 f.write(fmt_model_h())
 f.close()
 
@@ -171,7 +171,7 @@ bool lorGetModelName(const LorModel model, const char **const name) {{
 }}"""
 
     return f"""{get_auto_generated_warning()}
-#include \"lightorama/model.h\"
+#include \"lorproto/model.h\"
 
 {get_model_name_str}
 """

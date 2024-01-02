@@ -21,41 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_UID_H
-#define LIGHTORAMA_UID_H
+#ifndef LIBLORPROTO_HEARTBEAT_H
+#define LIBLORPROTO_HEARTBEAT_H
 
 #include "coretypes.h"
 
-#define LOR_UNIT_MIN ((LorUnit) 0x01)
-#define LOR_UNIT_MAX ((LorUnit) 0xF0)
+#define LOR_HEARTBEAT_DELAY_NS 500000000
+#define LOR_HEARTBEAT_DELAY_MS 500
+#define LOR_HEARTBEAT_DELAY_S  0.5F
 
-// https://github.com/Cryptkeeper/lightorama-protocol/blob/master/PROTOCOL.md#unit-ids
-#define LOR_UNIT_ALL ((LorUnit) 0xFF)
+void lorAppendUnitHeartbeat(LorBuffer *b, LorUnit unit);
 
-void lorAppendUnit(LorBuffer *b, LorUnit unit);
+void lorAppendHeartbeat(LorBuffer *b);
 
-void lorAppendChannel(LorBuffer *b, LorChannel channel);
-
-typedef enum LorChannelAlign {
-    LOR_ALIGN_8,
-    LOR_ALIGN_16,
-} LorChannelAlign;
-
-void lorAppendAlignedChannel(LorBuffer *b,
-                             LorChannel channel,
-                             LorChannelAlign align);
-
-typedef enum LorChannelFormat {
-    LOR_FORMAT_SINGLE    = 0x00, /* 0b0000 */
-    LOR_FORMAT_16        = 0x10, /* 0b0001 */
-    LOR_FORMAT_8L        = 0x20, /* 0b0010 */
-    LOR_FORMAT_8H        = 0x30, /* 0b0011 */
-    LOR_FORMAT_UNIT      = 0x40, /* 0b0100 */
-    LOR_FORMAT_MULTIPART = 0x50, /* 0b0101 */
-} LorChannelFormat;
-
-LorChannelFormat lorGetChannelSetFormat(LorChannelSet channelSet);
-
-void lorAppendChannelSet(LorBuffer *b, LorChannelSet channelSet);
-
-#endif// LIGHTORAMA_UID_H
+#endif// LIBLORPROTO_HEARTBEAT_H

@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_INTENSITY_H
-#define LIGHTORAMA_INTENSITY_H
+#ifndef LIBLORPROTO_INTENSITY_H
+#define LIBLORPROTO_INTENSITY_H
 
 #include "coretypes.h"
 
@@ -39,4 +39,4 @@ LorIntensity LorIntensityCurveLinear(float normal);
 
 LorIntensity LorIntensityCurveSquared(float normal);
 
-#endif// LIGHTORAMA_INTENSITY_H
+#endif// LIBLORPROTO_INTENSITY_H

@@ -1,39 +1,39 @@
-# liblightorama
+# liblorproto
 
-An **unofficial** C99 library implementing the [Light-O-Rama (LOR) communication protocol](https://github.com/Cryptkeeper/lightorama-protocol) alongside related APIs, aiming to reduce usage of magic values and competing encoding & helper methods.
+An **unofficial** C99 library implementing the [Light-O-Rama (LOR) communication protocol](https://github.com/Cryptkeeper/lightorama-protocol) alongside related APIs, aiming to reduce usage of magic values and competing encoding & helper methods. Previously called liblightorama.
 
-Usage of liblightorama assumes existing familiarity with the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
+Usage of liblorproto assumes existing familiarity with the [LOR protocol](https://github.com/Cryptkeeper/lightorama-protocol).
 
 The previous v2.x release is available by checking out the `v2.x` branch. Only v3.x is actively supported by the author.
 
 ## Project Structure
 
-| Header                                          | Purpose                                                                                                                                                                             |
-|-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`lightorama/coretypes.h`](include/lightorama/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                                                                            |
-| [`lightorama/compress.h`](include/lightorama/compress.h)   | LOR-protocol specific multi-channel update compression utility                                                                                                                      |
-| [`lightorama/easy.h`](include/lightorama/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                                                                                 |
-| [`lightorama/effect.h`](include/lightorama/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                                                                               |
-| [`lightorama/heartbeat.h`](include/lightorama/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                                                                  |
-| [`lightorama/intensity.h`](include/lightorama/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values                                                      |
-| [`lightorama/model.h`](include/lightorama/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lightorama.com/downloads/LOR_DeviceFile.txt), includes helper functions for referencing model names |
-| [`lightorama/time.h`](include/lightorama/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                                                                  |
-| [`lightorama/uid.h`](include/lightorama/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs)                                                   |
-| [`lightorama/version.h`](include/lightorama/version.h)     | Named constants of liblightorama version information                                                                                                                                |
+| Header                                                 | Purpose                                                                                                                                                                           |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`lorproto/coretypes.h`](include/lorproto/coretypes.h) | Core typedef definitions and fixed size ints used by the library, likely auto included by another header                                                                          |
+| [`lorproto/compress.h`](include/lorproto/compress.h)   | LOR-protocol specific multi-channel update compression utility                                                                                                                    |
+| [`lorproto/easy.h`](include/lorproto/easy.h)           | Ready to go functions for encoding predefined effect structures to a given unit/channel/channel set                                                                               |
+| [`lorproto/effect.h`](include/lorproto/effect.h)       | Type definitions for effect related data structures and associated encoding functions                                                                                             |
+| [`lorproto/heartbeat.h`](include/lorproto/heartbeat.h) | Heartbeat encoding functions and associated named helper constants                                                                                                                |
+| [`lorproto/intensity.h`](include/lorproto/intensity.h) | Type definitions for intensity, named helper constants, and brightness curve functions for encoding/decoding normalized values                                                    |
+| [`lorproto/model.h`](include/lorproto/model.h)         | Automatically generated code representation of [LOR_DeviceFile.txt](http://www1.lorproto.com/downloads/LOR_DeviceFile.txt), includes helper functions for referencing model names |
+| [`lorproto/time.h`](include/lorproto/time.h)           | Type definitions for time durations, named helper constants, and functions for encoding/decoding normalized values                                                                |
+| [`lorproto/uid.h`](include/lorproto/uid.h)             | Type definitions, named helper constants, and encoding/decoding functions for any referenceable addresses (unit IDs, channel IDs)                                                 |
+| [`lorproto/version.h`](include/lorproto/version.h)     | Named constants of liblorproto version information                                                                                                                                |
 
-You may optionally use `lightorama/lightorama.h` to automatically include all library header files (except `model.h` due to its strings, please include as needed).
+You may optionally use `lorproto/lorproto.h` to automatically include all library header files (except `model.h` due to its strings, please include as needed).
 
-liblightorama strives to be fairly portable (typically for use in microcontrollers) and requires no external dependencies or headers. The few core data types used by liblightorama (e.g. fixed size ints and booleans) are defined in [`coretypes.h`](include/lightorama/coretypes.h). Limited use of floating-point arithmetic is present in the [`intensity.c`](src/intensity.c) math functions.
+liblorproto strives to be fairly portable (typically for use in microcontrollers) and requires no external dependencies or headers. The few core data types used by liblorproto (e.g. fixed size ints and booleans) are defined in [`coretypes.h`](include/lorproto/coretypes.h). Limited use of floating-point arithmetic is present in the [`intensity.c`](src/intensity.c) math functions.
 
 ## Installation
 
-liblightorama uses [CMake](https://cmake.org/) for building and packaging the library.
+liblorproto uses [CMake](https://cmake.org/) for building and packaging the library.
 
 1. Generate Makefiles using `cmake .`
 2. (Optional) If outdated, use `python3 tools/generate_model_files.py` to generate updated `model.h` & `model.c` code files
 3. Compile the library using `make`
 4. Optionally install the headers and compiled archive using `make install`
-5. Include your selected headers, or include all headers using `lightorama/lightorama.h`
+5. Include your selected headers, or include all headers using `lorproto/lorproto.h`
 
 If optionally installed, `install_manifest.txt` will be created, containing the installed file paths for easy removal.
 
@@ -43,7 +43,7 @@ See [`examples/common-methods.c`](examples/common-methods.c) for usage examples.
 
 ## Packet Structure
 
-The majority of data is lighting control packets. Each follows a basic structure, prefixed by the target unit ID, and followed by a table directory and its corresponding data entry rows, in matching order. The corresponding data structures used by liblightorama for each field are shown in the diagram below.
+The majority of data is lighting control packets. Each follows a basic structure, prefixed by the target unit ID, and followed by a table directory and its corresponding data entry rows, in matching order. The corresponding data structures used by liblorproto for each field are shown in the diagram below.
 
 ```
 Light Control Packet
@@ -66,8 +66,8 @@ Light Control Packet
 
 ### Implementation Notes
 
-* Additional packet structures exist for remote management/firmware update/system configuration feature sets, but are entirely undocumented and more time-consuming to explore. As a result, liblightorama focuses purely on lighting control packets.
-*  A `union LorEffectArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
+- Additional packet structures exist for remote management/firmware update/system configuration feature sets, but are entirely undocumented and more time-consuming to explore. As a result, liblorproto focuses purely on lighting control packets.
+- A `union LorEffectArgs` type has been provided to reduce code complexity when passing effect arguments. It is solely a union of the other individually defined effect argument structures.
 
 ## Referencing Channels
 
@@ -101,16 +101,16 @@ Channels 33-48:  │01│02│03│04│05│06│07│08│09│10│11│12│
                  Channel Group Offset 2
 ```
 
-Within liblightorama a single channel ID is represented by the `LorChannel` type. Keep in mind that channels within the LOR protocol start at 0, not 1. A `LorChannelSet` can be used to reference a single channel, but that is likely a waste of bandwidth and isn't recommended.
+Within liblorproto a single channel ID is represented by the `LorChannel` type. Keep in mind that channels within the LOR protocol start at 0, not 1. A `LorChannelSet` can be used to reference a single channel, but that is likely a waste of bandwidth and isn't recommended.
 
-For using channel groups and channel banks, the `LorChannelSet` type contains a `channels` field for defining the channel banks and an optional `offset` value for providing a channel group offset. liblightorama's `LorChannelSet` encoding logic will apply a few protocol optimizations that can help minimize memory usage when referencing a single channel bank.
+For using channel groups and channel banks, the `LorChannelSet` type contains a `channels` field for defining the channel banks and an optional `offset` value for providing a channel group offset. liblorproto's `LorChannelSet` encoding logic will apply a few protocol optimizations that can help minimize memory usage when referencing a single channel bank.
 
 Depending on your type (`LorChannel`, `LorChannelSet`, `LorUnit`) you will use different functions when encoding/decoding (e.g. `lorAppendChannelEffect` vs `lorAppendChannelSetEffect` vs `lorAppendUnitEffect`). A missing function signature for your type may mean it is unsupported by the protocol.
 
 ### Channel Set Code Examples
 
 ```C
-LorChannelSet first_8_channels = { 
+LorChannelSet first_8_channels = {
         .channelBits = 0xFF00, // set first 8 high bits
         .offset = 0, // channel group 0
 };
@@ -130,29 +130,29 @@ LorChannelSet only_channel_32 = {
 
 ### Memory Allocations
 
-liblightorama does not allocate any memory internally, and requires a `LorBuffer *` struct be passed to functions for writing to memory (with basic write bounds checking via an `assert` call). To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest single lighting control packet will not write more than 32 bytes.
+liblorproto does not allocate any memory internally, and requires a `LorBuffer *` struct be passed to functions for writing to memory (with basic write bounds checking via an `assert` call). To help size your buffers, consider that while not absolute rule and potentially volatile, even the largest single lighting control packet will not write more than 32 bytes.
 
 ### Error Values
 
-Due to the simplicity of most encoding routines encoding functions do not return a value. A select few encoding issues (e.g. overflow/underflow issues) may be raised via `assert` which I recommend enabling in development builds. In most cases, there is no strong ability for the library to identify invalid values given the protocol's unknown limitations besides my adhoc testing. 
+Due to the simplicity of most encoding routines encoding functions do not return a value. A select few encoding issues (e.g. overflow/underflow issues) may be raised via `assert` which I recommend enabling in development builds. In most cases, there is no strong ability for the library to identify invalid values given the protocol's unknown limitations besides my adhoc testing.
 
 ### Brightness Curves
 
-Brightness curves are responsible for converting a normalized brightness value [0, 1] to a [LOR protocol brightness value](https://github.com/Cryptkeeper/lightorama-protocol#brightness). The purpose of different brightness curves is to easily modify the visual appearance of brightness changes without redefining the underlying normalized values.
+Brightness curves are responsible for converting a normalized brightness value [0, 1] to a [LOR protocol brightness value](https://github.com/Cryptkeeper/lorproto-protocol#brightness). The purpose of different brightness curves is to easily modify the visual appearance of brightness changes without redefining the underlying normalized values.
 
 #### Pre-implemented Brightness Curves
 
-| Function                   | Description                                                                                           |
-|----------------------------|-------------------------------------------------------------------------------------------------------|
-| `LorIntensityCurveLinear`  | Encodes the normalized value as its direct LOR protocol equivalent value without changes              |
-| `LorIntensityCurveSquared` | A smoothed version of `lorIntensityCurveLinear` designed to emphasize changes in brightness values    |
-| `LorIntensityCurveVendor`  | The most vanilla intensity curve for anyone with the goal of recreating a Light-O-Rama look           |
+| Function                   | Description                                                                                        |
+| -------------------------- | -------------------------------------------------------------------------------------------------- |
+| `LorIntensityCurveLinear`  | Encodes the normalized value as its direct LOR protocol equivalent value without changes           |
+| `LorIntensityCurveSquared` | A smoothed version of `lorIntensityCurveLinear` designed to emphasize changes in brightness values |
+| `LorIntensityCurveVendor`  | The most vanilla intensity curve for anyone with the goal of recreating a Light-O-Rama look        |
 
 #### Custom Brightness Curves
 
 Any brightness curve may be implemented assuming it adheres to the `LorIntensityCurveFn` function signature: `LorIntensity (*LorIntensityCurveFn)(float normal)`
 
-Each brightness curve is designed to return a `LorIntensity` value representing the LOR protocol equivalent value of the normalized input, as adapted by the curve. Several consts have been defined within [`intensity.h`](include/lightorama/intensity.h) to avoid using magic numbers in your implementations. See [`intensity.c`](src/intensity.c) for implementation examples.
+Each brightness curve is designed to return a `LorIntensity` value representing the LOR protocol equivalent value of the normalized input, as adapted by the curve. Several consts have been defined within [`intensity.h`](include/lorproto/intensity.h) to avoid using magic numbers in your implementations. See [`intensity.c`](src/intensity.c) for implementation examples.
 
 #### Layered Effects
 
@@ -160,11 +160,11 @@ Layered effects allow the unit to apply two effects simultaneously to a single c
 
 The underlying LOR protocol functionality seems to only support single channel IDs (i.e. `LorChannel`). However, any single channel ID that is encoded within a single byte, is padded by an additional `0x81` byte. As a result, the encoded channel routing bytes should always be exactly two bytes in length.
 
-liblightorama has provided a `lorAppendAlignedChannel` function within [`uid.h`](include/lightorama/uid.h) that when invoked with the `align` parameter set to `LOR_ALIGN_16` (normally `LOR_ALIGN_8`), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorAppendLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lightorama/easy.h).
+liblorproto has provided a `lorAppendAlignedChannel` function within [`uid.h`](include/lorproto/uid.h) that when invoked with the `align` parameter set to `LOR_ALIGN_16` (normally `LOR_ALIGN_8`), will result in a `0x81` padded 16-byte channel encoding. A pre-made helper function for encoding layered effects (`lorAppendLayeredChannelEffect`) is provided as a part of [`easy.h`](include/lorproto/easy.h).
 
 ## Compatibility
 
-liblightorama is implemented following [this documentation](https://github.com/Cryptkeeper/lightorama-protocol), which was built through reverse engineering efforts. As such, liblightorama has limited compatibility testing and may not work with your hardware. The current library functionality offerings have been tested with the `LOR1602Wg3` & `CTB16PCg3` hardware models.
+liblorproto is implemented following [this documentation](https://github.com/Cryptkeeper/lorproto-protocol), which was built through reverse engineering efforts. As such, liblorproto has limited compatibility testing and may not work with your hardware. The current library functionality offerings have been tested with the `LOR1602Wg3` & `CTB16PCg3` hardware models.
 
 ## License
 

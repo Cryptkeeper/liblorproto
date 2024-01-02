@@ -1,6 +1,7 @@
 # CMake
 CMakeFiles/
 cmake-build-debug/
+cmake-build-release/
 cmake_install.cmake
 CMakeCache.txt
 Makefile
@@ -10,8 +11,8 @@ install_manifest.txt
 .idea/
 
 # Archives
-liblightorama.a
-lightorama.cbp
+liblorproto.a
+liblorproto.cbp
 
 # CTest
 Testing/
@@ -19,7 +20,9 @@ CTestTestfile.cmake
 
 # Test binaries
 test_buffer
-test_channelset
+test_channel_format
+test_compress
 test_effect
-test_time
+test_intensity
 test_model
+test_time

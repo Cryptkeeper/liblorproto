@@ -21,30 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_CORETYPES_H
-#define LIGHTORAMA_CORETYPES_H
+#ifndef LIBLORPROTO_UID_H
+#define LIBLORPROTO_UID_H
 
-#include <stdint.h>
+#include "coretypes.h"
 
-typedef uint8_t LorUnit;
-typedef uint8_t LorIntensity;
-typedef uint8_t LorChannel;
+#define LOR_UNIT_MIN ((LorUnit) 0x01)
+#define LOR_UNIT_MAX ((LorUnit) 0xF0)
 
-typedef struct LorChannelSet {
-    uint8_t offset;       /* 6-bit unsigned int, max value of 64 */
-    uint16_t channelBits; /* 16-bit bitset of channels to apply changes to */
-} LorChannelSet;
+// https://github.com/Cryptkeeper/lightorama-protocol/blob/master/PROTOCOL.md#unit-ids
+#define LOR_UNIT_ALL ((LorUnit) 0xFF)
 
-typedef struct LorBuffer {
-    uint8_t *buffer; /* pointer to backing alloc for reading/writing bytes */
-    uint32_t size;   /* buffer memory allocation size for write bounds checks */
-    uint32_t offset; /* relative position of write head, # of bytes written */
-} LorBuffer;
+void lorAppendUnit(LorBuffer *b, LorUnit unit);
 
-LorBuffer lorBufferInit(uint8_t *mem, uint32_t size);
+void lorAppendChannel(LorBuffer *b, LorChannel channel);
 
-uint32_t lorBufferRemaining(LorBuffer b);
+typedef enum LorChannelAlign {
+    LOR_ALIGN_8,
+    LOR_ALIGN_16,
+} LorChannelAlign;
 
-void lorAppendU8(LorBuffer *b, uint8_t v);
+void lorAppendAlignedChannel(LorBuffer *b,
+                             LorChannel channel,
+                             LorChannelAlign align);
 
-#endif// LIGHTORAMA_CORETYPES_H
+typedef enum LorChannelFormat {
+    LOR_FORMAT_SINGLE    = 0x00, /* 0b0000 */
+    LOR_FORMAT_16        = 0x10, /* 0b0001 */
+    LOR_FORMAT_8L        = 0x20, /* 0b0010 */
+    LOR_FORMAT_8H        = 0x30, /* 0b0011 */
+    LOR_FORMAT_UNIT      = 0x40, /* 0b0100 */
+    LOR_FORMAT_MULTIPART = 0x50, /* 0b0101 */
+} LorChannelFormat;
+
+LorChannelFormat lorGetChannelSetFormat(LorChannelSet channelSet);
+
+void lorAppendChannelSet(LorBuffer *b, LorChannelSet channelSet);
+
+#endif// LIBLORPROTO_UID_H

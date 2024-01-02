@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_COMPRESS_H
-#define LIGHTORAMA_COMPRESS_H
+#ifndef LIBLORPROTO_COMPRESS_H
+#define LIBLORPROTO_COMPRESS_H
 
 #include <stdint.h>
 
@@ -87,4 +87,4 @@ int lorCompressorGenerate(
         const LorCompressor *compressor,
         struct LorCompressorResult results[LOR_COMPRESSOR_SIZE]);
 
-#endif//LIGHTORAMA_COMPRESS_H
+#endif//LIBLORPROTO_COMPRESS_H

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Nick Krecklow
+ * Copyright (c) 2023 Nick Krecklow
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LIGHTORAMA_LIGHTORAMA_H
-#define LIGHTORAMA_LIGHTORAMA_H
+#ifndef LIBLORPROTO_TIME_H
+#define LIBLORPROTO_TIME_H
 
-#include "easy.h"
-#include "effect.h"
-#include "heartbeat.h"
-#include "intensity.h"
-#include "time.h"
-#include "uid.h"
-#include "version.h"
+#include "coretypes.h"
 
-#endif// LIGHTORAMA_LIGHTORAMA_H
+#define LOR_TIME_MIN_DS 1
+#define LOR_TIME_MAX_DS 250
+
+void lorAppendFadeTime(LorBuffer *b,
+                       int deciseconds,
+                       LorIntensity start,
+                       LorIntensity end);
+
+#endif// LIBLORPROTO_TIME_H

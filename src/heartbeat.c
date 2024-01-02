@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/heartbeat.h"
+#include "lorproto/heartbeat.h"
 
-#include "lightorama/uid.h"
+#include "lorproto/uid.h"
 
 void lorAppendUnitHeartbeat(LorBuffer *const b, const LorUnit unit) {
     lorAppendU8(b, 0);

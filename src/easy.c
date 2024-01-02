@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/easy.h"
+#include "lorproto/easy.h"
 
-#include "lightorama/effect.h"
-#include "lightorama/uid.h"
+#include "lorproto/effect.h"
+#include "lorproto/uid.h"
 
 void lorAppendChannelEffect(LorBuffer *const b,
                             const LorEffect effect,

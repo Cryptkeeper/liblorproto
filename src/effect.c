@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "lightorama/effect.h"
+#include "lorproto/effect.h"
 
 #include <assert.h>
 
-#include "lightorama/intensity.h"
-#include "lightorama/time.h"
+#include "lorproto/intensity.h"
+#include "lorproto/time.h"
 
 void lorAppendEffect(LorBuffer *const b,
                      const LorEffect effect,
@@ -54,8 +54,7 @@ void lorAppendEffectArgs(LorBuffer *const b,
 
         case LOR_EFFECT_PULSE:
             assert(args);
-            lorAppendFadeTime(b, args->pulse.deciseconds,
-                              LOR_INTENSITY_MIN,
+            lorAppendFadeTime(b, args->pulse.deciseconds, LOR_INTENSITY_MIN,
                               LOR_INTENSITY_MAX);
             break;
 

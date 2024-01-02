@@ -1,4 +1,4 @@
-#include <lightorama/lightorama.h>
+#include <lorproto/lorproto.h>
 
 #include <stdbool.h>
 #include <stdio.h>
