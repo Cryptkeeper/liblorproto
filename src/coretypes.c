@@ -27,6 +27,7 @@
 
 LorBuffer lorBufferInit(uint8_t *const mem, const uint32_t size) {
     assert(mem);
+    assert(size > 0);
 
     return (LorBuffer){
             .buffer = mem,
@@ -36,10 +37,13 @@ LorBuffer lorBufferInit(uint8_t *const mem, const uint32_t size) {
 }
 
 inline uint32_t lorBufferRemaining(const LorBuffer b) {
+    assert(b.buffer);
+
     return b.offset >= b.size ? 0 : b.size - b.offset;
 }
 
 void lorAppendU8(LorBuffer *const b, const uint8_t v) {
+    assert(b->buffer);
     assert(b->offset < b->size);
 
     b->buffer[b->offset] = v;
