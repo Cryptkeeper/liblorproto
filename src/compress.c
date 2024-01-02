@@ -25,9 +25,9 @@
 
 #include <stdbool.h>
 
-enum LorCompressorError lorCompressorSetBaseChannel(
-        LorCompressor *const compressor,
-        const uint32_t baseChannel) {
+enum LorCompressorError
+lorCompressorSetBaseChannel(LorCompressor *const compressor,
+                            const uint32_t baseChannel) {
     if (baseChannel % LOR_COMPRESSOR_SIZE) return LOR_COMPRESSOR_UNALIGNED_BASE;
 
     compressor->baseChannel = baseChannel;
@@ -67,8 +67,7 @@ static bool lorCompressorEffectMatches(const LorCompressor *const compressor,
 
     switch (compressor->effects[a]) {
         case LOR_EFFECT_SET_INTENSITY:
-            return aArgs.setIntensity.intensity ==
-                   bArgs.setIntensity.intensity;
+            return aArgs.setIntensity.intensity == bArgs.setIntensity.intensity;
 
         case LOR_EFFECT_FADE:
             return aArgs.fade.startIntensity == bArgs.fade.startIntensity &&
@@ -79,8 +78,8 @@ static bool lorCompressorEffectMatches(const LorCompressor *const compressor,
             return aArgs.pulse.deciseconds == bArgs.pulse.deciseconds;
 
         case LOR_EFFECT_SET_DMX_INTENSITY:
-            return aArgs.setDMXIntensity.intensity == bArgs.setDMXIntensity.
-                   intensity;
+            return aArgs.setDMXIntensity.intensity ==
+                   bArgs.setDMXIntensity.intensity;
 
         default:
             return false;
@@ -94,7 +93,7 @@ uint16_t lorCompressorGetMatches(const LorCompressor *const compressor,
 
     for (int i = 0; i < LOR_COMPRESSOR_SIZE; i++) {
         const int bit = OCCUPANCY_BIT(i);
-        if (!(compressor->occupancySet & bit)) continue;/* unused channel */
+        if (!(compressor->occupancySet & bit)) continue; /* unused channel */
 
         if (lorCompressorEffectMatches(compressor, i, compare)) matches |= bit;
     }
@@ -102,13 +101,13 @@ uint16_t lorCompressorGetMatches(const LorCompressor *const compressor,
     return matches;
 }
 
-int lorCompressorGenerate(const LorCompressor *const compressor,
-                          struct LorCompressorResult results[
-                              LOR_COMPRESSOR_SIZE]) {
+int lorCompressorGenerate(
+        const LorCompressor *const compressor,
+        struct LorCompressorResult results[LOR_COMPRESSOR_SIZE]) {
     if (!compressor->occupancySet) return 0;
 
-    uint16_t updatedBits = 0;/* bitset of channels that have been processed */
-    int generated        = 0;/* number of results generated */
+    uint16_t updatedBits = 0; /* bitset of channels that have been processed */
+    int generated        = 0; /* number of results generated */
 
     for (int i = 0; i < LOR_COMPRESSOR_SIZE; i++) {
         // skip unused channels
@@ -118,18 +117,20 @@ int lorCompressorGenerate(const LorCompressor *const compressor,
         const uint16_t matches =
                 lorCompressorGetMatches(compressor, i) & ~updatedBits;
 
-        if (!matches) continue;/* no new matches */
+        if (!matches) continue; /* no new matches */
 
-        updatedBits |= matches;/* mark channels as handled */
+        updatedBits |= matches; /* mark channels as handled */
 
         // store the resulting bitmask set and unique effect
         results[generated++] = (struct LorCompressorResult){
-                .channelSet = (LorChannelSet){
-                        .offset = compressor->baseChannel / LOR_COMPRESSOR_SIZE,
-                        .channelBits = matches,
-                },
+                .channelSet =
+                        (LorChannelSet){
+                                .offset = compressor->baseChannel /
+                                          LOR_COMPRESSOR_SIZE,
+                                .channelBits = matches,
+                        },
                 .effect = compressor->effects[i],
-                .args = compressor->effectArgs[i],
+                .args   = compressor->effectArgs[i],
         };
 
         // break early if all channels are updated

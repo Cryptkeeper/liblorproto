@@ -31,14 +31,14 @@ typedef uint8_t LorIntensity;
 typedef uint8_t LorChannel;
 
 typedef struct LorChannelSet {
-    uint8_t offset;      /* 6-bit unsigned int, max value of 64 */
-    uint16_t channelBits;/* 16-bit bitset of channels to apply changes to */
+    uint8_t offset;       /* 6-bit unsigned int, max value of 64 */
+    uint16_t channelBits; /* 16-bit bitset of channels to apply changes to */
 } LorChannelSet;
 
 typedef struct LorBuffer {
-    uint8_t *buffer;/* pointer to backing alloc for reading/writing bytes */
-    uint32_t size;  /* buffer memory allocation size for write bounds checks */
-    uint32_t offset;/* relative position of write head, # of bytes written */
+    uint8_t *buffer; /* pointer to backing alloc for reading/writing bytes */
+    uint32_t size;   /* buffer memory allocation size for write bounds checks */
+    uint32_t offset; /* relative position of write head, # of bytes written */
 } LorBuffer;
 
 LorBuffer lorBufferInit(uint8_t *mem, uint32_t size);

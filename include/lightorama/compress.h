@@ -56,22 +56,21 @@ enum {
 typedef struct LorCompressor {
     uint32_t baseChannel;
     /* channel that all effect indexes are relative to */
-    LorEffect effects[LOR_COMPRESSOR_SIZE];/* effect state per channel */
-    union LorEffectArgs effectArgs[LOR_COMPRESSOR_SIZE];/* optional args */
-    uint16_t occupancySet;/* bitset of relative channels that have an effect */
+    LorEffect effects[LOR_COMPRESSOR_SIZE]; /* effect state per channel */
+    union LorEffectArgs effectArgs[LOR_COMPRESSOR_SIZE]; /* optional args */
+    uint16_t occupancySet; /* bitset of relative channels that have an effect */
 } LorCompressor;
 
 enum LorCompressorError {
-    LOR_COMPRESSOR_OK = 0,
+    LOR_COMPRESSOR_OK           = 0,
     LOR_COMPRESSOR_OUT_OF_RANGE = -1,
     /* relative channel index is < base or > base + 16 */
     LOR_COMPRESSOR_UNALIGNED_BASE = 2,
     /* base channel index isn't multiple of 16 */
 };
 
-enum LorCompressorError lorCompressorSetBaseChannel(
-        LorCompressor *compressor,
-        uint32_t baseChannel);
+enum LorCompressorError lorCompressorSetBaseChannel(LorCompressor *compressor,
+                                                    uint32_t baseChannel);
 
 enum LorCompressorError lorCompressorSetEffect(LorCompressor *compressor,
                                                uint32_t channel,
@@ -84,8 +83,8 @@ struct LorCompressorResult {
     union LorEffectArgs args;
 };
 
-int lorCompressorGenerate(const LorCompressor *compressor,
-                          struct LorCompressorResult results[
-                              LOR_COMPRESSOR_SIZE]);
+int lorCompressorGenerate(
+        const LorCompressor *compressor,
+        struct LorCompressorResult results[LOR_COMPRESSOR_SIZE]);
 
-#endif //LIGHTORAMA_COMPRESS_H
+#endif//LIGHTORAMA_COMPRESS_H
