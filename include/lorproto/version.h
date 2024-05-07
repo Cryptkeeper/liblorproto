@@ -26,7 +26,7 @@
 
 #define LIBLORPROTO_VERSION_MAJOR  ((unsigned char) 4)
 #define LIBLORPROTO_VERSION_MINOR  ((unsigned char) 0)
-#define LIBLORPROTO_VERSION_PATCH  ((unsigned char) 0)
-#define LIBLORPROTO_VERSION_STRING "4.0.0"
+#define LIBLORPROTO_VERSION_PATCH  ((unsigned char) 1)
+#define LIBLORPROTO_VERSION_STRING "4.0.1"
 
 #endif// LIBLORPROTO_VERSION_H

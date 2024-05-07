@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(lorproto
-        VERSION 4.0.0
+        VERSION 4.0.1
         DESCRIPTION "C99 library implementing the Light-O-Rama \(LOR\) communication protocol"
         HOMEPAGE_URL "https://github.com/Cryptkeeper/liblorproto"
         LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
 file(GLOB_RECURSE PUBLIC_HEADERS "include/lorproto/*.h")
 file(GLOB_RECURSE SRC_FILES "src/*.c")

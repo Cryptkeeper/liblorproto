@@ -36,9 +36,9 @@ void lorAppendChannel(LorBuffer *const b, const LorChannel channel) {
 
 // Light-O-Rama protocol requires all values be non-zero, so the highest order bit
 // seems to be static true, which is applied via `LOR_CHANNEL_OPT`
-#define LOR_CHANNEL_OPT            0b10000000                     /* 0x80 */
-#define LOR_CHANNEL_OPT_HAS_OFFSET (0b01000000 | LOR_CHANNEL_OPT) /* 0xC0 */
-#define LOR_CHANNEL_OPT_DATA_MASK  0b00111111                     /* 0x3F */
+#define LOR_CHANNEL_OPT            0x80 /* 0b10000000 */
+#define LOR_CHANNEL_OPT_HAS_OFFSET 0xC0 /* 0b11000000 */
+#define LOR_CHANNEL_OPT_DATA_MASK  0x3F /* 0b00111111 */
 
 void lorAppendAlignedChannel(LorBuffer *const b,
                              const LorChannel channel,
@@ -91,9 +91,9 @@ LorChannelFormat lorGetChannelSetFormat(const LorChannelSet channelSet) {
     __builtin_unreachable();
 }
 
-#define LOR_CHANNELSET_OPT_8L        0b01000000 /* 0x40 */
-#define LOR_CHANNELSET_OPT_8H        0b10000000 /* 0x80 */
-#define LOR_CHANNELSET_OPT_DATA_MASK 0b00111111 /* 0x3F */
+#define LOR_CHANNELSET_OPT_8L        0x40 /* 0b01000000 */
+#define LOR_CHANNELSET_OPT_8H        0x80 /* 0b10000000 */
+#define LOR_CHANNELSET_OPT_DATA_MASK 0x3F /* 0b00111111 */
 
 void lorAppendChannelSet(LorBuffer *const b, const LorChannelSet channelSet) {
     // 6-bit unsigned int, max value of 64
