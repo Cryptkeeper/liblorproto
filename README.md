@@ -6,6 +6,8 @@ Usage of liblorproto assumes existing familiarity with the [LOR protocol](https:
 
 The previous v2.x release is available by checking out the `v2.x` branch. Only v3.x is actively supported by the author.
 
+**Archived in favor of my work on [libtinylor](https://github.com/Cryptkeeper/libtinylor)**
+
 ## Project Structure
 
 | Header                                                 | Purpose                                                                                                                                                                           |
